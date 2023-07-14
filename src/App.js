@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Wizard } from 'react-use-wizard';
+import TableConstructor from './components/table-constructor/table-constructor';
+import SetEntryPoints from './components/set-entry-points/set-entry-points';
 
 // Vehicle class
 class Vehicle {
@@ -156,20 +159,21 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(numRows, numColumns);
     setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
   }, [numRows, numColumns])
 
-  const handleNumRowsChange = (strRowValue) => {
-    setNumRows(parseInt(strRowValue));
-  }
+  // const handleNumRowsChange = (strRowValue) => {
+  //   setNumRows(parseInt(strRowValue));
+  // }
 
-  const handleNumColumnsChange = (strColValue) => {
-    setNumColumns(parseInt(strColValue));
-  }
+  // const handleNumColumnsChange = (strColValue) => {
+  //   setNumColumns(parseInt(strColValue));
+  // }
 
   return (
     <div>
-      <h2>Parking Lot System</h2>
+      {/* <h2>Parking Lot System</h2>
 
       <div>
         <label>
@@ -269,7 +273,12 @@ function App() {
           <p>License Plate Number: {unparkedVehicle.licensePlateNumber}</p>
           <p>Vehicle Type: {unparkedVehicle.vehicleType}</p>
         </div>
-      )}
+      )} */}
+
+      <Wizard>
+        <TableConstructor setNumEntryPoints={setNumEntryPoints} setNumRows={setNumRows} setNumColumns={setNumColumns} />
+        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} />
+      </Wizard>
     </div>
   );
 }
