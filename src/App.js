@@ -276,8 +276,8 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor setNumEntryPoints={setNumEntryPoints} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} />
+        <TableConstructor setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
+        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} />
       </Wizard>
     </div>
   );

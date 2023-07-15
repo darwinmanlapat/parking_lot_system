@@ -19,18 +19,25 @@ const SetEntryPoints = (props) => {
     const [clickedCells, setClickedCells] = useState([]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
-        const cell = { rowIndex, columnIndex };
-        const isCellClicked = clickedCells.some(
-            clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
-        );
+        // Check if the cell is an outer cell
+        const isOuterCell = rowIndex === 0 || rowIndex === props.numRows - 1 || columnIndex === 0 || columnIndex === props.numColumns - 1;
 
-        // Check if a cell is clicked so we can toggle it.
-        if (isCellClicked) {
-            setClickedCells(clickedCells.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
-        } else {
-            // If the is cell is not yet clicked, we should check if have the desired amount of entry points
-            if (clickedCells.length < props.numEntryPoints) {
-                setClickedCells([...clickedCells, cell]);
+        if (isOuterCell) {
+            const cell = { rowIndex, columnIndex };
+
+            const isCellClicked = clickedCells.some(
+                clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
+            );
+
+            // Check if a cell is clicked so we can toggle it.
+            if (isCellClicked) {
+                setClickedCells(clickedCells.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
+            } else {
+                // If the is cell is not yet clicked, we should check if have the desired amount of entry points
+                if (clickedCells.length < props.numEntryPoints) {
+                    console.log(cell);
+                    setClickedCells([...clickedCells, cell]);
+                }
             }
         }
     };
@@ -60,6 +67,19 @@ const SetEntryPoints = (props) => {
                     ))}
                 </tbody>
             </table>
+
+            <div className="entry-point-list">
+                {
+                    clickedCells.map((clickedCell, cellIndex) => (
+                        <div key={"entry-point-cell" + cellIndex}>Entry Point # {cellIndex + 1}: ({clickedCell.rowIndex}, {clickedCell.columnIndex})</div>
+                    ))
+                }
+            </div>
+
+            <div className="step-nav-buttons">
+                <button onClick={() => previousStep()}>Previous</button>
+                <button onClick={() => nextStep()}>Next</button>
+            </div>
         </div>
     );
 }

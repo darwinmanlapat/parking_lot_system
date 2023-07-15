@@ -21,7 +21,7 @@ const TableConstructor = (props) => {
                     <input
                         type="number"
                         min="3"
-                        // value={numEntryPoints}
+                        value={props.numEntryPoints}
                         onChange={e => props.setNumEntryPoints(parseInt(e.target.value))}
                     />
                 </label>
@@ -33,7 +33,7 @@ const TableConstructor = (props) => {
                     <input
                         type="number"
                         min="1"
-                        // value={numRows}
+                        value={props.numRows}
                         onChange={e => props.setNumRows(parseInt(e.target.value))}
                     />
                 </label>
@@ -45,7 +45,7 @@ const TableConstructor = (props) => {
                     <input
                         type="number"
                         min="1"
-                        // value={numColumns}
+                        value={props.numColumns}
                         onChange={e => props.setNumColumns(parseInt(e.target.value))}
                     />
                 </label>
