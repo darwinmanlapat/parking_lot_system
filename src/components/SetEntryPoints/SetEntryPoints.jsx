@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./SetEntryPoints.scss";
-import ParkingMap from "../common/ParkingMap/ParkingMap";
 
 const SetEntryPoints = (props) => {
     const {
@@ -17,41 +16,11 @@ const SetEntryPoints = (props) => {
         handleStep,
     } = useWizard();
 
-    const handleCellClick = (rowIndex, columnIndex) => {
-        // Check if the cell is an outer cell
-        const isOuterCell = rowIndex === 0 || rowIndex === props.numRows - 1 || columnIndex === 0 || columnIndex === props.numColumns - 1;
-
-        if (isOuterCell) {
-            const cell = { rowIndex, columnIndex };
-
-            const isCellClicked = props.entryPoints.some(
-                clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
-            );
-
-            // Check if a cell is clicked so we can toggle it.
-            if (isCellClicked) {
-                props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
-            } else {
-                // If the is cell is not yet clicked, we should check if have the desired amount of entry points
-                if (props.entryPoints.length < props.numEntryPoints) {
-                    props.setEntryPoints([...props.entryPoints, cell]);
-                }
-            }
-        }
-    };
-
-    useEffect(() => console.log('entry points', props.entryPoints), [props.entryPoints]);
-
-    // Attach an optional handler
-    handleStep(() => {
-        // setEntryPoints
-    });
+    useEffect(() => props.setActiveStep(activeStep), []);
 
     return (
         <div className="set-entry-points">
             <h1>Select the entry points of the parking lot</h1>
-
-            <ParkingMap parkingMap={props.parkingMap} handleCellClick={handleCellClick} />
 
             <div className="entry-point-list">
                 {

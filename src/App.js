@@ -3,8 +3,10 @@ import { Wizard } from 'react-use-wizard';
 import TableConstructor from './components/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/SetParkingSlotSizes/SetParkingSlotSizes';
+import ParkingMap from './components/common/ParkingMap/ParkingMap';
 
 function App() {
+  const [activeStep, setActiveStep] = useState(1);
   const [numEntryPoints, setNumEntryPoints] = useState(3);
   const [numRows, setNumRows] = useState(numEntryPoints);
   const [numColumns, setNumColumns] = useState(numEntryPoints);
@@ -99,6 +101,31 @@ function App() {
       setParkingMap(updatedParkingMap);
     }
   }, [entryPoints]);
+
+  const handleCellClick = (rowIndex, columnIndex) => {
+    if (activeStep === 1) {
+      // Check if the cell is an outer cell
+      const isOuterCell = rowIndex === 0 || rowIndex === numRows - 1 || columnIndex === 0 || columnIndex === numColumns - 1;
+
+      if (isOuterCell) {
+        const cell = { rowIndex, columnIndex };
+
+        const isCellClicked = entryPoints.some(
+          clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
+        );
+
+        // Check if a cell is clicked so we can toggle it.
+        if (isCellClicked) {
+          setEntryPoints(entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
+        } else {
+          // If the is cell is not yet clicked, we should check if have the desired amount of entry points
+          if (entryPoints.length < numEntryPoints) {
+            setEntryPoints([...entryPoints, cell]);
+          }
+        }
+      }
+    }
+  }
 
   return (
     <div className="app">
@@ -205,10 +232,12 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setEntryPoints={setEntryPoints} entryPoints={entryPoints} />
-        <SetParkingSlotSizes parkingMap={parkingMap} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+        <TableConstructor setActiveStep={setActiveStep} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
+        <SetEntryPoints setActiveStep={setActiveStep} entryPoints={entryPoints} />
+        <SetParkingSlotSizes setActiveStep={setActiveStep} />
       </Wizard>
+
+      <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} />
     </div>
   );
 }

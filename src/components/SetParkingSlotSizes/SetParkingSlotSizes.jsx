@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./SetParkingSlotSizes.scss";
-import ParkingMap from "../common/ParkingMap/ParkingMap";
 
 const SetParkingSlotSizes = (props) => {
     const {
@@ -17,14 +16,11 @@ const SetParkingSlotSizes = (props) => {
         handleStep,
     } = useWizard();
 
-    const handleCellClick = (rowIndex, columnIndex) => {
-    };
+    useEffect(() => props.setActiveStep(activeStep), []);
 
     return (
         <div className="set-parking-slot-sizes">
             <h1>Set the parking slot sizes</h1>
-            
-            <ParkingMap step={activeStep} parkingMap={props.parkingMap} handleCellClick={handleCellClick} />
 
             <div className="step-nav-buttons">
                 <button onClick={() => previousStep()}>Previous</button>

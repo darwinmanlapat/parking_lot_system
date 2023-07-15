@@ -23,6 +23,7 @@ const ParkingMap = (props) => {
                                         onClick={() => props.handleCellClick(rowIndex, columnIndex)}
                                     >
                                         {
+                                            // Show the parking slot size options if we are in step 2 and the current cell is not an entry point
                                             props.step === 2 && !isEntryPoint ? (
                                                 <select>
                                                     <option>S</option>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 const TableConstructor = (props) => {
@@ -14,7 +14,7 @@ const TableConstructor = (props) => {
         handleStep,
     } = useWizard();
 
-    // const [status, setStatus] = useState('create-table');
+    useEffect(() => props.setActiveStep(activeStep), []);
 
     return (
         <div>
@@ -55,7 +55,6 @@ const TableConstructor = (props) => {
                 </label>
             </div>
 
-            {/* <button onClick={() => nextStep()}>Next</button> */}
             <button onClick={() => nextStep()}>Next</button>
         </div>
     );
