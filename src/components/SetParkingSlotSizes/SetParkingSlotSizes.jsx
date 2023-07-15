@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useWizard } from "react-use-wizard";
 
-import "./set-entry-points.scss";
+import "./SetParkingSlotSizes.scss";
 
-const SetEntryPoints = (props) => {
+const SetParkingSlotSizes = (props) => {
     const {
         isLoading,
         isLastStep,
@@ -43,8 +43,8 @@ const SetEntryPoints = (props) => {
     };
 
     return (
-        <div className="set-entry-points">
-            <h1>Select the entry points of the parking lot</h1>
+        <div className="set-parking-slot-sizes">
+            <h1>Set the parking slot sizes</h1>
             <table border={1} width={100}>
                 <tbody>
                     {props.parkingMap.map((row, rowIndex) => (
@@ -68,13 +68,13 @@ const SetEntryPoints = (props) => {
                 </tbody>
             </table>
 
-            <div className="entry-point-list">
+            {/* <div className="entry-point-list">
                 {
                     clickedCells.map((clickedCell, cellIndex) => (
                         <div key={"entry-point-cell" + cellIndex}>Entry Point # {cellIndex + 1}: ({clickedCell.rowIndex}, {clickedCell.columnIndex})</div>
                     ))
                 }
-            </div>
+            </div> */}
 
             <div className="step-nav-buttons">
                 <button onClick={() => previousStep()}>Previous</button>
@@ -84,4 +84,4 @@ const SetEntryPoints = (props) => {
     );
 }
 
-export default SetEntryPoints;
+export default SetParkingSlotSizes;
