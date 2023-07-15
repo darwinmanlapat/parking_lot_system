@@ -1,0 +1,13 @@
+.parking-map {
+    .clicked {
+        background-color: black;
+    }
+
+    td {
+        padding: 1.5rem;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

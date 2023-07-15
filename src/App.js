@@ -6,13 +6,15 @@ import SetParkingSlotSizes from './components/SetParkingSlotSizes/SetParkingSlot
 
 function App() {
   const [numEntryPoints, setNumEntryPoints] = useState(3);
-  const [numRows, setNumRows] = useState(1);
-  const [numColumns, setNumColumns] = useState(1);
-  const [parkingMap, setParkingMap] = useState(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
-  const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
-  const [vehicleType, setVehicleType] = useState('');
-  const [parkedVehicle, setParkedVehicle] = useState(null);
-  const [unparkedVehicle, setUnparkedVehicle] = useState(null);
+  const [numRows, setNumRows] = useState(numEntryPoints);
+  const [numColumns, setNumColumns] = useState(numEntryPoints);
+  const [entryPoints, setEntryPoints] = useState([]);
+  const [parkingMap, setParkingMap] = useState([]);
+  const [parkingSlotSizes, setParkingSlotSizes] = useState({});
+  // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
+  // const [vehicleType, setVehicleType] = useState('');
+  // const [parkedVehicle, setParkedVehicle] = useState(null);
+  // const [unparkedVehicle, setUnparkedVehicle] = useState(null);
 
   // const handleParkVehicle = () => {
   //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
@@ -68,12 +70,38 @@ function App() {
   //   setParkingMap(updatedParkingMap);
   // };
 
+  // Update the parking map whenever the number of rows and column changes
   useEffect(() => {
+    setEntryPoints([]);
     setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
-  }, [numRows, numColumns])
+  }, [numRows, numColumns]);
+
+  useEffect(() => console.log('parkingMap', parkingMap), [parkingMap]);
+
+  useEffect(() => {
+    if (parkingMap.length !== 0) {
+      const updatedParkingMap = [...parkingMap];
+
+      updatedParkingMap.map((row, rowIndex) => {
+        row.map((column, columnIndex) => {
+          const isEntryPoint = entryPoints.some(
+            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+          );
+
+          if (isEntryPoint) {
+            updatedParkingMap[rowIndex][columnIndex] = 'E';
+          } else {
+            updatedParkingMap[rowIndex][columnIndex] = 'S';
+          }
+        });
+      });
+
+      setParkingMap(updatedParkingMap);
+    }
+  }, [entryPoints]);
 
   return (
-    <div>
+    <div className="app">
       {/* <h2>Parking Lot System</h2>
 
       <div>
@@ -178,8 +206,8 @@ function App() {
 
       <Wizard>
         <TableConstructor setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} />
-        <SetParkingSlotSizes parkingMap={parkingMap} />
+        <SetEntryPoints parkingMap={parkingMap} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setEntryPoints={setEntryPoints} entryPoints={entryPoints} />
+        <SetParkingSlotSizes parkingMap={parkingMap} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
       </Wizard>
     </div>
   );
