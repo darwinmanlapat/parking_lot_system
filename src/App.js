@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Wizard } from 'react-use-wizard';
-import TableConstructor from './components/TableConstructor/TableConstructor';
-import SetEntryPoints from './components/SetEntryPoints/SetEntryPoints';
-import SetParkingSlotSizes from './components/SetParkingSlotSizes/SetParkingSlotSizes';
+import TableConstructor from './components/steps/TableConstructor/TableConstructor';
+import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
+import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
 
 function App() {
