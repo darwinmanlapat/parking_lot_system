@@ -4,6 +4,7 @@ import TableConstructor from './components/steps/TableConstructor/TableConstruct
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
+import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 
 function App() {
   const [activeStep, setActiveStep] = useState(1);
@@ -127,6 +128,22 @@ function App() {
     }
   }
 
+  const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
+    const updatedParkingMap = [...parkingMap];
+
+    updatedParkingMap.map((row, rowIndex) => {
+      row.map((column, columnIndex) => {
+        if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
+          updatedParkingMap[rowIndex][columnIndex] = cellValue;
+        } else {
+          updatedParkingMap[rowIndex][columnIndex] = column;
+        }
+      });
+    });
+
+    setParkingMap(updatedParkingMap);
+  }
+
   return (
     <div className="app">
       {/* <h2>Parking Lot System</h2>
@@ -235,9 +252,10 @@ function App() {
         <TableConstructor setActiveStep={setActiveStep} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
         <SetEntryPoints setActiveStep={setActiveStep} entryPoints={entryPoints} />
         <SetParkingSlotSizes setActiveStep={setActiveStep} />
+        <ControlPanel setActiveStep={setActiveStep} />
       </Wizard>
 
-      <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} />
+      <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} />
     </div>
   );
 }

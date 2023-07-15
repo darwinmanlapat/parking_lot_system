@@ -4,6 +4,22 @@ import { useWizard } from "react-use-wizard";
 import "./ParkingMap.scss";
 
 const ParkingMap = (props) => {
+    const renderCell = (rowIndex, columnIndex, cellValue) => {
+        if (props.step === 2) {
+            return (
+                <select onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
+                    <option>S</option>
+                    <option>M</option>
+                    <option>L</option>
+                </select>
+            );
+        }
+        
+        if (props.step === 3) {
+            return cellValue;
+        }
+    }
+
     return (
         <div className="parking-map">
             <table border={1} width={100}>
@@ -24,13 +40,7 @@ const ParkingMap = (props) => {
                                     >
                                         {
                                             // Show the parking slot size options if we are in step 2 and the current cell is not an entry point
-                                            props.step === 2 && !isEntryPoint ? (
-                                                <select>
-                                                    <option>S</option>
-                                                    <option>M</option>
-                                                    <option>L</option>
-                                                </select>
-                                            ) : null
+                                            !isEntryPoint ? renderCell(rowIndex, columnIndex, column) : null
                                         }
                                     </td>
                                 );
