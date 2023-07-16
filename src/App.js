@@ -28,34 +28,6 @@ function App() {
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
   // const [parkedVehicle, setParkedVehicle] = useState(null);
-  // const [unparkedVehicle, setUnparkedVehicle] = useState(null);
-
-  // const handleParkVehicle = () => {
-  //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
-  //   const parkingSlots = [];
-
-  //   parkingMap.forEach((row, rowIndex) => {
-  //     row.forEach((slotType, columnIndex) => {
-  //       const slotNumber = `${String.fromCharCode(65 + rowIndex)}${columnIndex + 1}`;
-  //       parkingSlots.push(new ParkingSlot(slotNumber, slotType));
-  //     });
-  //   });
-
-  //   const vehicleMap = {
-  //     S: 0, // Small vehicle
-  //     M: 1, // Medium vehicle
-  //     L: 2, // Large vehicle
-  //   };
-
-  // const parkingLot = new ParkingLot(entryPoints, parkingMap);
-
-  // console.log(parkingLot);
-  //   const vehicle = new Vehicle(vehiclePlateNumber, vehicleType);
-  //   parkingLot.parkVehicle(vehicle);
-  //   setParkedVehicle(vehicle);
-  //   setVehiclePlateNumber('');
-  //   setVehicleType('');
-  // };
 
   // const handleUnparkVehicle = () => {
   //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
@@ -80,12 +52,6 @@ function App() {
   //   setParkedVehicle(null);
   // };
 
-  // const handleSlotTypeChange = (rowIndex, columnIndex, slotType) => {
-  //   const updatedParkingMap = [...parkingMap];
-  //   updatedParkingMap[rowIndex][columnIndex] = slotType;
-  //   setParkingMap(updatedParkingMap);
-  // };
-
   // Update the parking map whenever the number of rows and column changes
   useEffect(() => {
     setEntryPoints([]);
@@ -101,42 +67,6 @@ function App() {
   }, [parkingSlotSizes]);
 
   useEffect(() => {
-    // if (parkingMap.length !== 0) {
-    //   const updatedParkingMap = [...parkingMap];
-    //   const smallSlots = [];
-
-    //   updatedParkingMap.map((row, rowIndex) => {
-    //     row.map((column, columnIndex) => {
-    //       const isEntryPoint = entryPoints.some(
-    //         entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-    //       );
-
-    //       if (isEntryPoint) {
-    //         updatedParkingMap[rowIndex][columnIndex] = 'E';
-
-    //         // Remove the small slot from the array
-    //         smallSlots.filter(
-    //           smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
-    //         );
-    //       } else {
-    //         updatedParkingMap[rowIndex][columnIndex] = SizeEnum.SMALL;
-
-    //         // Add the slot to the small slots array
-    //         smallSlots.push({ rowIndex, columnIndex });
-    //       }
-    //     });
-    //   });
-
-    //   setParkingMap(updatedParkingMap);
-    //   setParkingSlotSizes(prevParkingSlotSizes => {
-    //     return {
-    //       [SizeEnum.SMALL]: smallSlots,
-    //       [SizeEnum.MEDIUM]: [],
-    //       [SizeEnum.LARGE]: [],
-    //     };
-    //   });
-    // }
-
     const smallSlots = [];
 
     for (let rowIndex = 0; rowIndex < parkingMapConfig.numRows; rowIndex++) {
