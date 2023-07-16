@@ -139,20 +139,20 @@ function App() {
 
     const smallSlots = [];
 
-    for (let row = 0; row < parkingMapConfig.numRows; row++) {
-      for (let column = 0; column < parkingMapConfig.numColumns; column++) {
+    for (let rowIndex = 0; rowIndex < parkingMapConfig.numRows; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < parkingMapConfig.numColumns; columnIndex++) {
         const isEntryPoint = entryPoints.some(
-          entryPoint => entryPoint.rowIndex === row && entryPoint.columnIndex === column
+          entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
         );
 
         if (isEntryPoint) {
           // Remove the small slot from the array
           smallSlots.filter(
-            smallSlot => smallSlot.rowIndex !== row && smallSlot.columnIndex !== column
+            smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
           );
         } else {
           // Add the slot to the small slots array
-          smallSlots.push({ row, column });
+          smallSlots.push({ rowIndex, columnIndex });
         }
       }
     }

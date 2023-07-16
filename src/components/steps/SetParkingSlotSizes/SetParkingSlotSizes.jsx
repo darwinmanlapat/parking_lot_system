@@ -4,6 +4,7 @@ import { useWizard } from "react-use-wizard";
 import "./SetParkingSlotSizes.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import { SizeEnum } from "../../../enums/Sizes";
+import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const SetParkingSlotSizes = (props) => {
     const {
@@ -20,15 +21,7 @@ const SetParkingSlotSizes = (props) => {
 
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
         // props.updateParkingMap(rowIndex, columnIndex, cellValue);
-
-        // NOTE: Put this somewhere this can be called from anywhere
-        const { [SizeEnum.SMALL]: small, [SizeEnum.MEDIUM]: medium, [SizeEnum.LARGE]: large } = props.parkingSlotSizes;
-
-        const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-            ? SizeEnum.SMALL
-            : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-                ? SizeEnum.MEDIUM
-                : SizeEnum.LARGE;
+        const previousSize = getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
 
         const updatedSizes = { ...props.parkingSlotSizes };
 
