@@ -4,6 +4,7 @@ import { useWizard } from "react-use-wizard";
 import "./ControlPanel.scss";
 import ParkingLot from "../../../lib/ParkingLot";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
+import { SizeEnum } from "../../../enums/Sizes";
 
 const ControlPanel = (props) => {
     const {
@@ -18,14 +19,16 @@ const ControlPanel = (props) => {
         handleStep,
     } = useWizard();
 
-    const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
-    const [vehicles, setVehicles] = useState([]);
-    const [currentVehicle, setCurrentVehicle] = useState({
+    const defaultVehicle = {
         license: '',
         size: 'S',
         time_in: '',
         coordinates: {}
-    });
+    };
+
+    const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
+    const [vehicles, setVehicles] = useState([]);
+    const [currentVehicle, setCurrentVehicle] = useState(defaultVehicle);
 
     useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
 
@@ -44,38 +47,88 @@ const ControlPanel = (props) => {
     }
 
     const parkVehicle = () => {
-        const parkingSlotCoordinates = props.parkingSlotSizes[currentVehicle.size];
+        const parkingSlotCoordinates = possibleParkingSlots(currentVehicle.size);
 
         const availableSlot = findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
 
         if (availableSlot) {
-            setVehicles([...vehicles, {...currentVehicle, coordinates: availableSlot}]);
+            setVehicles([...vehicles, { ...currentVehicle, coordinates: availableSlot }]);
             alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${availableSlot.rowIndex}, ${availableSlot.columnIndex})`);
         } else {
             alert('No available parking slots for the vehicle type.');
         }
 
+        setCurrentVehicle(defaultVehicle);
         setSelectedEntryPoint(null);
     }
 
     // NOTE: Need to update this algorithm to get the closest slot in a clockwise direction.
     const findClosestAvailableSlot = (entryPoint, parkingSlotCoordinates) => {
-        let closestSlot = null;
+        const entryPointIndex = props.entryPoints.findIndex(
+            (coordinate) => entryPoint.rowIndex === coordinate.rowIndex && entryPoint.columnIndex === coordinate.columnIndex
+        );
+
+        // let closestSlot = null;
+        let closestSlots = [];
         let minDistance = Infinity;
 
         for (const coordinates of parkingSlotCoordinates) {
             const distance = calculateDistance(entryPoint, coordinates);
-            if (distance < minDistance && !isSlotOccupied(coordinates)) {
+            if (distance <= minDistance && !isSlotOccupied(coordinates)) {
+                // minDistance = distance;
+                // closestSlot = coordinates;
+                if (distance < minDistance) {
+                    closestSlots = [coordinates];
+                } else {
+                    closestSlots.push(coordinates);
+                }
+
                 minDistance = distance;
-                closestSlot = coordinates;
             }
         }
 
-        return closestSlot;
+        // If there are no close slots, return null immediately
+        if (closestSlots.length === 0) {
+            return null;
+        }
+
+        return getClosestClockwiseSlot(closestSlots);
     };
 
     const isSlotOccupied = (coordinates) => {
         return vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);
+    };
+
+    const possibleParkingSlots = (vehicleType) => {
+        const smallSlots = props.parkingSlotSizes[SizeEnum.SMALL];
+        const mediumSlots = props.parkingSlotSizes[SizeEnum.MEDIUM];
+        const largeSlots = props.parkingSlotSizes[SizeEnum.LARGE];
+
+        if (vehicleType === SizeEnum.SMALL) {
+            return smallSlots.concat(mediumSlots, largeSlots);
+        }
+
+        if (vehicleType === SizeEnum.MEDIUM) {
+            return mediumSlots.concat(largeSlots);
+        }
+
+        if (vehicleType === SizeEnum.LARGE) {
+            return largeSlots;
+        }
+    };
+
+    const getClosestClockwiseSlot = (parkingSlotCoordinates) => {
+        const sortedCoordinates = [...parkingSlotCoordinates];
+
+        sortedCoordinates.sort((coord1, coord2) => {
+            if (coord1.rowIndex !== coord2.rowIndex) {
+                return coord2.rowIndex - coord1.rowIndex; // Sort by highest row
+            } else {
+                return coord1.columnIndex - coord2.columnIndex; // Sort by lowest column
+            }
+        });
+
+        return sortedCoordinates[0] ?? null;
     };
 
     const calculateDistance = (point1, point2) => {
