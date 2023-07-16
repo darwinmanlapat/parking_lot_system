@@ -5,6 +5,7 @@ import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
+import ParkingLot from './lib/ParkingLot';
 
 function App() {
   const [activeStep, setActiveStep] = useState(1);
@@ -14,6 +15,7 @@ function App() {
   const [entryPoints, setEntryPoints] = useState([]);
   const [parkingMap, setParkingMap] = useState([]);
   const [parkingSlotSizes, setParkingSlotSizes] = useState({});
+  // const [parkingLot, setParkingLot] = useState(null);
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
   // const [parkedVehicle, setParkedVehicle] = useState(null);
@@ -36,7 +38,9 @@ function App() {
   //     L: 2, // Large vehicle
   //   };
 
-  //   const parkingLot = new ParkingLot(entryPoints, parkingSlots, vehicleMap);
+    const parkingLot = new ParkingLot(entryPoints, parkingMap);
+
+    console.log(parkingLot);
   //   const vehicle = new Vehicle(vehiclePlateNumber, vehicleType);
   //   parkingLot.parkVehicle(vehicle);
   //   setParkedVehicle(vehicle);
@@ -79,7 +83,9 @@ function App() {
     setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
   }, [numRows, numColumns]);
 
-  useEffect(() => console.log('parkingMap', parkingMap), [parkingMap]);
+  useEffect(() => {
+    console.log('parkingMap', parkingMap);
+  }, [parkingMap]);
 
   useEffect(() => {
     if (parkingMap.length !== 0) {

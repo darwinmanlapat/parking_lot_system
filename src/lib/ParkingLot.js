@@ -1,9 +1,20 @@
-class ParkingLot {
-    constructor(entryPoints, parkingSlots, vehicleMap) {
-        this.entryPoints = entryPoints;
-        this.parkingSlots = parkingSlots;
-        this.vehicleMap = vehicleMap;
+class ParkingLot {    
+    constructor(entryPoints, parkingMap) {
+        this._entryPoints = entryPoints;
+        // this._parkingSlots = parkingSlots;
+        this._map = parkingMap;
     }
+
+    // get getMap() {
+    //     return this._map;
+    // }
+
+    // /**
+    //  * @param {Array} parkingMap
+    //  */
+    // set setMap(parkingMap) {
+    //     this._map = parkingMap;
+    // }
 
     parkVehicle(vehicle) {
         const entryPointDistances = this.parkingSlots.map(slot => slot.slotNumber);
