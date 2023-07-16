@@ -86,6 +86,7 @@ const ControlPanel = (props) => {
 
         adjustedVehicles.splice(parkedVehicleIndex, 1);
 
+        setCurrentVehicle(null);
         setVehicles([...adjustedVehicles]);
     }
 
