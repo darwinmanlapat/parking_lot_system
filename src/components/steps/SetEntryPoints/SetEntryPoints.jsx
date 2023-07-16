@@ -57,7 +57,7 @@ const SetEntryPoints = (props) => {
                 <button onClick={() => nextStep()}>Next</button>
             </div>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} handleCellClick={handleCellClick} />
+            <ParkingMap parkingMap={props.parkingMap} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
         </div>
     );
 }

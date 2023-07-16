@@ -56,7 +56,7 @@ const TableConstructor = (props) => {
 
             <button onClick={() => nextStep()}>Next</button>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} />
+            <ParkingMap parkingMap={props.parkingMap} step={activeStep} entryPoints={props.entryPoints} />
         </div>
     );
 }

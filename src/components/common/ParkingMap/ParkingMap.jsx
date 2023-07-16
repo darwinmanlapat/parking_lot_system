@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./ParkingMap.scss";
+import { SizeEnum } from "../../../enums/Sizes";
 
 const ParkingMap = (props) => {
     const handleCellClick = (rowIndex, columnIndex) => {
@@ -14,9 +15,9 @@ const ParkingMap = (props) => {
         if (props.step === 2) {
             return (
                 <select onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
-                    <option>S</option>
-                    <option>M</option>
-                    <option>L</option>
+                    <option>{SizeEnum.SMALL}</option>
+                    <option>{SizeEnum.MEDIUM}</option>
+                    <option>{SizeEnum.LARGE}</option>
                 </select>
             );
         }
@@ -33,10 +34,10 @@ const ParkingMap = (props) => {
                     {props.parkingMap.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((column, columnIndex) => {
-                                // const isCellClicked = props.entryPoints.some(
-                                //     entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-                                // );
-                                const isEntryPoint = column === 'E';
+                                const isEntryPoint = props.entryPoints.some(
+                                    entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+                                );
+                                // const isEntryPoint = column === 'E';
 
                                 return (
                                     <td

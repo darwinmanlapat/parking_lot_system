@@ -6,6 +6,7 @@ import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParki
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 import ParkingLot from './lib/ParkingLot';
+import { SizeEnum } from './enums/Sizes';
 
 function App() {
   const [activeStep, setActiveStep] = useState(1);
@@ -14,7 +15,11 @@ function App() {
   const [numColumns, setNumColumns] = useState(numEntryPoints);
   const [entryPoints, setEntryPoints] = useState([]);
   const [parkingMap, setParkingMap] = useState([]);
-  const [parkingSlotSizes, setParkingSlotSizes] = useState({small: [], medium: [], large: []});
+  const [parkingSlotSizes, setParkingSlotSizes] = useState({
+    [SizeEnum.SMALL]: [],
+    [SizeEnum.MEDIUM]: [],
+    [SizeEnum.LARGE]: []
+  });
   // const [parkingLot, setParkingLot] = useState(null);
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
@@ -38,9 +43,9 @@ function App() {
   //     L: 2, // Large vehicle
   //   };
 
-    const parkingLot = new ParkingLot(entryPoints, parkingMap);
+  const parkingLot = new ParkingLot(entryPoints, parkingMap);
 
-    console.log(parkingLot);
+  console.log(parkingLot);
   //   const vehicle = new Vehicle(vehiclePlateNumber, vehicleType);
   //   parkingLot.parkVehicle(vehicle);
   //   setParkedVehicle(vehicle);
@@ -110,10 +115,10 @@ function App() {
               smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
             );
           } else {
-            updatedParkingMap[rowIndex][columnIndex] = 'S';
+            updatedParkingMap[rowIndex][columnIndex] = SizeEnum.SMALL;
 
             // Add the slot to the small slots array
-            smallSlots.push({rowIndex, columnIndex});
+            smallSlots.push({ rowIndex, columnIndex });
           }
         });
       });
@@ -121,9 +126,9 @@ function App() {
       setParkingMap(updatedParkingMap);
       setParkingSlotSizes(prevParkingSlotSizes => {
         return {
-          small: smallSlots,
-          medium: prevParkingSlotSizes.medium,
-          large: prevParkingSlotSizes.large,
+          [SizeEnum.SMALL]: smallSlots,
+          [SizeEnum.MEDIUM]: [],
+          [SizeEnum.LARGE]: [],
         };
       });
     }
@@ -250,9 +255,9 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor parkingMap={parkingMap} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
+        <TableConstructor parkingMap={parkingMap} setNumEntryPoints={setNumEntryPoints} entryPoints={entryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
         <SetEntryPoints parkingMap={parkingMap} entryPoints={entryPoints} numEntryPoints={numEntryPoints} setEntryPoints={setEntryPoints} numRows={numRows} numColumns={numColumns} />
-        <SetParkingSlotSizes parkingMap={parkingMap} updateParkingMap={updateParkingMap} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+        <SetParkingSlotSizes parkingMap={parkingMap} entryPoints={entryPoints}  updateParkingMap={updateParkingMap} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
         <ControlPanel parkingMap={parkingMap} entryPoints={entryPoints} />
       </Wizard>
 

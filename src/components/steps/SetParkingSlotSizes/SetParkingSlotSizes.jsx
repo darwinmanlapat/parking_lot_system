@@ -3,6 +3,7 @@ import { useWizard } from "react-use-wizard";
 
 import "./SetParkingSlotSizes.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
+import { SizeEnum } from "../../../enums/Sizes";
 
 const SetParkingSlotSizes = (props) => {
     const {
@@ -20,13 +21,22 @@ const SetParkingSlotSizes = (props) => {
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
         props.updateParkingMap(rowIndex, columnIndex, cellValue);
 
-        props.setParkingSlotSizes(prevParkingSlotSizes => {
-            return {
-                small: [...prevParkingSlotSizes.small],
-                medium: [...prevParkingSlotSizes.medium],
-                large: [...prevParkingSlotSizes.large],
-            };
-        });
+        const { [SizeEnum.SMALL]: small, [SizeEnum.MEDIUM]: medium, [SizeEnum.LARGE]: large } = props.parkingSlotSizes;
+
+        const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+            ? SizeEnum.SMALL
+            : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+                ? SizeEnum.MEDIUM
+                : SizeEnum.LARGE;
+
+        const updatedSizes = { ...props.parkingSlotSizes };
+
+        updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord => coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex)
+
+        // Add the coordinate to the new size
+        updatedSizes[cellValue] = [...updatedSizes[cellValue], { rowIndex, columnIndex }];
+
+        props.setParkingSlotSizes(updatedSizes)
     }
 
     return (
@@ -38,7 +48,7 @@ const SetParkingSlotSizes = (props) => {
                 <button onClick={() => nextStep()}>Next</button>
             </div>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
+            <ParkingMap parkingMap={props.parkingMap} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
         </div>
     );
 }
