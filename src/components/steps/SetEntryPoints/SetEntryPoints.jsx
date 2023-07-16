@@ -19,7 +19,7 @@ const SetEntryPoints = (props) => {
 
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
-        const isOuterCell = rowIndex === 0 || rowIndex === props.numRows - 1 || columnIndex === 0 || columnIndex === props.numColumns - 1;
+        const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.numRows - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.numColumns - 1;
 
         if (isOuterCell) {
             const cell = { rowIndex, columnIndex };
@@ -33,7 +33,7 @@ const SetEntryPoints = (props) => {
                 props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
             } else {
                 // If the is cell is not yet clicked, we should check if have the desired amount of entry points
-                if (props.entryPoints.length < props.numEntryPoints) {
+                if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {
                     props.setEntryPoints([...props.entryPoints, cell]);
                 }
             }
@@ -57,7 +57,7 @@ const SetEntryPoints = (props) => {
                 <button onClick={() => nextStep()}>Next</button>
             </div>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
+            <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
         </div>
     );
 }

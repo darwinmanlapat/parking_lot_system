@@ -67,7 +67,7 @@ const ControlPanel = (props) => {
                 <button onClick={() => previousStep()}>Previous</button>
             </div>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} handleCellClick={handleCellClick} />
+            <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} parkingSlotSizes={props.parkingSlotSizes} />
         </div>
     );
 }

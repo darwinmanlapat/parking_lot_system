@@ -19,8 +19,9 @@ const SetParkingSlotSizes = (props) => {
     } = useWizard();
 
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
-        props.updateParkingMap(rowIndex, columnIndex, cellValue);
+        // props.updateParkingMap(rowIndex, columnIndex, cellValue);
 
+        // NOTE: Put this somewhere this can be called from anywhere
         const { [SizeEnum.SMALL]: small, [SizeEnum.MEDIUM]: medium, [SizeEnum.LARGE]: large } = props.parkingSlotSizes;
 
         const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
@@ -48,7 +49,7 @@ const SetParkingSlotSizes = (props) => {
                 <button onClick={() => nextStep()}>Next</button>
             </div>
 
-            <ParkingMap parkingMap={props.parkingMap} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
+            <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
         </div>
     );
 }

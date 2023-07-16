@@ -11,7 +11,7 @@ const ParkingMap = (props) => {
         }
     }
 
-    const renderCell = (rowIndex, columnIndex, cellValue) => {
+    const renderCell = (rowIndex, columnIndex) => {
         if (props.step === 2) {
             return (
                 <select onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
@@ -21,9 +21,18 @@ const ParkingMap = (props) => {
                 </select>
             );
         }
-        
+
         if (props.step === 3) {
-            return cellValue;
+            // NOTE: Put this somewhere this can be called from anywhere
+            const { [SizeEnum.SMALL]: small, [SizeEnum.MEDIUM]: medium, [SizeEnum.LARGE]: large } = props.parkingSlotSizes;
+
+            const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+                ? SizeEnum.SMALL
+                : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+                    ? SizeEnum.MEDIUM
+                    : SizeEnum.LARGE;
+
+            return previousSize;
         }
     }
 
@@ -31,7 +40,7 @@ const ParkingMap = (props) => {
         <div className="parking-map">
             <table border={1} width={100}>
                 <tbody>
-                    {props.parkingMap.map((row, rowIndex) => (
+                    {/* {props.parkingMap.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((column, columnIndex) => {
                                 const isEntryPoint = props.entryPoints.some(
@@ -49,6 +58,26 @@ const ParkingMap = (props) => {
                                             // Show the parking slot size options if we are in step 2 and the current cell is not an entry point
                                             !isEntryPoint ? renderCell(rowIndex, columnIndex, column) : null
                                         }
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))} */}
+
+                    {Array.from({ length: props.config.numRows }, (_, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {Array.from({ length: props.config.numColumns }, (_, columnIndex) => {
+                                const isEntryPoint = props.entryPoints.some(
+                                    entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+                                );
+
+                                return (
+                                    <td
+                                        key={columnIndex}
+                                        className={isEntryPoint ? 'clicked' : ''}
+                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
+                                    >
+                                        {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
                                     </td>
                                 );
                             })}

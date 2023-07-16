@@ -10,11 +10,15 @@ import { SizeEnum } from './enums/Sizes';
 
 function App() {
   const [activeStep, setActiveStep] = useState(1);
-  const [numEntryPoints, setNumEntryPoints] = useState(3);
-  const [numRows, setNumRows] = useState(numEntryPoints);
-  const [numColumns, setNumColumns] = useState(numEntryPoints);
+  // const [numEntryPoints, setNumEntryPoints] = useState(3);
+  // const [numRows, setNumRows] = useState(numEntryPoints);
+  // const [numColumns, setNumColumns] = useState(numEntryPoints);
   const [entryPoints, setEntryPoints] = useState([]);
-  const [parkingMap, setParkingMap] = useState([]);
+  const [parkingMapConfig, setParkingMapConfig] = useState({
+    numEntryPoints: 3,
+    numRows: 3,
+    numColumns: 3,
+  });
   const [parkingSlotSizes, setParkingSlotSizes] = useState({
     [SizeEnum.SMALL]: [],
     [SizeEnum.MEDIUM]: [],
@@ -43,9 +47,9 @@ function App() {
   //     L: 2, // Large vehicle
   //   };
 
-  const parkingLot = new ParkingLot(entryPoints, parkingMap);
+  // const parkingLot = new ParkingLot(entryPoints, parkingMap);
 
-  console.log(parkingLot);
+  // console.log(parkingLot);
   //   const vehicle = new Vehicle(vehiclePlateNumber, vehicleType);
   //   parkingLot.parkVehicle(vehicle);
   //   setParkedVehicle(vehicle);
@@ -85,70 +89,96 @@ function App() {
   // Update the parking map whenever the number of rows and column changes
   useEffect(() => {
     setEntryPoints([]);
-    setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
-  }, [numRows, numColumns]);
+    // setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
+  }, [parkingMapConfig.numRows, parkingMapConfig.numColumns]);
 
   useEffect(() => {
-    console.log('parkingMap', parkingMap);
-  }, [parkingMap]);
+    console.log('parkingMapConfig', parkingMapConfig);
+  }, [parkingMapConfig]);
 
   useEffect(() => {
     console.log('parkingSlotSizes', parkingSlotSizes);
   }, [parkingSlotSizes]);
 
   useEffect(() => {
-    if (parkingMap.length !== 0) {
-      const updatedParkingMap = [...parkingMap];
-      const smallSlots = [];
+    // if (parkingMap.length !== 0) {
+    //   const updatedParkingMap = [...parkingMap];
+    //   const smallSlots = [];
 
-      updatedParkingMap.map((row, rowIndex) => {
-        row.map((column, columnIndex) => {
-          const isEntryPoint = entryPoints.some(
-            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+    //   updatedParkingMap.map((row, rowIndex) => {
+    //     row.map((column, columnIndex) => {
+    //       const isEntryPoint = entryPoints.some(
+    //         entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+    //       );
+
+    //       if (isEntryPoint) {
+    //         updatedParkingMap[rowIndex][columnIndex] = 'E';
+
+    //         // Remove the small slot from the array
+    //         smallSlots.filter(
+    //           smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
+    //         );
+    //       } else {
+    //         updatedParkingMap[rowIndex][columnIndex] = SizeEnum.SMALL;
+
+    //         // Add the slot to the small slots array
+    //         smallSlots.push({ rowIndex, columnIndex });
+    //       }
+    //     });
+    //   });
+
+    //   setParkingMap(updatedParkingMap);
+    //   setParkingSlotSizes(prevParkingSlotSizes => {
+    //     return {
+    //       [SizeEnum.SMALL]: smallSlots,
+    //       [SizeEnum.MEDIUM]: [],
+    //       [SizeEnum.LARGE]: [],
+    //     };
+    //   });
+    // }
+
+    const smallSlots = [];
+
+    for (let row = 0; row < parkingMapConfig.numRows; row++) {
+      for (let column = 0; column < parkingMapConfig.numColumns; column++) {
+        const isEntryPoint = entryPoints.some(
+          entryPoint => entryPoint.rowIndex === row && entryPoint.columnIndex === column
+        );
+
+        if (isEntryPoint) {
+          // Remove the small slot from the array
+          smallSlots.filter(
+            smallSlot => smallSlot.rowIndex !== row && smallSlot.columnIndex !== column
           );
-
-          if (isEntryPoint) {
-            updatedParkingMap[rowIndex][columnIndex] = 'E';
-
-            // Remove the small slot from the array
-            smallSlots.filter(
-              smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
-            );
-          } else {
-            updatedParkingMap[rowIndex][columnIndex] = SizeEnum.SMALL;
-
-            // Add the slot to the small slots array
-            smallSlots.push({ rowIndex, columnIndex });
-          }
-        });
-      });
-
-      setParkingMap(updatedParkingMap);
-      setParkingSlotSizes(prevParkingSlotSizes => {
-        return {
-          [SizeEnum.SMALL]: smallSlots,
-          [SizeEnum.MEDIUM]: [],
-          [SizeEnum.LARGE]: [],
-        };
-      });
+        } else {
+          // Add the slot to the small slots array
+          smallSlots.push({ row, column });
+        }
+      }
     }
+
+    setParkingSlotSizes({
+      [SizeEnum.SMALL]: smallSlots,
+      [SizeEnum.MEDIUM]: [],
+      [SizeEnum.LARGE]: [],
+    });
   }, [entryPoints]);
 
-  const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
-    const updatedParkingMap = [...parkingMap];
+  // const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
+  //   const updatedParkingMap = [...parkingMap];
 
-    updatedParkingMap.map((row, rowIndex) => {
-      row.map((column, columnIndex) => {
-        if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
-          updatedParkingMap[rowIndex][columnIndex] = cellValue;
-        } else {
-          updatedParkingMap[rowIndex][columnIndex] = column;
-        }
-      });
-    });
+  //   updatedParkingMap.map((row, rowIndex) => {
+  //     row.map((column, columnIndex) => {
+  //       if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
+  //         updatedParkingMap[rowIndex][columnIndex] = cellValue;
+  //       } else {
+  //         updatedParkingMap[rowIndex][columnIndex] = column;
+  //       }
+  //     });
+  //   });
 
-    setParkingMap(updatedParkingMap);
-  }
+  //   setParkingMap(updatedParkingMap);
+  // }
 
   return (
     <div className="app">
@@ -255,10 +285,10 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor parkingMap={parkingMap} setNumEntryPoints={setNumEntryPoints} entryPoints={entryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints parkingMap={parkingMap} entryPoints={entryPoints} numEntryPoints={numEntryPoints} setEntryPoints={setEntryPoints} numRows={numRows} numColumns={numColumns} />
-        <SetParkingSlotSizes parkingMap={parkingMap} entryPoints={entryPoints}  updateParkingMap={updateParkingMap} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
-        <ControlPanel parkingMap={parkingMap} entryPoints={entryPoints} />
+        <TableConstructor parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} />
+        <SetEntryPoints parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} setEntryPoints={setEntryPoints} />
+        <SetParkingSlotSizes parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+        <ControlPanel parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} />
       </Wizard>
 
       {/* <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} /> */}
