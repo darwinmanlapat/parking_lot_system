@@ -24,12 +24,12 @@ const SetEntryPoints = (props) => {
         if (isOuterCell) {
             const cell = { rowIndex, columnIndex };
 
-            const isCellClicked = props.entryPoints.some(
+            const isEntryPointCell = props.entryPoints.some(
                 clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
             );
 
             // Check if a cell is clicked so we can toggle it.
-            if (isCellClicked) {
+            if (isEntryPointCell) {
                 props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
             } else {
                 // If the is cell is not yet clicked, we should check if have the desired amount of entry points

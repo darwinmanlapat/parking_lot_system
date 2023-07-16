@@ -20,12 +20,22 @@ const ControlPanel = (props) => {
 
     const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
 
-    const handleCellClick = () => {
+    useEffect(() => {
+        console.log('selectedEntryPoint', selectedEntryPoint);
+      }, [selectedEntryPoint]);
 
+    const handleCellClick = (rowIndex, columnIndex) => {
+        const isEntryPointCell = props.entryPoints.some(
+            entryPointCell => entryPointCell.rowIndex === rowIndex && entryPointCell.columnIndex === columnIndex
+        );
+
+        if (isEntryPointCell) {
+            setSelectedEntryPoint({rowIndex, columnIndex});
+        }
     }
 
     const parkVehicle = () => {
-
+        
     }
 
     return (
@@ -36,6 +46,7 @@ const ControlPanel = (props) => {
                 selectedEntryPoint ?
                     <div className="park-vehicle">
                         <h3>Vehicle Details</h3>
+                        <div>Entry Point: Row {selectedEntryPoint.rowIndex} Column {selectedEntryPoint.columnIndex}</div>
                         <div>
                             <label htmlFor="vehicle-size">Vehicle Size</label>
                             <select id="vehicle-size">

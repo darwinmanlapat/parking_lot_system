@@ -14,7 +14,7 @@ function App() {
   const [numColumns, setNumColumns] = useState(numEntryPoints);
   const [entryPoints, setEntryPoints] = useState([]);
   const [parkingMap, setParkingMap] = useState([]);
-  const [parkingSlotSizes, setParkingSlotSizes] = useState({});
+  const [parkingSlotSizes, setParkingSlotSizes] = useState({small: [], medium: [], large: []});
   // const [parkingLot, setParkingLot] = useState(null);
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
@@ -88,8 +88,13 @@ function App() {
   }, [parkingMap]);
 
   useEffect(() => {
+    console.log('parkingSlotSizes', parkingSlotSizes);
+  }, [parkingSlotSizes]);
+
+  useEffect(() => {
     if (parkingMap.length !== 0) {
       const updatedParkingMap = [...parkingMap];
+      const smallSlots = [];
 
       updatedParkingMap.map((row, rowIndex) => {
         row.map((column, columnIndex) => {
@@ -99,13 +104,28 @@ function App() {
 
           if (isEntryPoint) {
             updatedParkingMap[rowIndex][columnIndex] = 'E';
+
+            // Remove the small slot from the array
+            smallSlots.filter(
+              smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
+            );
           } else {
             updatedParkingMap[rowIndex][columnIndex] = 'S';
+
+            // Add the slot to the small slots array
+            smallSlots.push({rowIndex, columnIndex});
           }
         });
       });
 
       setParkingMap(updatedParkingMap);
+      setParkingSlotSizes(prevParkingSlotSizes => {
+        return {
+          small: smallSlots,
+          medium: prevParkingSlotSizes.medium,
+          large: prevParkingSlotSizes.large,
+        };
+      });
     }
   }, [entryPoints]);
 
@@ -232,8 +252,8 @@ function App() {
       <Wizard>
         <TableConstructor parkingMap={parkingMap} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
         <SetEntryPoints parkingMap={parkingMap} entryPoints={entryPoints} numEntryPoints={numEntryPoints} setEntryPoints={setEntryPoints} numRows={numRows} numColumns={numColumns} />
-        <SetParkingSlotSizes parkingMap={parkingMap} updateParkingMap={updateParkingMap} />
-        <ControlPanel parkingMap={parkingMap} />
+        <SetParkingSlotSizes parkingMap={parkingMap} updateParkingMap={updateParkingMap} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+        <ControlPanel parkingMap={parkingMap} entryPoints={entryPoints} />
       </Wizard>
 
       {/* <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} /> */}
