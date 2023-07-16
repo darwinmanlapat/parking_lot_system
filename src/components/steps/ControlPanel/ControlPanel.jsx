@@ -62,37 +62,19 @@ const ControlPanel = (props) => {
         setSelectedEntryPoint(null);
     }
 
-    // NOTE: Need to update this algorithm to get the closest slot in a clockwise direction.
     const findClosestAvailableSlot = (entryPoint, parkingSlotCoordinates) => {
-        const entryPointIndex = props.entryPoints.findIndex(
-            (coordinate) => entryPoint.rowIndex === coordinate.rowIndex && entryPoint.columnIndex === coordinate.columnIndex
-        );
-
-        // let closestSlot = null;
-        let closestSlots = [];
+        let closestSlot = null;
         let minDistance = Infinity;
 
         for (const coordinates of parkingSlotCoordinates) {
             const distance = calculateDistance(entryPoint, coordinates);
-            if (distance <= minDistance && !isSlotOccupied(coordinates)) {
-                // minDistance = distance;
-                // closestSlot = coordinates;
-                if (distance < minDistance) {
-                    closestSlots = [coordinates];
-                } else {
-                    closestSlots.push(coordinates);
-                }
-
+            if (distance < minDistance && !isSlotOccupied(coordinates)) {
                 minDistance = distance;
+                closestSlot = coordinates;
             }
         }
 
-        // If there are no close slots, return null immediately
-        if (closestSlots.length === 0) {
-            return null;
-        }
-
-        return getClosestClockwiseSlot(closestSlots);
+        return closestSlot;
     };
 
     const isSlotOccupied = (coordinates) => {
@@ -115,20 +97,6 @@ const ControlPanel = (props) => {
         if (vehicleType === SizeEnum.LARGE) {
             return largeSlots;
         }
-    };
-
-    const getClosestClockwiseSlot = (parkingSlotCoordinates) => {
-        const sortedCoordinates = [...parkingSlotCoordinates];
-
-        sortedCoordinates.sort((coord1, coord2) => {
-            if (coord1.rowIndex !== coord2.rowIndex) {
-                return coord2.rowIndex - coord1.rowIndex; // Sort by highest row
-            } else {
-                return coord1.columnIndex - coord2.columnIndex; // Sort by lowest column
-            }
-        });
-
-        return sortedCoordinates[0] ?? null;
     };
 
     const calculateDistance = (point1, point2) => {
