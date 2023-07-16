@@ -24,6 +24,16 @@ const ParkingMap = (props) => {
         }
 
         if (props.step === 3) {
+            let vehicle = null;
+
+            if (props.vehicles.length !== 0) {
+                vehicle = props.vehicles.filter(vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex)[0];
+            }
+
+            if (!!vehicle) {
+                return vehicle.license;
+            }
+
             return getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
         }
     }

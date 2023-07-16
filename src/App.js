@@ -9,7 +9,7 @@ import ParkingLot from './lib/ParkingLot';
 import { SizeEnum } from './enums/Sizes';
 
 function App() {
-  const [activeStep, setActiveStep] = useState(1);
+  // const [activeStep, setActiveStep] = useState(1);
   // const [numEntryPoints, setNumEntryPoints] = useState(3);
   // const [numRows, setNumRows] = useState(numEntryPoints);
   // const [numColumns, setNumColumns] = useState(numEntryPoints);
