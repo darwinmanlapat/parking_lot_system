@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
+import ParkingMap from "../../common/ParkingMap/ParkingMap";
 
 const TableConstructor = (props) => {
     const {
@@ -13,8 +14,6 @@ const TableConstructor = (props) => {
         goToStep,
         handleStep,
     } = useWizard();
-
-    useEffect(() => props.setActiveStep(activeStep), []);
 
     return (
         <div>
@@ -56,6 +55,8 @@ const TableConstructor = (props) => {
             </div>
 
             <button onClick={() => nextStep()}>Next</button>
+
+            <ParkingMap parkingMap={props.parkingMap} step={activeStep} />
         </div>
     );
 }

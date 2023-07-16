@@ -4,6 +4,12 @@ import { useWizard } from "react-use-wizard";
 import "./ParkingMap.scss";
 
 const ParkingMap = (props) => {
+    const handleCellClick = (rowIndex, columnIndex) => {
+        if (props.handleCellClick) {
+            props.handleCellClick(rowIndex, columnIndex);
+        }
+    }
+
     const renderCell = (rowIndex, columnIndex, cellValue) => {
         if (props.step === 2) {
             return (
@@ -36,7 +42,7 @@ const ParkingMap = (props) => {
                                     <td
                                         key={columnIndex}
                                         className={isEntryPoint ? 'clicked' : ''}
-                                        onClick={() => props.handleCellClick(rowIndex, columnIndex)}
+                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
                                     >
                                         {
                                             // Show the parking slot size options if we are in step 2 and the current cell is not an entry point

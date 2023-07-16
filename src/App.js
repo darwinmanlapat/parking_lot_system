@@ -109,31 +109,6 @@ function App() {
     }
   }, [entryPoints]);
 
-  const handleCellClick = (rowIndex, columnIndex) => {
-    if (activeStep === 1) {
-      // Check if the cell is an outer cell
-      const isOuterCell = rowIndex === 0 || rowIndex === numRows - 1 || columnIndex === 0 || columnIndex === numColumns - 1;
-
-      if (isOuterCell) {
-        const cell = { rowIndex, columnIndex };
-
-        const isCellClicked = entryPoints.some(
-          clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
-        );
-
-        // Check if a cell is clicked so we can toggle it.
-        if (isCellClicked) {
-          setEntryPoints(entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
-        } else {
-          // If the is cell is not yet clicked, we should check if have the desired amount of entry points
-          if (entryPoints.length < numEntryPoints) {
-            setEntryPoints([...entryPoints, cell]);
-          }
-        }
-      }
-    }
-  }
-
   const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
     const updatedParkingMap = [...parkingMap];
 
@@ -255,13 +230,13 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor setActiveStep={setActiveStep} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints setActiveStep={setActiveStep} entryPoints={entryPoints} />
-        <SetParkingSlotSizes setActiveStep={setActiveStep} />
-        <ControlPanel setActiveStep={setActiveStep} />
+        <TableConstructor parkingMap={parkingMap} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
+        <SetEntryPoints parkingMap={parkingMap} entryPoints={entryPoints} numEntryPoints={numEntryPoints} setEntryPoints={setEntryPoints} numRows={numRows} numColumns={numColumns} />
+        <SetParkingSlotSizes parkingMap={parkingMap} updateParkingMap={updateParkingMap} />
+        <ControlPanel parkingMap={parkingMap} />
       </Wizard>
 
-      <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} />
+      {/* <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} /> */}
     </div>
   );
 }
