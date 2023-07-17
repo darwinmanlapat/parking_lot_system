@@ -7,6 +7,10 @@ import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import { SizeEnum } from "../../../enums/Sizes";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
+const getTimeDifference = (timeIn, timeOut) => {
+    return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
+}
+
 const ControlPanel = (props) => {
     const {
         isLoading,
@@ -31,12 +35,15 @@ const ControlPanel = (props) => {
     const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
     const [vehicles, setVehicles] = useState([]);
     const [currentVehicle, setCurrentVehicle] = useState(null);
+    const [unparkedVehicles, setUnparkedVehicles] = useState([]);
 
     useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
 
     useEffect(() => console.log('currentVehicle', currentVehicle), [currentVehicle]);
 
     useEffect(() => console.log('vehicles', vehicles), [vehicles]);
+
+    useEffect(() => console.log('unparkedVehicles', unparkedVehicles), [unparkedVehicles]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = props.entryPoints.some(
@@ -58,7 +65,13 @@ const ControlPanel = (props) => {
     }
 
     const parkVehicle = () => {
-        const parkingSlotCoordinates = possibleParkingSlots(currentVehicle.size);
+        const returningVehicleIndex = unparkedVehicles.findIndex((unParkedVehicle) => {
+            return unParkedVehicle.license === currentVehicle.license && getTimeDifference(currentVehicle.time_in, unParkedVehicle.time_out) <= 1;
+        });
+
+        console.log('returningVehicle', returningVehicleIndex >= 0 ? unparkedVehicles[returningVehicleIndex] : null);
+
+        const parkingSlotCoordinates = possibleParkingSlots();
 
         const availableSlot = findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
 
@@ -86,6 +99,7 @@ const ControlPanel = (props) => {
 
         adjustedVehicles.splice(parkedVehicleIndex, 1);
 
+        setUnparkedVehicles(prevUnparkedVehicles => [...prevUnparkedVehicles, parkedVehicle]);
         setCurrentVehicle(null);
         setVehicles([...adjustedVehicles]);
     }
@@ -93,7 +107,7 @@ const ControlPanel = (props) => {
     const calculateFee = (unParkedVehicle, slotType) => {
         const { time_in, time_out } = unParkedVehicle;
 
-        const timeDiff = Math.ceil((new Date(time_out) - new Date(time_in)) / (1000 * 60 * 60)); // hours rounded up
+        const timeDiff = getTimeDifference(time_in, time_out); // hours rounded up
         const baseRate = 40;
 
         let exceedingHourlyRate = 0;
@@ -137,20 +151,20 @@ const ControlPanel = (props) => {
         return vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);
     };
 
-    const possibleParkingSlots = (vehicleType) => {
+    const possibleParkingSlots = () => {
         const smallSlots = props.parkingSlotSizes[SizeEnum.SMALL];
         const mediumSlots = props.parkingSlotSizes[SizeEnum.MEDIUM];
         const largeSlots = props.parkingSlotSizes[SizeEnum.LARGE];
 
-        if (vehicleType === SizeEnum.SMALL) {
+        if (currentVehicle.size === SizeEnum.SMALL) {
             return smallSlots.concat(mediumSlots, largeSlots);
         }
 
-        if (vehicleType === SizeEnum.MEDIUM) {
+        if (currentVehicle.size === SizeEnum.MEDIUM) {
             return mediumSlots.concat(largeSlots);
         }
 
-        if (vehicleType === SizeEnum.LARGE) {
+        if (currentVehicle.size === SizeEnum.LARGE) {
             return largeSlots;
         }
     };
