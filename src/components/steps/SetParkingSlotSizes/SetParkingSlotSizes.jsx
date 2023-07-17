@@ -3,7 +3,6 @@ import { useWizard } from "react-use-wizard";
 
 import "./SetParkingSlotSizes.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
-import { SizeEnum } from "../../../enums/Sizes";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const SetParkingSlotSizes = (props) => {

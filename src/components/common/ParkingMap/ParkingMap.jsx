@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./ParkingMap.scss";
-import { SizeEnum } from "../../../enums/Sizes";
+import { Size } from "../../../enums/Size";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const ParkingMap = (props) => {
@@ -16,9 +16,9 @@ const ParkingMap = (props) => {
         if (props.step === 2) {
             return (
                 <select onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
-                    <option>{SizeEnum.SMALL}</option>
-                    <option>{SizeEnum.MEDIUM}</option>
-                    <option>{SizeEnum.LARGE}</option>
+                    <option>{Size.SMALL}</option>
+                    <option>{Size.MEDIUM}</option>
+                    <option>{Size.LARGE}</option>
                 </select>
             );
         }

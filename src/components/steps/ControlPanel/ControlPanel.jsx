@@ -4,7 +4,7 @@ import { useWizard } from "react-use-wizard";
 import "./ControlPanel.scss";
 import ParkingLot from "../../../lib/ParkingLot";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
-import { SizeEnum } from "../../../enums/Sizes";
+import { Size } from "../../../enums/Size";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const getTimeDifference = (timeIn, timeOut) => {
@@ -112,9 +112,9 @@ const ControlPanel = (props) => {
 
         let exceedingHourlyRate = 0;
 
-        if (slotType === SizeEnum.SMALL) exceedingHourlyRate = 20;
-        else if (slotType === SizeEnum.MEDIUM) exceedingHourlyRate = 60;
-        else if (slotType === SizeEnum.LARGE) exceedingHourlyRate = 100;
+        if (slotType === Size.SMALL) exceedingHourlyRate = 20;
+        else if (slotType === Size.MEDIUM) exceedingHourlyRate = 60;
+        else if (slotType === Size.LARGE) exceedingHourlyRate = 100;
 
         const full24Hour = Math.floor(timeDiff / 24);
         const remainderHours = timeDiff % 24;
@@ -152,19 +152,19 @@ const ControlPanel = (props) => {
     };
 
     const possibleParkingSlots = () => {
-        const smallSlots = props.parkingSlotSizes[SizeEnum.SMALL];
-        const mediumSlots = props.parkingSlotSizes[SizeEnum.MEDIUM];
-        const largeSlots = props.parkingSlotSizes[SizeEnum.LARGE];
+        const smallSlots = props.parkingSlotSizes[Size.SMALL];
+        const mediumSlots = props.parkingSlotSizes[Size.MEDIUM];
+        const largeSlots = props.parkingSlotSizes[Size.LARGE];
 
-        if (currentVehicle.size === SizeEnum.SMALL) {
+        if (currentVehicle.size === Size.SMALL) {
             return smallSlots.concat(mediumSlots, largeSlots);
         }
 
-        if (currentVehicle.size === SizeEnum.MEDIUM) {
+        if (currentVehicle.size === Size.MEDIUM) {
             return mediumSlots.concat(largeSlots);
         }
 
-        if (currentVehicle.size === SizeEnum.LARGE) {
+        if (currentVehicle.size === Size.LARGE) {
             return largeSlots;
         }
     };

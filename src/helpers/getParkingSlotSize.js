@@ -1,13 +1,13 @@
-import { SizeEnum } from "../enums/Sizes";
+import { Size } from "../enums/Size";
 
 export function getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
-    const { [SizeEnum.SMALL]: small, [SizeEnum.MEDIUM]: medium, [SizeEnum.LARGE]: large } = parkingSlotSizes;
+    const { [Size.SMALL]: small, [Size.MEDIUM]: medium, [Size.LARGE]: large } = parkingSlotSizes;
 
     const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-        ? SizeEnum.SMALL
+        ? Size.SMALL
         : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-            ? SizeEnum.MEDIUM
-            : SizeEnum.LARGE;
+            ? Size.MEDIUM
+            : Size.LARGE;
 
     return previousSize;
 }

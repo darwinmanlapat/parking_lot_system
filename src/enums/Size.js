@@ -1,4 +1,4 @@
-export const SizeEnum = {
+export const Size = {
     SMALL: 'S',
     MEDIUM: 'M',
     LARGE: 'L'

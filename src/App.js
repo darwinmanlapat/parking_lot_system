@@ -6,7 +6,7 @@ import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParki
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 import ParkingLot from './lib/ParkingLot';
-import { SizeEnum } from './enums/Sizes';
+import { Size } from './enums/Size';
 
 function App() {
   // const [activeStep, setActiveStep] = useState(1);
@@ -20,9 +20,9 @@ function App() {
     numColumns: 3,
   });
   const [parkingSlotSizes, setParkingSlotSizes] = useState({
-    [SizeEnum.SMALL]: [],
-    [SizeEnum.MEDIUM]: [],
-    [SizeEnum.LARGE]: []
+    [Size.SMALL]: [],
+    [Size.MEDIUM]: [],
+    [Size.LARGE]: []
   });
   // const [parkingLot, setParkingLot] = useState(null);
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
@@ -88,9 +88,9 @@ function App() {
     }
 
     setParkingSlotSizes({
-      [SizeEnum.SMALL]: smallSlots,
-      [SizeEnum.MEDIUM]: [],
-      [SizeEnum.LARGE]: [],
+      [Size.SMALL]: smallSlots,
+      [Size.MEDIUM]: [],
+      [Size.LARGE]: [],
     });
   }, [entryPoints]);
 
