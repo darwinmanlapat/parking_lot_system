@@ -76,7 +76,7 @@ const ParkingMap = (props) => {
                                 return (
                                     <td
                                         key={columnIndex}
-                                        className={isEntryPoint ? 'clicked' : ''}
+                                        className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
                                         onClick={() => handleCellClick(rowIndex, columnIndex)}
                                     >
                                         {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
