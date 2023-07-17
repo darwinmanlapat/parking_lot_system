@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./SetParkingSlotSizes.scss";
+import ParkingMap from "../../common/ParkingMap/ParkingMap";
+import { SizeEnum } from "../../../enums/Sizes";
+import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const SetParkingSlotSizes = (props) => {
     const {
@@ -16,7 +19,19 @@ const SetParkingSlotSizes = (props) => {
         handleStep,
     } = useWizard();
 
-    useEffect(() => props.setActiveStep(activeStep), []);
+    const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
+        // props.updateParkingMap(rowIndex, columnIndex, cellValue);
+        const previousSize = getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
+
+        const updatedSizes = { ...props.parkingSlotSizes };
+
+        updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord => coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex)
+
+        // Add the coordinate to the new size
+        updatedSizes[cellValue] = [...updatedSizes[cellValue], { rowIndex, columnIndex }];
+
+        props.setParkingSlotSizes(updatedSizes)
+    }
 
     return (
         <div className="set-parking-slot-sizes">
@@ -26,6 +41,8 @@ const SetParkingSlotSizes = (props) => {
                 <button onClick={() => previousStep()}>Previous</button>
                 <button onClick={() => nextStep()}>Next</button>
             </div>
+
+            <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
         </div>
     );
 }

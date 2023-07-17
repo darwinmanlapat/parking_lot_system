@@ -6,47 +6,28 @@ import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParki
 import ParkingMap from './components/common/ParkingMap/ParkingMap';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 import ParkingLot from './lib/ParkingLot';
+import { SizeEnum } from './enums/Sizes';
 
 function App() {
-  const [activeStep, setActiveStep] = useState(1);
-  const [numEntryPoints, setNumEntryPoints] = useState(3);
-  const [numRows, setNumRows] = useState(numEntryPoints);
-  const [numColumns, setNumColumns] = useState(numEntryPoints);
+  // const [activeStep, setActiveStep] = useState(1);
+  // const [numEntryPoints, setNumEntryPoints] = useState(3);
+  // const [numRows, setNumRows] = useState(numEntryPoints);
+  // const [numColumns, setNumColumns] = useState(numEntryPoints);
   const [entryPoints, setEntryPoints] = useState([]);
-  const [parkingMap, setParkingMap] = useState([]);
-  const [parkingSlotSizes, setParkingSlotSizes] = useState({});
+  const [parkingMapConfig, setParkingMapConfig] = useState({
+    numEntryPoints: 3,
+    numRows: 3,
+    numColumns: 3,
+  });
+  const [parkingSlotSizes, setParkingSlotSizes] = useState({
+    [SizeEnum.SMALL]: [],
+    [SizeEnum.MEDIUM]: [],
+    [SizeEnum.LARGE]: []
+  });
   // const [parkingLot, setParkingLot] = useState(null);
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
   // const [parkedVehicle, setParkedVehicle] = useState(null);
-  // const [unparkedVehicle, setUnparkedVehicle] = useState(null);
-
-  // const handleParkVehicle = () => {
-  //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
-  //   const parkingSlots = [];
-
-  //   parkingMap.forEach((row, rowIndex) => {
-  //     row.forEach((slotType, columnIndex) => {
-  //       const slotNumber = `${String.fromCharCode(65 + rowIndex)}${columnIndex + 1}`;
-  //       parkingSlots.push(new ParkingSlot(slotNumber, slotType));
-  //     });
-  //   });
-
-  //   const vehicleMap = {
-  //     S: 0, // Small vehicle
-  //     M: 1, // Medium vehicle
-  //     L: 2, // Large vehicle
-  //   };
-
-    const parkingLot = new ParkingLot(entryPoints, parkingMap);
-
-    console.log(parkingLot);
-  //   const vehicle = new Vehicle(vehiclePlateNumber, vehicleType);
-  //   parkingLot.parkVehicle(vehicle);
-  //   setParkedVehicle(vehicle);
-  //   setVehiclePlateNumber('');
-  //   setVehicleType('');
-  // };
 
   // const handleUnparkVehicle = () => {
   //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
@@ -71,84 +52,63 @@ function App() {
   //   setParkedVehicle(null);
   // };
 
-  // const handleSlotTypeChange = (rowIndex, columnIndex, slotType) => {
-  //   const updatedParkingMap = [...parkingMap];
-  //   updatedParkingMap[rowIndex][columnIndex] = slotType;
-  //   setParkingMap(updatedParkingMap);
-  // };
-
   // Update the parking map whenever the number of rows and column changes
   useEffect(() => {
     setEntryPoints([]);
-    setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
-  }, [numRows, numColumns]);
+    // setParkingMap(Array.from({ length: numRows }, () => Array(numColumns).fill(null)));
+  }, [parkingMapConfig.numRows, parkingMapConfig.numColumns]);
 
   useEffect(() => {
-    console.log('parkingMap', parkingMap);
-  }, [parkingMap]);
+    console.log('parkingMapConfig', parkingMapConfig);
+  }, [parkingMapConfig]);
 
   useEffect(() => {
-    if (parkingMap.length !== 0) {
-      const updatedParkingMap = [...parkingMap];
+    console.log('parkingSlotSizes', parkingSlotSizes);
+  }, [parkingSlotSizes]);
 
-      updatedParkingMap.map((row, rowIndex) => {
-        row.map((column, columnIndex) => {
-          const isEntryPoint = entryPoints.some(
-            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-          );
+  useEffect(() => {
+    const smallSlots = [];
 
-          if (isEntryPoint) {
-            updatedParkingMap[rowIndex][columnIndex] = 'E';
-          } else {
-            updatedParkingMap[rowIndex][columnIndex] = 'S';
-          }
-        });
-      });
-
-      setParkingMap(updatedParkingMap);
-    }
-  }, [entryPoints]);
-
-  const handleCellClick = (rowIndex, columnIndex) => {
-    if (activeStep === 1) {
-      // Check if the cell is an outer cell
-      const isOuterCell = rowIndex === 0 || rowIndex === numRows - 1 || columnIndex === 0 || columnIndex === numColumns - 1;
-
-      if (isOuterCell) {
-        const cell = { rowIndex, columnIndex };
-
-        const isCellClicked = entryPoints.some(
-          clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
+    for (let rowIndex = 0; rowIndex < parkingMapConfig.numRows; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < parkingMapConfig.numColumns; columnIndex++) {
+        const isEntryPoint = entryPoints.some(
+          entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
         );
 
-        // Check if a cell is clicked so we can toggle it.
-        if (isCellClicked) {
-          setEntryPoints(entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
+        if (isEntryPoint) {
+          // Remove the small slot from the array
+          smallSlots.filter(
+            smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
+          );
         } else {
-          // If the is cell is not yet clicked, we should check if have the desired amount of entry points
-          if (entryPoints.length < numEntryPoints) {
-            setEntryPoints([...entryPoints, cell]);
-          }
+          // Add the slot to the small slots array
+          smallSlots.push({ rowIndex, columnIndex });
         }
       }
     }
-  }
 
-  const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
-    const updatedParkingMap = [...parkingMap];
-
-    updatedParkingMap.map((row, rowIndex) => {
-      row.map((column, columnIndex) => {
-        if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
-          updatedParkingMap[rowIndex][columnIndex] = cellValue;
-        } else {
-          updatedParkingMap[rowIndex][columnIndex] = column;
-        }
-      });
+    setParkingSlotSizes({
+      [SizeEnum.SMALL]: smallSlots,
+      [SizeEnum.MEDIUM]: [],
+      [SizeEnum.LARGE]: [],
     });
+  }, [entryPoints]);
 
-    setParkingMap(updatedParkingMap);
-  }
+  // const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
+  //   const updatedParkingMap = [...parkingMap];
+
+  //   updatedParkingMap.map((row, rowIndex) => {
+  //     row.map((column, columnIndex) => {
+  //       if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
+  //         updatedParkingMap[rowIndex][columnIndex] = cellValue;
+  //       } else {
+  //         updatedParkingMap[rowIndex][columnIndex] = column;
+  //       }
+  //     });
+  //   });
+
+  //   setParkingMap(updatedParkingMap);
+  // }
 
   return (
     <div className="app">
@@ -255,13 +215,13 @@ function App() {
       )} */}
 
       <Wizard>
-        <TableConstructor setActiveStep={setActiveStep} setNumEntryPoints={setNumEntryPoints} numEntryPoints={numEntryPoints} numRows={numRows} numColumns={numColumns} setNumRows={setNumRows} setNumColumns={setNumColumns} />
-        <SetEntryPoints setActiveStep={setActiveStep} entryPoints={entryPoints} />
-        <SetParkingSlotSizes setActiveStep={setActiveStep} />
-        <ControlPanel setActiveStep={setActiveStep} />
+        <TableConstructor parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} />
+        <SetEntryPoints parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} setEntryPoints={setEntryPoints} />
+        <SetParkingSlotSizes parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+        <ControlPanel parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} />
       </Wizard>
 
-      <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} />
+      {/* <ParkingMap parkingMap={parkingMap} step={activeStep} handleCellClick={handleCellClick} handleParkingSlotSizeChange={updateParkingMap} /> */}
     </div>
   );
 }
