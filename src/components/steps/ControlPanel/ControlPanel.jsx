@@ -11,6 +11,16 @@ const getTimeDifference = (timeIn, timeOut) => {
     return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
 }
 
+const BASE_RATE = 40;
+
+const HOURLY_RATE = {
+    [Size.SMALL]: 20,
+    [Size.MEDIUM]: 40,
+    [Size.LARGE]: 60,
+}
+
+const DAILY_RATE = 5000;
+
 const ControlPanel = (props) => {
     const {
         isLoading,
@@ -106,35 +116,26 @@ const ControlPanel = (props) => {
 
     const calculateFee = (unParkedVehicle, slotType) => {
         const { time_in, time_out } = unParkedVehicle;
-
         const timeDiff = getTimeDifference(time_in, time_out); // hours rounded up
-        const baseRate = 40;
-
-        let exceedingHourlyRate = 0;
-
-        if (slotType === Size.SMALL) exceedingHourlyRate = 20;
-        else if (slotType === Size.MEDIUM) exceedingHourlyRate = 60;
-        else if (slotType === Size.LARGE) exceedingHourlyRate = 100;
-
         const full24Hour = Math.floor(timeDiff / 24);
         const remainderHours = timeDiff % 24;
+        const full24HoursFee = full24Hour * DAILY_RATE;
 
-        const full24HoursFee = full24Hour * 5000;
-        const remainderHoursFee = full24Hour > 0 ? calculateExceedingHoursFee(remainderHours, exceedingHourlyRate) : 0;
-        const exceedingHoursFee = full24Hour > 0 ? 0 : calculateExceedingHoursFee(remainderHours, exceedingHourlyRate);
+        let exceedingHoursFee = Math.max(timeDiff - 3, 0) * HOURLY_RATE[slotType];
 
-        let fee = exceedingHoursFee + full24HoursFee + remainderHoursFee;
+        // We compute the exceeding differently for 24-hour+ parking vs below 24-hour parking
+        if (full24Hour > 0) {
+            exceedingHoursFee = remainderHours * HOURLY_RATE[slotType];
+        }
 
-        // Only add the base rate for time differences that have remaining hours of more than 0
-        if ((full24Hour > 0 && remainderHours > 0) || (full24Hour === 0 && timeDiff > 0)) {
-            fee += baseRate;
+        let fee = exceedingHoursFee + full24HoursFee;
+
+        // Only add the base rate for parking durations of less than a 24 hours
+        if (timeDiff < 24 && timeDiff > 0) {
+            fee += BASE_RATE;
         }
 
         return fee;
-    }
-
-    const calculateExceedingHoursFee = (exceedingHours, exceedingHourlyRate) => {
-        return Math.max(exceedingHours - 3, 0) * exceedingHourlyRate;
     }
 
     const findClosestAvailableSlot = (entryPoint, parkingSlotCoordinates) => {
