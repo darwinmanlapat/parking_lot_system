@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import "./App.scss";
 import { Wizard } from 'react-use-wizard';
 import TableConstructor from './components/steps/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
@@ -88,30 +89,22 @@ function App() {
     });
   }, [entryPoints]);
 
-  // const updateParkingMap = (givenRowIndex, givenColumnIndex, cellValue) => {
-  //   const updatedParkingMap = [...parkingMap];
-
-  //   updatedParkingMap.map((row, rowIndex) => {
-  //     row.map((column, columnIndex) => {
-  //       if (rowIndex === givenRowIndex && columnIndex === givenColumnIndex) {
-  //         updatedParkingMap[rowIndex][columnIndex] = cellValue;
-  //       } else {
-  //         updatedParkingMap[rowIndex][columnIndex] = column;
-  //       }
-  //     });
-  //   });
-
-  //   setParkingMap(updatedParkingMap);
-  // }
-
   return (
     <div className="app">
-      <Wizard>
-        <TableConstructor parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} />
-        <SetEntryPoints parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} setEntryPoints={setEntryPoints} />
-        <SetParkingSlotSizes parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
-        <ControlPanel parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} />
-      </Wizard>
+      <div className="container-fluid">
+        <header>
+          <h1 className="title">Parking Lot System</h1>
+        </header>
+
+        <section>
+          <Wizard>
+            <TableConstructor parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} />
+            <SetEntryPoints parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} setEntryPoints={setEntryPoints} />
+            <SetParkingSlotSizes parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
+            <ControlPanel parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} />
+          </Wizard>
+        </section>
+      </div>
     </div>
   );
 }

@@ -1,13 +1,5 @@
 .set-parking-slot-sizes {
-    .clicked {
-        background-color: black;
-    }
-
     td {
-        padding: 1.5rem;
-
-        &:hover {
-            cursor: pointer;
-        }
+        padding: .75rem 0.5rem !important;
     }
 }

@@ -182,79 +182,85 @@ const ControlPanel = (props) => {
 
     return (
         <div className="control-panel">
-            <h1>Parking Lot System Control Panel</h1>
+            <div className="row">
+                <h2>Control Panel</h2>
 
-            {
-                selectedEntryPoint || !!currentVehicle ?
-                    <div className="park-vehicle">
-                        <h3>Vehicle Details</h3>
-                        {
-                            selectedEntryPoint ? <div>Entry Point: Row {selectedEntryPoint.rowIndex} Column {selectedEntryPoint.columnIndex}</div> : null
-                        }
-                        <div>
-                            <label htmlFor="license-plate">License Plate</label>
-                            <input type="text" id="license-plate" value={currentVehicle.license} onChange={(e) => {
-                                setCurrentVehicle(prevVehicle => {
-                                    return {
-                                        ...prevVehicle,
-                                        license: e.target.value,
-                                    }
-                                });
-                            }} />
-                        </div>
-                        <div>
-                            <label htmlFor="vehicle-size">Vehicle Size</label>
-                            <select id="vehicle-size" value={currentVehicle.size} onChange={(e) => {
-                                setCurrentVehicle(prevVehicle => {
-                                    return {
-                                        ...prevVehicle,
-                                        size: e.target.value,
-                                    }
-                                });
-                            }}>
-                                <option>S</option>
-                                <option>M</option>
-                                <option>L</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="time-in">Time in</label>
-                            <input id="time-in" type="datetime-local" value={currentVehicle.time_in} onChange={(e) => {
-                                setCurrentVehicle(prevVehicle => {
-                                    return {
-                                        ...prevVehicle,
-                                        time_in: e.target.value,
-                                    }
-                                });
-                            }} />
-                        </div>
-                        {
-                            Object.keys(currentVehicle.coordinates).length !== 0 ?
+                <div className="col-8">
+                    <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} parkingSlotSizes={props.parkingSlotSizes} vehicles={vehicles} />
+                </div>
+
+                <div className="col-4">
+                    {
+                        selectedEntryPoint || !!currentVehicle ?
+                            <div className="park-vehicle">
+                                <h3>Vehicle Details</h3>
+                                {
+                                    selectedEntryPoint ? <div>Entry Point: Row {selectedEntryPoint.rowIndex} Column {selectedEntryPoint.columnIndex}</div> : null
+                                }
                                 <div>
-                                    <label htmlFor="time-out">Time out</label>
-                                    <input id="time-out" type="datetime-local" value={currentVehicle.time_out} onChange={(e) => {
+                                    <label htmlFor="license-plate">License Plate</label>
+                                    <input type="text" id="license-plate" value={currentVehicle.license} onChange={(e) => {
                                         setCurrentVehicle(prevVehicle => {
                                             return {
                                                 ...prevVehicle,
-                                                time_out: e.target.value,
+                                                license: e.target.value,
                                             }
                                         });
                                     }} />
-                                </div> : null
-                        }
+                                </div>
+                                <div>
+                                    <label htmlFor="vehicle-size">Vehicle Size</label>
+                                    <select id="vehicle-size" value={currentVehicle.size} onChange={(e) => {
+                                        setCurrentVehicle(prevVehicle => {
+                                            return {
+                                                ...prevVehicle,
+                                                size: e.target.value,
+                                            }
+                                        });
+                                    }}>
+                                        <option>S</option>
+                                        <option>M</option>
+                                        <option>L</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="time-in">Time in</label>
+                                    <input id="time-in" type="datetime-local" value={currentVehicle.time_in} onChange={(e) => {
+                                        setCurrentVehicle(prevVehicle => {
+                                            return {
+                                                ...prevVehicle,
+                                                time_in: e.target.value,
+                                            }
+                                        });
+                                    }} />
+                                </div>
+                                {
+                                    Object.keys(currentVehicle.coordinates).length !== 0 ?
+                                        <div>
+                                            <label htmlFor="time-out">Time out</label>
+                                            <input id="time-out" type="datetime-local" value={currentVehicle.time_out} onChange={(e) => {
+                                                setCurrentVehicle(prevVehicle => {
+                                                    return {
+                                                        ...prevVehicle,
+                                                        time_out: e.target.value,
+                                                    }
+                                                });
+                                            }} />
+                                        </div> : null
+                                }
 
-                        {
-                            Object.keys(currentVehicle.coordinates).length !== 0 ?
-                                <button onClick={() => unParkVehicle(currentVehicle)}>Unpark Vehicle</button> : <button onClick={() => parkVehicle()}>Park Vehicle</button>
-                        }
-                    </div> : null
-            }
+                                {
+                                    Object.keys(currentVehicle.coordinates).length !== 0 ?
+                                        <button onClick={() => unParkVehicle(currentVehicle)}>Unpark Vehicle</button> : <button onClick={() => parkVehicle()}>Park Vehicle</button>
+                                }
+                            </div> : null
+                    }
 
-            <div className="step-nav-buttons">
-                <button onClick={() => previousStep()}>Previous</button>
+                    <div className="step-nav-buttons">
+                        <button onClick={() => previousStep()}>Previous</button>
+                    </div>
+                </div>
             </div>
-
-            <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} parkingSlotSizes={props.parkingSlotSizes} vehicles={vehicles} />
         </div>
     );
 }

@@ -34,14 +34,20 @@ const SetParkingSlotSizes = (props) => {
 
     return (
         <div className="set-parking-slot-sizes">
-            <h1>Set the parking slot sizes</h1>
+            <div className="row">
+                <h2>Set the parking slot sizes</h2>
 
-            <div className="step-nav-buttons">
-                <button onClick={() => previousStep()}>Previous</button>
-                <button onClick={() => nextStep()}>Next</button>
+                <div className="col-8">
+                    <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
+                </div>
+
+                <div className="col-4">
+                    <div className="step-nav-buttons">
+                        <button onClick={() => previousStep()}>Previous</button>
+                        <button onClick={() => nextStep()}>Next</button>
+                    </div>
+                </div>
             </div>
-
-            <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
         </div>
     );
 }

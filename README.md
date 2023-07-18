@@ -67,6 +67,8 @@ Here are some of my personal assumptions and constraints for the system:
 
 - We will always have the same number of rows and column to make a square map. Instead of getting the number of rows and column from the user, we will get a table size variable to make the table.
 
+- We will also limit the table size to 10 or 100 cells.
+
 ### Entry Points
 
 - We will only let the user designate the table's outer cells (edges and sides) as an entry point to mimick a simple parking lot.

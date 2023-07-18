@@ -39,33 +39,9 @@ const ParkingMap = (props) => {
     }
 
     return (
-        <div className="parking-map">
-            <table border={1} width={100}>
+        <div className="parking-map"><center>
+            <table className="table table-bordered border-primary">
                 <tbody>
-                    {/* {props.parkingMap.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {row.map((column, columnIndex) => {
-                                const isEntryPoint = props.entryPoints.some(
-                                    entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-                                );
-                                // const isEntryPoint = column === 'E';
-
-                                return (
-                                    <td
-                                        key={columnIndex}
-                                        className={isEntryPoint ? 'clicked' : ''}
-                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
-                                    >
-                                        {
-                                            // Show the parking slot size options if we are in step 2 and the current cell is not an entry point
-                                            !isEntryPoint ? renderCell(rowIndex, columnIndex, column) : null
-                                        }
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    ))} */}
-
                     {Array.from({ length: props.config.tableSize }, (_, rowIndex) => (
                         <tr key={rowIndex}>
                             {Array.from({ length: props.config.tableSize }, (_, columnIndex) => {
@@ -86,7 +62,7 @@ const ParkingMap = (props) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table></center>
         </div>
     );
 }

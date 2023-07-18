@@ -42,22 +42,28 @@ const SetEntryPoints = (props) => {
 
     return (
         <div className="set-entry-points">
-            <h1>Select the entry points of the parking lot</h1>
+            <div className="row">
+                <h2>Select the entry points of the parking lot</h2>
 
-            <div className="entry-point-list">
-                {
-                    props.entryPoints.map((entryPoint, cellIndex) => (
-                        <div key={"entry-point-cell" + cellIndex}>Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})</div>
-                    ))
-                }
+                <div className="col-8">
+                    <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
+                </div>
+
+                <div className="col-4">
+                    <div className="entry-point-list">
+                        {
+                            props.entryPoints.map((entryPoint, cellIndex) => (
+                                <div key={"entry-point-cell" + cellIndex}>Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})</div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="step-nav-buttons">
+                        <button onClick={() => previousStep()}>Previous</button>
+                        <button onClick={() => nextStep()}>Next</button>
+                    </div>
+                </div>
             </div>
-
-            <div className="step-nav-buttons">
-                <button onClick={() => previousStep()}>Previous</button>
-                <button onClick={() => nextStep()}>Next</button>
-            </div>
-
-            <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
         </div>
     );
 }
