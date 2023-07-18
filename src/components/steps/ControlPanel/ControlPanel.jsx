@@ -120,10 +120,14 @@ const ControlPanel = (props) => {
         const remainderHours = timeDiff % 24;
 
         const full24HoursFee = full24Hour * 5000;
-        const remainderHoursFee = full24HoursFee > 0 ? calculateExceedingHoursFee(remainderHours, exceedingHourlyRate) : 0;
-        const exceedingHoursFee = full24HoursFee > 0 ? 0 : calculateExceedingHoursFee(remainderHours, exceedingHourlyRate);
+        const remainderHoursFee = full24Hour > 0 ? calculateExceedingHoursFee(remainderHours, exceedingHourlyRate) : 0;
+        const exceedingHoursFee = full24Hour > 0 ? 0 : calculateExceedingHoursFee(remainderHours, exceedingHourlyRate);
 
-        const fee = (baseRate * Math.max(full24Hour, 1)) + exceedingHoursFee + full24HoursFee + remainderHoursFee;
+        let fee = exceedingHoursFee + full24HoursFee + remainderHoursFee;
+
+        if ((full24Hour > 0 && remainderHours > 0) || (full24Hour === 0 && timeDiff > 0)) {
+            fee += baseRate;
+        }
 
         return fee;
     }
