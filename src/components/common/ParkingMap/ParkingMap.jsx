@@ -66,9 +66,9 @@ const ParkingMap = (props) => {
                         </tr>
                     ))} */}
 
-                    {Array.from({ length: props.config.numRows }, (_, rowIndex) => (
+                    {Array.from({ length: props.config.tableSize }, (_, rowIndex) => (
                         <tr key={rowIndex}>
-                            {Array.from({ length: props.config.numColumns }, (_, columnIndex) => {
+                            {Array.from({ length: props.config.tableSize }, (_, columnIndex) => {
                                 const isEntryPoint = props.entryPoints.some(
                                     entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
                                 );

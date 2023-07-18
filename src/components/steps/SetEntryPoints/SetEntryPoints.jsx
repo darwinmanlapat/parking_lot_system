@@ -19,7 +19,7 @@ const SetEntryPoints = (props) => {
 
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
-        const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.numRows - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.numColumns - 1;
+        const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.tableSize - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.tableSize - 1;
 
         if (isOuterCell) {
             const cell = { rowIndex, columnIndex };

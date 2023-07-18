@@ -1,8 +1,8 @@
 class ParkingMap {
     map = [];
 
-    constructor(numRows, numColumns) {
-        this.map = Array.from({ length: numRows }, () => Array(numColumns).fill(null));
+    constructor(tableSize) {
+        this.map = Array.from({ length: tableSize }, () => Array(tableSize).fill(null));
 
         return this;
     }

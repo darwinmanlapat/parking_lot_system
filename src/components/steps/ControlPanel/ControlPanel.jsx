@@ -125,6 +125,7 @@ const ControlPanel = (props) => {
 
         let fee = exceedingHoursFee + full24HoursFee + remainderHoursFee;
 
+        // Only add the base rate for time differences that have remaining hours of more than 0
         if ((full24Hour > 0 && remainderHours > 0) || (full24Hour === 0 && timeDiff > 0)) {
             fee += baseRate;
         }

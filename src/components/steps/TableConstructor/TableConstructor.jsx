@@ -15,8 +15,7 @@ const TableConstructor = (props) => {
         handleStep,
     } = useWizard();
 
-    const numRows = props.parkingMapConfig.numRows;
-    const numColumns = props.parkingMapConfig.numColumns;
+    const tableSize = props.parkingMapConfig.tableSize;
     const numEntryPoints = props.parkingMapConfig.numEntryPoints;
 
     const handleNumEntryPointChange = (newNumEntryPoint) => {
@@ -37,6 +36,7 @@ const TableConstructor = (props) => {
                     <input
                         type="number"
                         min="3"
+                        max={props.parkingMapConfig.tableSize * 2}
                         value={numEntryPoints}
                         onChange={e => {
                             props.setParkingMapConfig(prevConfig => {
@@ -52,35 +52,16 @@ const TableConstructor = (props) => {
 
             <div>
                 <label>
-                    Number of Rows:
+                    Size of the table:
                     <input
                         type="number"
-                        min={props.parkingMapConfig.numEntryPoints}
-                        value={numRows}
+                        min="3"
+                        value={tableSize}
                         onChange={e => {
                             props.setParkingMapConfig(prevConfig => {
                                 return {
                                     ...prevConfig,
-                                    numRows: parseInt(e.target.value),
-                                }
-                            });
-                        }}
-                    />
-                </label>
-            </div>
-
-            <div>
-                <label>
-                    Number of Columns:
-                    <input
-                        type="number"
-                        min={props.parkingMapConfig.numEntryPoints}
-                        value={numColumns}
-                        onChange={e => {
-                            props.setParkingMapConfig(prevConfig => {
-                                return {
-                                    ...prevConfig,
-                                    numColumns: parseInt(e.target.value),
+                                    tableSize: parseInt(e.target.value),
                                 }
                             });
                         }}
