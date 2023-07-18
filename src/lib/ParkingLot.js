@@ -1,5 +1,4 @@
 import { Size } from "../enums/Size";
-import { getParkingSlotSize } from "../helpers/getParkingSlotSize";
 
 const BASE_RATE = 40;
 
@@ -19,7 +18,7 @@ class ParkingLot {
 
     parkVehicle(selectedEntryPoint, vehicle) {
         const returningVehicleIndex = this._unparkedVehicles.findIndex((unParkedVehicle) => {
-            return unParkedVehicle.license === vehicle.license && this.#getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1;
+            return unParkedVehicle.license === vehicle.license && ParkingLot.getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1;
         });
 
         console.log('returningVehicle', returningVehicleIndex >= 0 ? this._unparkedVehicles[returningVehicleIndex] : null);
@@ -49,9 +48,25 @@ class ParkingLot {
     }
 
     unparkVehicle(vehicle) {
-        const parkedVehicleSlotSize = getParkingSlotSize(vehicle.coordinates.rowIndex, vehicle.coordinates.columnIndex, this._parkingSlotSizes);
+        const parkedVehicleSlotSize = ParkingLot.getParkingSlotSize(vehicle.coordinates.rowIndex, vehicle.coordinates.columnIndex, this._parkingSlotSizes);
 
         return this.#calculateFee(vehicle, parkedVehicleSlotSize)
+    }
+
+    static getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
+        const { [Size.SMALL]: small, [Size.MEDIUM]: medium, [Size.LARGE]: large } = parkingSlotSizes;
+    
+        const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+            ? Size.SMALL
+            : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
+                ? Size.MEDIUM
+                : Size.LARGE;
+    
+        return previousSize;
+    }
+
+    static getTimeDifference(timeIn, timeOut) {
+        return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
     }
 
     #calculateDistance(point1, point2) {
@@ -62,7 +77,7 @@ class ParkingLot {
 
     #calculateFee(vehicle, parkedVehicleSlotSize) {
         const { timeIn, timeOut } = vehicle;
-        const timeDiff = this.#getTimeDifference(timeIn, timeOut); // hours rounded up
+        const timeDiff = ParkingLot.getTimeDifference(timeIn, timeOut); // hours rounded up
         const full24Hour = Math.floor(timeDiff / 24);
         const remainderHours = timeDiff % 24;
         const full24HoursFee = full24Hour * DAILY_RATE;
@@ -98,10 +113,6 @@ class ParkingLot {
 
         return closestSlot;
     };
-
-    #getTimeDifference(timeIn, timeOut) {
-        return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
-    }
 
     #isSlotOccupied(coordinates) {
         return this._vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);

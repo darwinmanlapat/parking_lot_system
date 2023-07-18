@@ -1,6 +1,6 @@
 import "./ParkingMap.scss";
 import { Size } from "../../../enums/Size";
-import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
+import ParkingLot from "../../../lib/ParkingLot";
 
 const ParkingMap = (props) => {
     const handleCellClick = (rowIndex, columnIndex) => {
@@ -31,7 +31,7 @@ const ParkingMap = (props) => {
                 return vehicle.license;
             }
 
-            return getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
+            return ParkingLot.getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
         }
     }
 
