@@ -1,20 +1,8 @@
 import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
-
-import "./ControlPanel.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
-import { Size } from "../../../enums/Size";
-import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
-
-const BASE_RATE = 40;
-
-const HOURLY_RATE = {
-    [Size.SMALL]: 20,
-    [Size.MEDIUM]: 60,
-    [Size.LARGE]: 100,
-}
-
-const DAILY_RATE = 5000;
+import ParkingLot from "../../../lib/ParkingLot";
+import "./ControlPanel.scss";
 
 const ControlPanel = (props) => {
     const {
@@ -29,10 +17,11 @@ const ControlPanel = (props) => {
         timeOut: '',
         coordinates: {}
     };
-
+    
+    const [parkingLot, setParkingLot] = useState(null);
     const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
-    const [vehicles, setVehicles] = useState([]);
     const [currentVehicle, setCurrentVehicle] = useState(null);
+    const [vehicles, setVehicles] = useState([]);
     const [unparkedVehicles, setUnparkedVehicles] = useState([]);
 
     useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
@@ -42,6 +31,10 @@ const ControlPanel = (props) => {
     useEffect(() => console.log('vehicles', vehicles), [vehicles]);
 
     useEffect(() => console.log('unparkedVehicles', unparkedVehicles), [unparkedVehicles]);
+
+    useEffect(() => {
+        setParkingLot(new ParkingLot(props.parkingSlotSizes, vehicles, unparkedVehicles));
+    }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = props.entryPoints.some(
@@ -62,33 +55,13 @@ const ControlPanel = (props) => {
         }
     }
 
-    const parkVehicle = () => {
-        const returningVehicleIndex = unparkedVehicles.findIndex((unParkedVehicle) => {
-            return unParkedVehicle.license === currentVehicle.license && getTimeDifference(currentVehicle.timeIn, unParkedVehicle.timeOut) <= 1;
-        });
+    const handleParkButton = () => {
+        const parkedVehicleCoordinates = parkingLot.parkVehicle(selectedEntryPoint, currentVehicle);
 
-        console.log('returningVehicle', returningVehicleIndex >= 0 ? unparkedVehicles[returningVehicleIndex] : null);
+        if (!!parkedVehicleCoordinates) {
+            alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${parkedVehicleCoordinates.rowIndex}, ${parkedVehicleCoordinates.columnIndex})`);
 
-        const parkingSlotCoordinates = possibleParkingSlots();
-
-        const availableSlot = findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
-
-        if (availableSlot) {
-            const adjustedVehicle = currentVehicle;
-
-            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
-            if (returningVehicleIndex >= 0) {
-                adjustedVehicle.timeIn = unparkedVehicles[returningVehicleIndex].timeIn;
-
-                const adjustedUnparkedVehicles = [...unparkedVehicles];
-
-                adjustedUnparkedVehicles.splice(returningVehicleIndex, 1);
-
-                setUnparkedVehicles(...adjustedUnparkedVehicles);
-            }
-
-            setVehicles([...vehicles, { ...adjustedVehicle, coordinates: availableSlot }]);
-            alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${availableSlot.rowIndex}, ${availableSlot.columnIndex})`);
+            setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates }]);
         } else {
             alert('No available parking slots for the vehicle type.');
         }
@@ -97,14 +70,14 @@ const ControlPanel = (props) => {
         setSelectedEntryPoint(null);
     }
 
-    const unParkVehicle = (parkedVehicle) => {
+    const handleUnparkButton = (parkedVehicle) => {
         const parkedVehicleIndex = vehicles.findIndex(
             vehicle => parkedVehicle.coordinates.rowIndex === vehicle.rowIndex && parkedVehicle.coordinates.columnIndex === vehicle.columnIndex
         );
 
-        const parkedVehicleSlotSize = getParkingSlotSize(parkedVehicle.coordinates.rowIndex, parkedVehicle.coordinates.columnIndex, props.parkingSlotSizes);
+        const parkingFee = parkingLot.unparkVehicle(parkedVehicle);
 
-        alert(calculateFee(parkedVehicle, parkedVehicleSlotSize));
+        alert(parkingFee);
 
         const adjustedVehicles = [...vehicles];
 
@@ -114,77 +87,6 @@ const ControlPanel = (props) => {
         setCurrentVehicle(null);
         setVehicles([...adjustedVehicles]);
     }
-
-    const calculateFee = (unParkedVehicle, slotType) => {
-        const { timeIn, timeOut } = unParkedVehicle;
-        const timeDiff = getTimeDifference(timeIn, timeOut); // hours rounded up
-        const full24Hour = Math.floor(timeDiff / 24);
-        const remainderHours = timeDiff % 24;
-        const full24HoursFee = full24Hour * DAILY_RATE;
-
-        let exceedingHoursFee = Math.max(timeDiff - 3, 0) * HOURLY_RATE[slotType];
-
-        // We compute the exceeding differently for 24-hour+ parking vs below 24-hour parking
-        if (full24Hour > 0) {
-            exceedingHoursFee = remainderHours * HOURLY_RATE[slotType];
-        }
-
-        let fee = exceedingHoursFee + full24HoursFee;
-
-        // Only add the base rate for parking durations of less than 24 hours
-        if (timeDiff < 24 && timeDiff > 0) {
-            fee += BASE_RATE;
-        }
-
-        return fee;
-    }
-
-    const findClosestAvailableSlot = (entryPoint, parkingSlotCoordinates) => {
-        let closestSlot = null;
-        let minDistance = Infinity;
-
-        for (const coordinates of parkingSlotCoordinates) {
-            const distance = calculateDistance(entryPoint, coordinates);
-            if (distance < minDistance && !isSlotOccupied(coordinates)) {
-                minDistance = distance;
-                closestSlot = coordinates;
-            }
-        }
-
-        return closestSlot;
-    };
-
-    const getTimeDifference = (timeIn, timeOut) => {
-        return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
-    }
-
-    const isSlotOccupied = (coordinates) => {
-        return vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);
-    };
-
-    const possibleParkingSlots = () => {
-        const smallSlots = props.parkingSlotSizes[Size.SMALL];
-        const mediumSlots = props.parkingSlotSizes[Size.MEDIUM];
-        const largeSlots = props.parkingSlotSizes[Size.LARGE];
-
-        if (currentVehicle.size === Size.SMALL) {
-            return smallSlots.concat(mediumSlots, largeSlots);
-        }
-
-        if (currentVehicle.size === Size.MEDIUM) {
-            return mediumSlots.concat(largeSlots);
-        }
-
-        if (currentVehicle.size === Size.LARGE) {
-            return largeSlots;
-        }
-    };
-
-    const calculateDistance = (point1, point2) => {
-        const dx = Math.abs(point1.rowIndex - point2.rowIndex);
-        const dy = Math.abs(point1.columnIndex - point2.columnIndex);
-        return Math.max(dx, dy);
-    };
 
     return (
         <div className="control-panel">
@@ -264,7 +166,7 @@ const ControlPanel = (props) => {
 
                                 {
                                     Object.keys(currentVehicle.coordinates).length !== 0 ?
-                                        <button onClick={() => unParkVehicle(currentVehicle)}>Unpark Vehicle</button> : <button onClick={() => parkVehicle()}>Park Vehicle</button>
+                                        <button onClick={() => handleUnparkButton(currentVehicle)}>Unpark Vehicle</button> : <button onClick={() => handleParkButton()}>Park Vehicle</button>
                                 }
                             </div> : null
                     }

@@ -1,74 +1,129 @@
-class ParkingLot {    
-    constructor(entryPoints, parkingMap) {
-        this._entryPoints = entryPoints;
-        // this._parkingSlots = parkingSlots;
-        this._map = parkingMap;
+import { Size } from "../enums/Size";
+import { getParkingSlotSize } from "../helpers/getParkingSlotSize";
+
+const BASE_RATE = 40;
+
+const HOURLY_RATE = {
+    [Size.SMALL]: 20,
+    [Size.MEDIUM]: 60,
+    [Size.LARGE]: 100,
+}
+
+const DAILY_RATE = 5000;
+class ParkingLot {
+    constructor(parkingSlotSizes, vehicles, unparkedVehicles) {
+        this._unparkedVehicles = unparkedVehicles;
+        this._parkingSlotSizes = parkingSlotSizes;
+        this._vehicles = vehicles;
     }
 
-    // get getMap() {
-    //     return this._map;
-    // }
-
-    // /**
-    //  * @param {Array} parkingMap
-    //  */
-    // set setMap(parkingMap) {
-    //     this._map = parkingMap;
-    // }
-
-    parkVehicle(vehicle) {
-        const entryPointDistances = this.parkingSlots.map(slot => slot.slotNumber);
-        const closestEntryPoint = entryPointDistances.indexOf(Math.min(...entryPointDistances));
-        const availableSlots = this.parkingSlots.filter(slot => !slot.isOccupied && slot.slotType.includes(this.vehicleMap[vehicle.vehicleType]));
-
-        if (availableSlots.length === 0) {
-            console.log("No available slots for parking.");
-            return;
-        }
-
-        const closestSlot = availableSlots.reduce((closest, slot) => {
-            const slotDistance = Math.abs(slot.slotNumber - closestEntryPoint);
-            return slotDistance < Math.abs(closest.slotNumber - closestEntryPoint) ? slot : closest;
+    parkVehicle(selectedEntryPoint, vehicle) {
+        const returningVehicleIndex = this._unparkedVehicles.findIndex((unParkedVehicle) => {
+            return unParkedVehicle.license === vehicle.license && this.#getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1;
         });
 
-        closestSlot.allocate(vehicle);
-        console.log(`Vehicle ${vehicle.licensePlateNumber} parked at Slot ${closestSlot.slotNumber}`);
+        console.log('returningVehicle', returningVehicleIndex >= 0 ? this._unparkedVehicles[returningVehicleIndex] : null);
+
+        const parkingSlotCoordinates = this.#possibleParkingSlots(vehicle.size);
+
+        const availableSlot = this.#findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
+
+        if (availableSlot) {
+            // const adjustedVehicle = vehicle;
+
+            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
+            if (returningVehicleIndex >= 0) {
+                // adjustedVehicle.timeIn = this._unparkedVehicles[returningVehicleIndex].timeIn;
+
+                // const adjustedUnparkedVehicles = [...this._unparkedVehicles];
+
+                // adjustedUnparkedVehicles.splice(returningVehicleIndex, 1);
+
+                // setUnparkedVehicles(...adjustedUnparkedVehicles);
+            }
+
+            return availableSlot;
+        } else {
+            return null;
+        }
     }
 
     unparkVehicle(vehicle) {
-        const slot = this.parkingSlots.find(slot => slot.isOccupied && slot.vehicle === vehicle);
-        if (!slot) {
-            console.log("Vehicle is not parked in the parking lot.");
-            return;
+        const parkedVehicleSlotSize = getParkingSlotSize(vehicle.coordinates.rowIndex, vehicle.coordinates.columnIndex, this._parkingSlotSizes);
+
+        return this.#calculateFee(vehicle, parkedVehicleSlotSize)
+    }
+
+    #calculateDistance(point1, point2) {
+        const dx = Math.abs(point1.rowIndex - point2.rowIndex);
+        const dy = Math.abs(point1.columnIndex - point2.columnIndex);
+        return Math.max(dx, dy);
+    };
+
+    #calculateFee(vehicle, parkedVehicleSlotSize) {
+        const { timeIn, timeOut } = vehicle;
+        const timeDiff = this.#getTimeDifference(timeIn, timeOut); // hours rounded up
+        const full24Hour = Math.floor(timeDiff / 24);
+        const remainderHours = timeDiff % 24;
+        const full24HoursFee = full24Hour * DAILY_RATE;
+
+        let exceedingHoursFee = Math.max(timeDiff - 3, 0) * HOURLY_RATE[parkedVehicleSlotSize];
+
+        // We compute the exceeding differently for 24-hour+ parking vs below 24-hour parking
+        if (full24Hour > 0) {
+            exceedingHoursFee = remainderHours * HOURLY_RATE[parkedVehicleSlotSize];
         }
 
-        const entryTime = slot.vehicle.entryTime;
-        const exitTime = new Date();
-        const fee = this.calculateFee(entryTime, exitTime, vehicle.vehicleType, slot.slotType);
+        let fee = exceedingHoursFee + full24HoursFee;
 
-        slot.free();
-        console.log(`Vehicle ${vehicle.licensePlateNumber} has been unparked. Fee: ${fee} pesos.`);
-
-        return fee;
-    }
-
-    calculateFee(entryTime, exitTime, vehicleType, slotType) {
-        const timeDiff = Math.ceil((exitTime - entryTime) / (1000 * 60 * 60)); // hours rounded up
-        const baseRate = 40;
-
-        let exceedingHourlyRate = 0;
-        if (slotType === "SP") exceedingHourlyRate = 20;
-        else if (slotType === "MP") exceedingHourlyRate = 60;
-        else if (slotType === "LP") exceedingHourlyRate = 100;
-
-        const exceedingHoursFee = Math.max(timeDiff - 3, 0) * exceedingHourlyRate;
-        const full24HoursFee = Math.floor(timeDiff / 24) * 5000;
-        const remainderHoursFee = (timeDiff % 24) * exceedingHourlyRate;
-
-        const fee = baseRate + exceedingHoursFee + full24HoursFee + remainderHoursFee;
+        // Only add the base rate for parking durations of less than 24 hours
+        if (timeDiff < 24 && timeDiff > 0) {
+            fee += BASE_RATE;
+        }
 
         return fee;
     }
+
+    #findClosestAvailableSlot(entryPoint, parkingSlotCoordinates) {
+        let closestSlot = null;
+        let minDistance = Infinity;
+
+        for (let coordinates of parkingSlotCoordinates) {
+            const distance = this.#calculateDistance(entryPoint, coordinates);
+            if (distance < minDistance && !this.#isSlotOccupied(coordinates)) {
+                minDistance = distance;
+                closestSlot = coordinates;
+            }
+        }
+
+        return closestSlot;
+    };
+
+    #getTimeDifference(timeIn, timeOut) {
+        return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
+    }
+
+    #isSlotOccupied(coordinates) {
+        return this._vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);
+    };
+
+    #possibleParkingSlots(vehicleSize) {
+        const smallSlots = this._parkingSlotSizes[Size.SMALL];
+        const mediumSlots = this._parkingSlotSizes[Size.MEDIUM];
+        const largeSlots = this._parkingSlotSizes[Size.LARGE];
+
+        if (vehicleSize === Size.SMALL) {
+            return smallSlots.concat(mediumSlots, largeSlots);
+        }
+
+        if (vehicleSize === Size.MEDIUM) {
+            return mediumSlots.concat(largeSlots);
+        }
+
+        if (vehicleSize === Size.LARGE) {
+            return largeSlots;
+        }
+    };
 }
 
 export default ParkingLot;
