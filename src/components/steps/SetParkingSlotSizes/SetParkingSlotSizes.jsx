@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./SetParkingSlotSizes.scss";
@@ -7,15 +6,9 @@ import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const SetParkingSlotSizes = (props) => {
     const {
-        isLoading,
-        isLastStep,
-        isFirstStep,
         activeStep,
-        stepCount,
         previousStep,
         nextStep,
-        goToStep,
-        handleStep,
     } = useWizard();
 
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./SetEntryPoints.scss";
@@ -6,15 +5,9 @@ import ParkingMap from "../../common/ParkingMap/ParkingMap";
 
 const SetEntryPoints = (props) => {
     const {
-        isLoading,
-        isLastStep,
-        isFirstStep,
         activeStep,
-        stepCount,
         previousStep,
         nextStep,
-        goToStep,
-        handleStep,
     } = useWizard();
 
     const handleCellClick = (rowIndex, columnIndex) => {

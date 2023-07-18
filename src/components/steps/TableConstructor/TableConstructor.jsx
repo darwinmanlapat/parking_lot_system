@@ -1,31 +1,14 @@
-import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 
 const TableConstructor = (props) => {
     const {
-        isLoading,
-        isLastStep,
-        isFirstStep,
         activeStep,
-        stepCount,
-        previousStep,
         nextStep,
-        goToStep,
-        handleStep,
     } = useWizard();
 
     const tableSize = props.parkingMapConfig.tableSize;
     const numEntryPoints = props.parkingMapConfig.numEntryPoints;
-
-    const handleNumEntryPointChange = (newNumEntryPoint) => {
-        props.setParkingMapConfig(prevConfig => {
-            return {
-                numEntryPoints: newNumEntryPoint,
-                ...prevConfig,
-            }
-        });
-    }
 
     return (
         <div>

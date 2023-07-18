@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { useWizard } from "react-use-wizard";
-
 import "./ParkingMap.scss";
 import { Size } from "../../../enums/Size";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";

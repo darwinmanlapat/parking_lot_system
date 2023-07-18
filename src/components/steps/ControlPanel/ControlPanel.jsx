@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useWizard } from "react-use-wizard";
 
 import "./ControlPanel.scss";
-import ParkingLot from "../../../lib/ParkingLot";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import { Size } from "../../../enums/Size";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
@@ -23,22 +22,15 @@ const DAILY_RATE = 5000;
 
 const ControlPanel = (props) => {
     const {
-        isLoading,
-        isLastStep,
-        isFirstStep,
         activeStep,
-        stepCount,
         previousStep,
-        nextStep,
-        goToStep,
-        handleStep,
     } = useWizard();
 
     const defaultVehicle = {
         license: '',
         size: 'S',
-        time_in: '',
-        time_out: '',
+        timeIn: '',
+        timeOut: '',
         coordinates: {}
     };
 
@@ -76,7 +68,7 @@ const ControlPanel = (props) => {
 
     const parkVehicle = () => {
         const returningVehicleIndex = unparkedVehicles.findIndex((unParkedVehicle) => {
-            return unParkedVehicle.license === currentVehicle.license && getTimeDifference(currentVehicle.time_in, unParkedVehicle.time_out) <= 1;
+            return unParkedVehicle.license === currentVehicle.license && getTimeDifference(currentVehicle.timeIn, unParkedVehicle.timeOut) <= 1;
         });
 
         console.log('returningVehicle', returningVehicleIndex >= 0 ? unparkedVehicles[returningVehicleIndex] : null);
@@ -90,7 +82,7 @@ const ControlPanel = (props) => {
 
             // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
             if (returningVehicleIndex >= 0) {
-                adjustedVehicle.time_in = unparkedVehicles[returningVehicleIndex].time_in;
+                adjustedVehicle.timeIn = unparkedVehicles[returningVehicleIndex].timeIn;
 
                 const adjustedUnparkedVehicles = [...unparkedVehicles];
 
@@ -128,8 +120,8 @@ const ControlPanel = (props) => {
     }
 
     const calculateFee = (unParkedVehicle, slotType) => {
-        const { time_in, time_out } = unParkedVehicle;
-        const timeDiff = getTimeDifference(time_in, time_out); // hours rounded up
+        const { timeIn, timeOut } = unParkedVehicle;
+        const timeDiff = getTimeDifference(timeIn, timeOut); // hours rounded up
         const full24Hour = Math.floor(timeDiff / 24);
         const remainderHours = timeDiff % 24;
         const full24HoursFee = full24Hour * DAILY_RATE;
@@ -239,11 +231,11 @@ const ControlPanel = (props) => {
                                 </div>
                                 <div>
                                     <label htmlFor="time-in">Time in</label>
-                                    <input id="time-in" type="datetime-local" value={currentVehicle.time_in} onChange={(e) => {
+                                    <input id="time-in" type="datetime-local" value={currentVehicle.timeIn} onChange={(e) => {
                                         setCurrentVehicle(prevVehicle => {
                                             return {
                                                 ...prevVehicle,
-                                                time_in: e.target.value,
+                                                timeIn: e.target.value,
                                             }
                                         });
                                     }} />
@@ -252,11 +244,11 @@ const ControlPanel = (props) => {
                                     Object.keys(currentVehicle.coordinates).length !== 0 ?
                                         <div>
                                             <label htmlFor="time-out">Time out</label>
-                                            <input id="time-out" type="datetime-local" value={currentVehicle.time_out} onChange={(e) => {
+                                            <input id="time-out" type="datetime-local" value={currentVehicle.timeOut} onChange={(e) => {
                                                 setCurrentVehicle(prevVehicle => {
                                                     return {
                                                         ...prevVehicle,
-                                                        time_out: e.target.value,
+                                                        timeOut: e.target.value,
                                                     }
                                                 });
                                             }} />
