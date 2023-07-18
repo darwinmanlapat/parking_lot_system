@@ -15,8 +15,8 @@ const BASE_RATE = 40;
 
 const HOURLY_RATE = {
     [Size.SMALL]: 20,
-    [Size.MEDIUM]: 40,
-    [Size.LARGE]: 60,
+    [Size.MEDIUM]: 60,
+    [Size.LARGE]: 100,
 }
 
 const DAILY_RATE = 5000;
@@ -130,7 +130,7 @@ const ControlPanel = (props) => {
 
         let fee = exceedingHoursFee + full24HoursFee;
 
-        // Only add the base rate for parking durations of less than a 24 hours
+        // Only add the base rate for parking durations of less than 24 hours
         if (timeDiff < 24 && timeDiff > 0) {
             fee += BASE_RATE;
         }

@@ -83,9 +83,13 @@ Here are some of my personal assumptions and constraints for the system:
 
 - Unless stated otherwise in the query on my email, we will assume that the 24-hour fee will be override any other fees of that day (including the base rate) and will only compute for the remaining hours.
 
+- As confirmed in my email, the base rate will only apply on the first day. Any remaining hours in the subsequent days will be computed as exceeding hours.
+
 ### Returning Vehicles
 
-- Unless stated otherwise in the query on my email, returning vehicles can only return to a similar spot size to its previous spot so that we can retain the same parking fee calculation for its continuous rate. The parking logic still applies to this scenario albeit for the same parking slot size only.
+- ~~Unless stated otherwise in the query on my email, returning vehicles can only return to a similar spot size to its previous spot so that we can retain the same parking fee calculation for its continuous rate. The parking logic still applies to this scenario albeit for the same parking slot size only.~~
+
+- As confirmed in my email, returning vehicles will still follow the current parking logic and will able to park based on its size and the entry point's proximity. The continuous fee will be still be the same calculation logic for the current parking slot size regardless of its previous slot size.
 
 ## Improvements
 
