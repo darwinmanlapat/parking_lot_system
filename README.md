@@ -91,9 +91,12 @@ Here are some of my personal assumptions and constraints for the system:
 
 - As confirmed in my email, returning vehicles will still follow the current parking logic and will able to park based on its size and the entry point's proximity. The continuous fee will be still be the same calculation logic for the current parking slot size regardless of its previous slot size.
 
+- We assume that user will enter the same vehicle details (license and size) when trying to return and park.
+
 ## Improvements
 
 - [ ] Add proper input validations
 - [ ] Add styling
 - [ ] Improve visual map (include animations?)
 - [ ] Add Cypress e2e testing
+- [ ] Improve validation on returning vehicles

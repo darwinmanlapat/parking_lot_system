@@ -86,7 +86,20 @@ const ControlPanel = (props) => {
         const availableSlot = findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
 
         if (availableSlot) {
-            setVehicles([...vehicles, { ...currentVehicle, coordinates: availableSlot }]);
+            const adjustedVehicle = currentVehicle;
+
+            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
+            if (returningVehicleIndex >= 0) {
+                adjustedVehicle.time_in = unparkedVehicles[returningVehicleIndex].time_in;
+
+                const adjustedUnparkedVehicles = [...unparkedVehicles];
+
+                adjustedUnparkedVehicles.splice(returningVehicleIndex, 1);
+                
+                setUnparkedVehicles(...adjustedUnparkedVehicles);
+            }
+
+            setVehicles([...vehicles, { ...adjustedVehicle, coordinates: availableSlot }]);
             alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${availableSlot.rowIndex}, ${availableSlot.columnIndex})`);
         } else {
             alert('No available parking slots for the vehicle type.');
