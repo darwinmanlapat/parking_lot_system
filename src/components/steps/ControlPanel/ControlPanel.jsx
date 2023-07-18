@@ -6,10 +6,6 @@ import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import { Size } from "../../../enums/Size";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
-const getTimeDifference = (timeIn, timeOut) => {
-    return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
-}
-
 const BASE_RATE = 40;
 
 const HOURLY_RATE = {
@@ -87,7 +83,7 @@ const ControlPanel = (props) => {
                 const adjustedUnparkedVehicles = [...unparkedVehicles];
 
                 adjustedUnparkedVehicles.splice(returningVehicleIndex, 1);
-                
+
                 setUnparkedVehicles(...adjustedUnparkedVehicles);
             }
 
@@ -158,6 +154,10 @@ const ControlPanel = (props) => {
         return closestSlot;
     };
 
+    const getTimeDifference = (timeIn, timeOut) => {
+        return Math.ceil((new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60))
+    }
+
     const isSlotOccupied = (coordinates) => {
         return vehicles.some((vehicle) => vehicle.coordinates.rowIndex === coordinates.rowIndex && vehicle.coordinates.columnIndex === coordinates.columnIndex);
     };
@@ -192,7 +192,14 @@ const ControlPanel = (props) => {
                 <h2>Control Panel</h2>
 
                 <div className="col-8">
-                    <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} parkingSlotSizes={props.parkingSlotSizes} vehicles={vehicles} />
+                    <ParkingMap
+                        step={activeStep}
+                        vehicles={vehicles}
+                        config={props.parkingMapConfig}
+                        entryPoints={props.entryPoints}
+                        parkingSlotSizes={props.parkingSlotSizes}
+                        handleCellClick={handleCellClick}
+                    />
                 </div>
 
                 <div className="col-4">

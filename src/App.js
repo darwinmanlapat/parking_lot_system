@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import "./App.scss";
 import { Wizard } from 'react-use-wizard';
+import { Size } from './enums/Size';
 import TableConstructor from './components/steps/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
-import ParkingMap from './components/common/ParkingMap/ParkingMap';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
-import ParkingLot from './lib/ParkingLot';
-import { Size } from './enums/Size';
+
+import "./App.scss";
 
 function App() {
   const [entryPoints, setEntryPoints] = useState([]);
@@ -24,29 +23,6 @@ function App() {
   // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
   // const [vehicleType, setVehicleType] = useState('');
   // const [parkedVehicle, setParkedVehicle] = useState(null);
-
-  // const handleUnparkVehicle = () => {
-  //   const entryPoints = Array.from({ length: numEntryPoints }, (_, i) => `Entry ${String.fromCharCode(65 + i)}`);
-  //   const parkingSlots = [];
-
-  //   parkingMap.forEach((row, rowIndex) => {
-  //     row.forEach((slotType, columnIndex) => {
-  //       const slotNumber = `${String.fromCharCode(65 + rowIndex)}${columnIndex + 1}`;
-  //       parkingSlots.push(new ParkingSlot(slotNumber, slotType));
-  //     });
-  //   });
-
-  //   const vehicleMap = {
-  //     S: 0, // Small vehicle
-  //     M: 1, // Medium vehicle
-  //     L: 2, // Large vehicle
-  //   };
-
-  //   const parkingLot = new ParkingLot(entryPoints, parkingSlots, vehicleMap);
-  //   parkingLot.unparkVehicle(parkedVehicle);
-  //   setUnparkedVehicle(parkedVehicle);
-  //   setParkedVehicle(null);
-  // };
 
   // Reset the entry point list whenever the table size changes
   useEffect(() => {
@@ -98,10 +74,33 @@ function App() {
 
         <section>
           <Wizard>
-            <TableConstructor parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} />
-            <SetEntryPoints parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} setEntryPoints={setEntryPoints} />
-            <SetParkingSlotSizes parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} setParkingSlotSizes={setParkingSlotSizes} />
-            <ControlPanel parkingMapConfig={parkingMapConfig} setParkingMapConfig={setParkingMapConfig} entryPoints={entryPoints} parkingSlotSizes={parkingSlotSizes} />
+            <TableConstructor
+              parkingMapConfig={parkingMapConfig}
+              setParkingMapConfig={setParkingMapConfig}
+              entryPoints={entryPoints}
+            />
+
+            <SetEntryPoints
+              parkingMapConfig={parkingMapConfig}
+              entryPoints={entryPoints}
+              setParkingMapConfig={setParkingMapConfig}
+              setEntryPoints={setEntryPoints}
+            />
+
+            <SetParkingSlotSizes
+              parkingMapConfig={parkingMapConfig}
+              entryPoints={entryPoints}
+              parkingSlotSizes={parkingSlotSizes}
+              setParkingMapConfig={setParkingMapConfig}
+              setParkingSlotSizes={setParkingSlotSizes}
+            />
+            
+            <ControlPanel
+              parkingMapConfig={parkingMapConfig}
+              entryPoints={entryPoints}
+              parkingSlotSizes={parkingSlotSizes}
+              setParkingMapConfig={setParkingMapConfig}
+            />
           </Wizard>
         </section>
       </div>

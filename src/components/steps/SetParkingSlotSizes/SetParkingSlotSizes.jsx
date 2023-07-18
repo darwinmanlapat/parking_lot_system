@@ -5,21 +5,15 @@ import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
 
 const SetParkingSlotSizes = (props) => {
-    const {
-        activeStep,
-        previousStep,
-        nextStep,
-    } = useWizard();
+    const { activeStep, previousStep, nextStep } = useWizard();
 
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
-        // props.updateParkingMap(rowIndex, columnIndex, cellValue);
         const previousSize = getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
 
         const updatedSizes = { ...props.parkingSlotSizes };
 
         updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord => coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex)
 
-        // Add the coordinate to the new size
         updatedSizes[cellValue] = [...updatedSizes[cellValue], { rowIndex, columnIndex }];
 
         props.setParkingSlotSizes(updatedSizes)
@@ -31,7 +25,12 @@ const SetParkingSlotSizes = (props) => {
                 <h2>Set the parking slot sizes</h2>
 
                 <div className="col-8">
-                    <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} handleParkingSlotSizeChange={handleParkingSlotSizeChange} />
+                    <ParkingMap
+                        step={activeStep}
+                        config={props.parkingMapConfig}
+                        entryPoints={props.entryPoints}
+                        handleParkingSlotSizeChange={handleParkingSlotSizeChange}
+                    />
                 </div>
 
                 <div className="col-4">

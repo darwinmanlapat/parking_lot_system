@@ -4,19 +4,13 @@ import "./SetEntryPoints.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 
 const SetEntryPoints = (props) => {
-    const {
-        activeStep,
-        previousStep,
-        nextStep,
-    } = useWizard();
+    const { activeStep, previousStep, nextStep } = useWizard();
 
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
         const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.tableSize - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.tableSize - 1;
 
         if (isOuterCell) {
-            const cell = { rowIndex, columnIndex };
-
             const isEntryPointCell = props.entryPoints.some(
                 clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
             );
@@ -25,9 +19,9 @@ const SetEntryPoints = (props) => {
             if (isEntryPointCell) {
                 props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
             } else {
-                // If the is cell is not yet clicked, we should check if have the desired amount of entry points
+                // If the is cell is not yet clicked, we should check if we have the desired amount of entry points
                 if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {
-                    props.setEntryPoints([...props.entryPoints, cell]);
+                    props.setEntryPoints([...props.entryPoints, { rowIndex, columnIndex }]);
                 }
             }
         }
@@ -39,7 +33,12 @@ const SetEntryPoints = (props) => {
                 <h2>Select the entry points of the parking lot</h2>
 
                 <div className="col-8">
-                    <ParkingMap config={props.parkingMapConfig} step={activeStep} handleCellClick={handleCellClick} entryPoints={props.entryPoints} />
+                    <ParkingMap
+                        step={activeStep}
+                        config={props.parkingMapConfig}
+                        entryPoints={props.entryPoints}
+                        handleCellClick={handleCellClick}
+                    />
                 </div>
 
                 <div className="col-4">

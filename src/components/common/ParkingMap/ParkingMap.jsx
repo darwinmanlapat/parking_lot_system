@@ -21,7 +21,7 @@ const ParkingMap = (props) => {
         }
 
         if (props.step === 3) {
-            let vehicle = null;
+            let vehicle;
 
             if (props.vehicles.length !== 0) {
                 vehicle = props.vehicles.filter(vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex)[0];
@@ -39,25 +39,27 @@ const ParkingMap = (props) => {
         <div className="parking-map"><center>
             <table className="table table-bordered border-primary">
                 <tbody>
-                    {Array.from({ length: props.config.tableSize }, (_, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {Array.from({ length: props.config.tableSize }, (_, columnIndex) => {
-                                const isEntryPoint = props.entryPoints.some(
-                                    entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-                                );
+                    {
+                        Array.from({ length: props.config.tableSize }, (row, rowIndex) => (
+                            <tr key={'parking-map-row' + rowIndex}>
+                                {
+                                    Array.from({ length: props.config.tableSize }, (column, columnIndex) => {
+                                        const isEntryPoint = props.entryPoints.some(
+                                            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+                                        );
 
-                                return (
-                                    <td
-                                        key={columnIndex}
-                                        className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
-                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
-                                    >
-                                        {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    ))}
+                                        return (
+                                            <td
+                                                key={'parking-map-column' + columnIndex}
+                                                className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
+                                                onClick={() => handleCellClick(rowIndex, columnIndex)}
+                                            >
+                                                {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
+                                            </td>
+                                        );
+                                    })}
+                            </tr>
+                        ))}
                 </tbody>
             </table></center>
         </div>

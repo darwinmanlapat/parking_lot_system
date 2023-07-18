@@ -1,11 +1,11 @@
 import { useWizard } from "react-use-wizard";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 
+const MIN_ENTRY_POINTS = 3;
+const MAX_TABLE_SIZE = 10;
+
 const TableConstructor = (props) => {
-    const {
-        activeStep,
-        nextStep,
-    } = useWizard();
+    const { activeStep, nextStep } = useWizard();
 
     const tableSize = props.parkingMapConfig.tableSize;
     const numEntryPoints = props.parkingMapConfig.numEntryPoints;
@@ -16,7 +16,11 @@ const TableConstructor = (props) => {
                 <h2>Set table size and number of entry points</h2>
 
                 <div className="col-8">
-                    <ParkingMap config={props.parkingMapConfig} step={activeStep} entryPoints={props.entryPoints} />
+                    <ParkingMap
+                        step={activeStep}
+                        config={props.parkingMapConfig}
+                        entryPoints={props.entryPoints}
+                    />
                 </div>
 
                 <div className="col-4">
@@ -25,7 +29,7 @@ const TableConstructor = (props) => {
                             Number of Entry Points:
                             <input
                                 type="number"
-                                min="3"
+                                min={MIN_ENTRY_POINTS}
                                 max={props.parkingMapConfig.tableSize * 2}
                                 value={numEntryPoints}
                                 onChange={e => {
@@ -45,8 +49,8 @@ const TableConstructor = (props) => {
                             Size of the table:
                             <input
                                 type="number"
-                                min="3"
-                                max="10"
+                                min={MIN_ENTRY_POINTS}
+                                max={MAX_TABLE_SIZE}
                                 value={tableSize}
                                 onChange={e => {
                                     props.setParkingMapConfig(prevConfig => {
