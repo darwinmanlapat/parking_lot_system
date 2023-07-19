@@ -18,7 +18,7 @@ const ControlPanel = (props) => {
         timeOut: '',
         coordinates: {}
     };
-    
+
     const [parkingLot, setParkingLot] = useState(null);
     const [vehicleManager, setVehicleManager] = useState(null);
     const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
@@ -41,15 +41,13 @@ const ControlPanel = (props) => {
 
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
-        const parkedVehicleIndex = vehicles.findIndex(
-            vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex
-        );
+        const parkedVehicle = vehicleManager.getVehicleByPosition(rowIndex, columnIndex);
 
         if (isEntryPointCell) {
             setSelectedEntryPoint({ rowIndex, columnIndex });
             setCurrentVehicle(defaultVehicle);
-        } else if (parkedVehicleIndex >= 0) {
-            setCurrentVehicle(vehicles[parkedVehicleIndex]);
+        } else if (!!parkedVehicle) {
+            setCurrentVehicle(parkedVehicle);
         } else {
             setCurrentVehicle(null);
             setSelectedEntryPoint(null);
@@ -61,7 +59,7 @@ const ControlPanel = (props) => {
 
         if (!!parkedVehicleCoordinates) {
             const isReturningVehicle = vehicleManager?.isReturningVehicle(currentVehicle);
-            let vehicleTimeIn = currentVehicle.timeIn;  
+            let vehicleTimeIn = currentVehicle.timeIn;
 
             // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
             if (isReturningVehicle >= 0) {
@@ -86,21 +84,17 @@ const ControlPanel = (props) => {
     }
 
     const handleUnparkButton = (parkedVehicle) => {
-        const parkedVehicleIndex = vehicles.findIndex(
-            vehicle => parkedVehicle.coordinates.rowIndex === vehicle.rowIndex && parkedVehicle.coordinates.columnIndex === vehicle.columnIndex
-        );
-
         const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 
+        // TODO: Add this to the screen instead of using an alert
         alert(parkingFee);
 
-        const adjustedVehicles = [...vehicles];
-
-        adjustedVehicles.splice(parkedVehicleIndex, 1);
-
-        setUnparkedVehicles(prevUnparkedVehicles => [...prevUnparkedVehicles, parkedVehicle]);
         setCurrentVehicle(null);
-        setVehicles([...adjustedVehicles]);
+        setUnparkedVehicles(prevUnparkedVehicles => [...prevUnparkedVehicles, parkedVehicle]);
+        setVehicles(vehicles.filter(vehicle =>
+            !(vehicle.coordinates.rowIndex === parkedVehicle.coordinates.rowIndex &&
+                vehicle.coordinates.columnIndex === parkedVehicle.coordinates.columnIndex)
+        ));
     }
 
     return (
