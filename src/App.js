@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import "./App.scss";
 import { Wizard } from 'react-use-wizard';
 import { Size } from './enums/Size';
 import TableConstructor from './components/steps/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
-
-import "./App.scss";
 import ParkingLot from './lib/ParkingLot';
 
 function App() {

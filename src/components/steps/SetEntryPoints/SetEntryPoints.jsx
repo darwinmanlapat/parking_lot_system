@@ -1,5 +1,4 @@
 import { useWizard } from "react-use-wizard";
-
 import "./SetEntryPoints.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";

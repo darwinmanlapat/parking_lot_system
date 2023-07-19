@@ -1,8 +1,8 @@
+import { useEffect, useState } from "react";
 import "./ParkingMap.scss";
 import { Size } from "../../../enums/Size";
 import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
-import { useEffect, useState } from "react";
 
 const ParkingMap = (props) => {
     const [ vehicleManager, setVehicleManager ] = useState(null);

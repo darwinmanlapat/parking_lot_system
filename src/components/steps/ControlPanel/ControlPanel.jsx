@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import "./ControlPanel.scss";
 import { useWizard } from "react-use-wizard";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
-import "./ControlPanel.scss";
 import VehicleManager from "../../../lib/VehicleManager";
 
 const ControlPanel = (props) => {
