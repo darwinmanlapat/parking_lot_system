@@ -16,31 +16,22 @@ class ParkingLot {
         this._vehicles = vehicles;
     }
 
-    parkVehicle(selectedEntryPoint, vehicle) {
+    isReturningVehicle(vehicle) {
         const returningVehicleIndex = this._unparkedVehicles.findIndex((unParkedVehicle) => {
             return unParkedVehicle.license === vehicle.license && ParkingLot.getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1;
         });
 
         console.log('returningVehicle', returningVehicleIndex >= 0 ? this._unparkedVehicles[returningVehicleIndex] : null);
 
+        return returningVehicleIndex;
+    }
+
+    parkVehicle(selectedEntryPoint, vehicle) {
         const parkingSlotCoordinates = this.#possibleParkingSlots(vehicle.size);
 
         const availableSlot = this.#findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
 
         if (availableSlot) {
-            // const adjustedVehicle = vehicle;
-
-            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
-            if (returningVehicleIndex >= 0) {
-                // adjustedVehicle.timeIn = this._unparkedVehicles[returningVehicleIndex].timeIn;
-
-                // const adjustedUnparkedVehicles = [...this._unparkedVehicles];
-
-                // adjustedUnparkedVehicles.splice(returningVehicleIndex, 1);
-
-                // setUnparkedVehicles(...adjustedUnparkedVehicles);
-            }
-
             return availableSlot;
         } else {
             return null;
@@ -55,13 +46,13 @@ class ParkingLot {
 
     static getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
         const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = parkingSlotSizes;
-    
+
         const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
             ? Size.SMALL
             : medium.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
                 ? Size.MEDIUM
                 : Size.LARGE;
-    
+
         return previousSize;
     }
 

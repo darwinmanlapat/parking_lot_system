@@ -59,9 +59,23 @@ const ControlPanel = (props) => {
         const parkedVehicleCoordinates = parkingLot.parkVehicle(selectedEntryPoint, currentVehicle);
 
         if (!!parkedVehicleCoordinates) {
+            const isReturningVehicle = parkingLot.isReturningVehicle(currentVehicle);
+            let vehicleTimeIn = currentVehicle.timeIn;  
+
+            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
+            if (isReturningVehicle >= 0) {
+                const adjustedUnparkedVehicles = [...unparkedVehicles];
+
+                vehicleTimeIn = unparkedVehicles[isReturningVehicle].timeIn;
+
+                adjustedUnparkedVehicles.splice(isReturningVehicle, 1);
+
+                setUnparkedVehicles(...adjustedUnparkedVehicles);
+            }
+
             alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${parkedVehicleCoordinates.rowIndex}, ${parkedVehicleCoordinates.columnIndex})`);
 
-            setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates }]);
+            setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates, timeIn: vehicleTimeIn }]);
         } else {
             alert('No available parking slots for the vehicle type.');
         }
