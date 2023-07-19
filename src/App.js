@@ -19,10 +19,6 @@ function App() {
     [Size.MEDIUM]: [],
     [Size.LARGE]: []
   });
-  // const [parkingLot, setParkingLot] = useState(null);
-  // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
-  // const [vehicleType, setVehicleType] = useState('');
-  // const [parkedVehicle, setParkedVehicle] = useState(null);
 
   // Reset the entry point list whenever the table size changes
   useEffect(() => {
@@ -63,6 +59,7 @@ function App() {
       [Size.MEDIUM]: [],
       [Size.LARGE]: [],
     });
+    // eslint-disable-next-line
   }, [entryPoints]);
 
   return (
@@ -94,7 +91,7 @@ function App() {
               setParkingMapConfig={setParkingMapConfig}
               setParkingSlotSizes={setParkingSlotSizes}
             />
-            
+
             <ControlPanel
               parkingMapConfig={parkingMapConfig}
               entryPoints={entryPoints}

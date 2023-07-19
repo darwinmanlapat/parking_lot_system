@@ -54,7 +54,7 @@ class ParkingLot {
     }
 
     static getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
-        const { [Size.SMALL]: small, [Size.MEDIUM]: medium, [Size.LARGE]: large } = parkingSlotSizes;
+        const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = parkingSlotSizes;
     
         const previousSize = small.some(slot => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
             ? Size.SMALL
