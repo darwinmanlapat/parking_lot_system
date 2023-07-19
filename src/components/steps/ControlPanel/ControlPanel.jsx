@@ -3,6 +3,7 @@ import { useWizard } from "react-use-wizard";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
 import "./ControlPanel.scss";
+import VehicleManager from "../../../lib/VehicleManager";
 
 const ControlPanel = (props) => {
     const {
@@ -19,6 +20,7 @@ const ControlPanel = (props) => {
     };
     
     const [parkingLot, setParkingLot] = useState(null);
+    const [vehicleManager, setVehicleManager] = useState(null);
     const [selectedEntryPoint, setSelectedEntryPoint] = useState(null);
     const [currentVehicle, setCurrentVehicle] = useState(null);
     const [vehicles, setVehicles] = useState([]);
@@ -34,6 +36,7 @@ const ControlPanel = (props) => {
 
     useEffect(() => {
         setParkingLot(new ParkingLot(props.parkingSlotSizes, vehicles, unparkedVehicles));
+        setVehicleManager(new VehicleManager(vehicles, unparkedVehicles));
     }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
@@ -59,7 +62,7 @@ const ControlPanel = (props) => {
         const parkedVehicleCoordinates = parkingLot.parkVehicle(selectedEntryPoint, currentVehicle);
 
         if (!!parkedVehicleCoordinates) {
-            const isReturningVehicle = parkingLot.isReturningVehicle(currentVehicle);
+            const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
             let vehicleTimeIn = currentVehicle.timeIn;  
 
             // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
