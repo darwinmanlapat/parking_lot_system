@@ -1,5 +1,5 @@
 class VehicleManager {
-    constructor(vehicles, unparkedVehicles) {
+    constructor(vehicles, unparkedVehicles = []) {
         this._vehicles = vehicles;
         this._unparkedVehicles = unparkedVehicles;
     }
@@ -18,6 +18,14 @@ class VehicleManager {
         );
 
         return returningVehicleIndex;
+    }
+
+    getVehicleByPosition(rowIndex, columnIndex) {
+        if (this._vehicles.length === 0) {
+            return null;
+        }
+
+        return this._vehicles.filter(vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex)[0]
     }
 
     static getTimeDifference(timeIn, timeOut) {
