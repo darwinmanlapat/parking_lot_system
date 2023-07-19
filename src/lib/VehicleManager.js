@@ -5,19 +5,20 @@ class VehicleManager {
     }
 
     isReturningVehicle(vehicle) {
-        const returningVehicleIndex = this._unparkedVehicles.findIndex((unParkedVehicle) => {
+        return !!this.getReturningVehicle(vehicle);
+    }
+
+    getReturningVehicle(vehicle) {
+        if (this._unparkedVehicles.length === 0) {
+            return false;
+        }
+
+        return this._unparkedVehicles.filter((unParkedVehicle) => {
             return (
                 unParkedVehicle.license === vehicle.license &&
                 VehicleManager.getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1
             );
-        });
-
-        console.log(
-            'returningVehicle',
-            returningVehicleIndex >= 0 ? this._unparkedVehicles[returningVehicleIndex] : null
-        );
-
-        return returningVehicleIndex;
+        })[0];
     }
 
     getVehicleByPosition(rowIndex, columnIndex) {

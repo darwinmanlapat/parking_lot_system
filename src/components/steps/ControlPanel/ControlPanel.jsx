@@ -62,14 +62,15 @@ const ControlPanel = (props) => {
             let vehicleTimeIn = currentVehicle.timeIn;
 
             // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
-            if (isReturningVehicle >= 0) {
-                const adjustedUnparkedVehicles = [...unparkedVehicles];
+            if (isReturningVehicle) {
+                const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
 
-                vehicleTimeIn = unparkedVehicles[isReturningVehicle].timeIn;
+                vehicleTimeIn = returningVehicle.timeIn;
 
-                adjustedUnparkedVehicles.splice(isReturningVehicle, 1);
-
-                setUnparkedVehicles([...adjustedUnparkedVehicles]);
+                setUnparkedVehicles(unparkedVehicles.filter(unparkedVehicle =>
+                    !(unparkedVehicle.coordinates.rowIndex === returningVehicle.coordinates.rowIndex &&
+                        unparkedVehicle.coordinates.columnIndex === returningVehicle.coordinates.columnIndex)
+                ));
             }
 
             alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${parkedVehicleCoordinates.rowIndex}, ${parkedVehicleCoordinates.columnIndex})`);
