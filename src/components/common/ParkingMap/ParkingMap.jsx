@@ -4,6 +4,7 @@ import { Size } from "../../../enums/Size";
 import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
 import ParkingSlot from "../../../lib/ParkingSlot";
+import config from "../../../config";
 
 const ParkingMap = (props) => {
     const [parkingSlot, setParkingSLot] = useState(null);
@@ -47,24 +48,26 @@ const ParkingMap = (props) => {
             <table className="table table-bordered border-primary">
                 <tbody>
                     {
-                        Array.from({ length: props.config.tableSize }, (row, rowIndex) => (
-                            <tr key={'parking-map-row' + rowIndex}>
-                                {
-                                    Array.from({ length: props.config.tableSize }, (column, columnIndex) => {
-                                        const isEntryPoint = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
+                        props.config.tableSize >= config.MIN_ENTRY_POINTS && props.config.tableSize <= config.MAX_TABLE_SIZE ?
+                            Array.from({ length: props.config.tableSize }, (row, rowIndex) => (
+                                <tr key={'parking-map-row' + rowIndex}>
+                                    {
+                                        Array.from({ length: props.config.tableSize }, (column, columnIndex) => {
+                                            const isEntryPoint = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
 
-                                        return (
-                                            <td
-                                                key={'parking-map-column' + columnIndex}
-                                                className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
-                                                onClick={() => handleCellClick(rowIndex, columnIndex)}
-                                            >
-                                                {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
-                                            </td>
-                                        );
-                                    })}
-                            </tr>
-                        ))}
+                                            return (
+                                                <td
+                                                    key={'parking-map-column' + columnIndex}
+                                                    className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
+                                                    onClick={() => handleCellClick(rowIndex, columnIndex)}
+                                                >
+                                                    {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
+                                                </td>
+                                            );
+                                        })}
+                                </tr>
+                            )) : null
+                    }
                 </tbody>
             </table></center>
         </div>
