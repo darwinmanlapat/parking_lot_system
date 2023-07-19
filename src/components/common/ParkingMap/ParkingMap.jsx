@@ -5,8 +5,10 @@ import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
 
 const ParkingMap = (props) => {
+    const [ parkingLot, setParkingLot ] = useState(null);
     const [ vehicleManager, setVehicleManager ] = useState(null);
 
+    useEffect(() => setParkingLot(new ParkingLot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
     useEffect(() => setVehicleManager(new VehicleManager(props.vehicles)), [props.vehicles]);
 
     useEffect(() => console.log(vehicleManager), [vehicleManager]);
@@ -35,7 +37,7 @@ const ParkingMap = (props) => {
                 return vehicle.license;
             }
 
-            return ParkingLot.getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
+            return parkingLot?.getParkingSlotSize(rowIndex, columnIndex);
         }
     }
 

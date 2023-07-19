@@ -2,7 +2,7 @@ import { Size } from "../enums/Size";
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
 
 class ParkingLot {
-    constructor(parkingSlotSizes, vehicles, unparkedVehicles) {
+    constructor(parkingSlotSizes, vehicles = [], unparkedVehicles = []) {
         this._unparkedVehicles = unparkedVehicles;
         this._parkingSlotSizes = parkingSlotSizes;
         this._vehicles = vehicles;
@@ -21,7 +21,7 @@ class ParkingLot {
     }
 
     unparkVehicle(vehicle) {
-        const parkedVehicleSlotSize = ParkingLot.getParkingSlotSize(
+        const parkedVehicleSlotSize = this.getParkingSlotSize(
             vehicle.coordinates.rowIndex,
             vehicle.coordinates.columnIndex,
             this._parkingSlotSizes
@@ -30,8 +30,8 @@ class ParkingLot {
         return ParkingFeeCalculator.calculateFee(vehicle, parkedVehicleSlotSize);
     }
 
-    static getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
-        const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = parkingSlotSizes;
+    getParkingSlotSize(rowIndex, columnIndex) {
+        const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = this._parkingSlotSizes;
         const isSmall = small.some(slot =>
             slot.rowIndex === rowIndex && slot.columnIndex === columnIndex
         );
@@ -48,6 +48,18 @@ class ParkingLot {
         }
 
         return Size.LARGE;
+    }
+
+    updateParkingSlotSizes(rowIndex, columnIndex, parkingSlotSize) {
+        const previousSize = this.getParkingSlotSize(rowIndex, columnIndex);
+
+        this._parkingSlotSizes[previousSize] = this._parkingSlotSizes[previousSize].filter(coord =>
+            coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex
+        );
+
+        this._parkingSlotSizes[parkingSlotSize] = [...this._parkingSlotSizes[parkingSlotSize], { rowIndex, columnIndex }];
+
+        return this._parkingSlotSizes;
     }
 
     static isEntryPoint(entryPoints, rowIndex, columnIndex) {
