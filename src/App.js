@@ -7,12 +7,13 @@ import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 import ParkingLot from './lib/ParkingLot';
+import config from './config';
 
 function App() {
   const [entryPoints, setEntryPoints] = useState([]);
   const [parkingMapConfig, setParkingMapConfig] = useState({
-    numEntryPoints: 3,
-    tableSize: 3,
+    numEntryPoints: config.MIN_ENTRY_POINTS,
+    tableSize: config.MIN_ENTRY_POINTS,
   });
   const [parkingSlotSizes, setParkingSlotSizes] = useState({
     [Size.SMALL]: [],
