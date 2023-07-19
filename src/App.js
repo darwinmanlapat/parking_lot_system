@@ -7,6 +7,7 @@ import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParki
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 
 import "./App.scss";
+import ParkingLot from './lib/ParkingLot';
 
 function App() {
   const [entryPoints, setEntryPoints] = useState([]);
@@ -38,9 +39,8 @@ function App() {
 
     for (let rowIndex = 0; rowIndex < parkingMapConfig.tableSize; rowIndex++) {
       for (let columnIndex = 0; columnIndex < parkingMapConfig.tableSize; columnIndex++) {
-        const isEntryPoint = entryPoints.some(
-          entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-        );
+        const isEntryPoint = ParkingLot.isEntryPoint(entryPoints, rowIndex, columnIndex);
+        
 
         if (isEntryPoint) {
           // Remove the small slot from the array

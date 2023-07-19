@@ -40,9 +40,7 @@ const ControlPanel = (props) => {
     }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
-        const isEntryPointCell = props.entryPoints.some(
-            entryPointCell => entryPointCell.rowIndex === rowIndex && entryPointCell.columnIndex === columnIndex
-        );
+        const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
         const parkedVehicleIndex = vehicles.findIndex(
             vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex
         );

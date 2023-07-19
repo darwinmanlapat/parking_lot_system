@@ -42,6 +42,12 @@ class ParkingLot {
         return previousSize;
     }
 
+    static isEntryPoint(entryPoints, rowIndex, columnIndex) {
+        return entryPoints.some(
+            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+        );
+    }
+
     #calculateDistance(point1, point2) {
         const dx = Math.abs(point1.rowIndex - point2.rowIndex);
         const dy = Math.abs(point1.columnIndex - point2.columnIndex);
