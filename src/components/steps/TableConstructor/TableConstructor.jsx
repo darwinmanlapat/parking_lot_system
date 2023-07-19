@@ -1,8 +1,6 @@
 import { useWizard } from "react-use-wizard";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
-
-const MIN_ENTRY_POINTS = 3;
-const MAX_TABLE_SIZE = 10;
+import config from "../../../config";
 
 const TableConstructor = (props) => {
     const { activeStep, nextStep } = useWizard();
@@ -29,7 +27,7 @@ const TableConstructor = (props) => {
                             Number of Entry Points:
                             <input
                                 type="number"
-                                min={MIN_ENTRY_POINTS}
+                                min={config.MIN_ENTRY_POINTS}
                                 max={props.parkingMapConfig.tableSize * 2}
                                 value={numEntryPoints}
                                 onChange={e => {
@@ -49,8 +47,8 @@ const TableConstructor = (props) => {
                             Size of the table:
                             <input
                                 type="number"
-                                min={MIN_ENTRY_POINTS}
-                                max={MAX_TABLE_SIZE}
+                                min={config.MIN_ENTRY_POINTS}
+                                max={config.MAX_TABLE_SIZE}
                                 value={tableSize}
                                 onChange={e => {
                                     props.setParkingMapConfig(prevConfig => {
