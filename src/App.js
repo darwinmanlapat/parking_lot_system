@@ -72,8 +72,8 @@ function App() {
           <Wizard>
             <TableConstructor
               parkingMapConfig={parkingMapConfig}
-              setParkingMapConfig={setParkingMapConfig}
               entryPoints={entryPoints}
+              setParkingMapConfig={setParkingMapConfig}
             />
 
             <SetEntryPoints
