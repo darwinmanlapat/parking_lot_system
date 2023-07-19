@@ -3,12 +3,13 @@ import "./ParkingMap.scss";
 import { Size } from "../../../enums/Size";
 import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
+import ParkingSlot from "../../../lib/ParkingSlot";
 
 const ParkingMap = (props) => {
-    const [ parkingLot, setParkingLot ] = useState(null);
-    const [ vehicleManager, setVehicleManager ] = useState(null);
+    const [parkingSlot, setParkingSLot] = useState(null);
+    const [vehicleManager, setVehicleManager] = useState(null);
 
-    useEffect(() => setParkingLot(new ParkingLot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
+    useEffect(() => setParkingSLot(new ParkingSlot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
     useEffect(() => setVehicleManager(new VehicleManager(props.vehicles)), [props.vehicles]);
 
     useEffect(() => console.log(vehicleManager), [vehicleManager]);
@@ -37,7 +38,7 @@ const ParkingMap = (props) => {
                 return vehicle.license;
             }
 
-            return parkingLot?.getParkingSlotSize(rowIndex, columnIndex);
+            return parkingSlot?.getSizeByCoordinates(rowIndex, columnIndex);
         }
     }
 
