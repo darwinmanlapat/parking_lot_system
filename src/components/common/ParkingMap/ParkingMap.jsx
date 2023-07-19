@@ -1,8 +1,19 @@
+import { useEffect, useState } from "react";
 import "./ParkingMap.scss";
 import { Size } from "../../../enums/Size";
-import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
+import ParkingLot from "../../../lib/ParkingLot";
+import VehicleManager from "../../../lib/VehicleManager";
+import ParkingSlot from "../../../lib/ParkingSlot";
 
 const ParkingMap = (props) => {
+    const [parkingSlot, setParkingSLot] = useState(null);
+    const [vehicleManager, setVehicleManager] = useState(null);
+
+    useEffect(() => setParkingSLot(new ParkingSlot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
+    useEffect(() => setVehicleManager(new VehicleManager(props.vehicles)), [props.vehicles]);
+
+    useEffect(() => console.log(vehicleManager), [vehicleManager]);
+
     const handleCellClick = (rowIndex, columnIndex) => {
         if (props.handleCellClick) {
             props.handleCellClick(rowIndex, columnIndex);
@@ -21,17 +32,13 @@ const ParkingMap = (props) => {
         }
 
         if (props.step === 3) {
-            let vehicle;
-
-            if (props.vehicles.length !== 0) {
-                vehicle = props.vehicles.filter(vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex)[0];
-            }
+            const vehicle = vehicleManager?.getVehicleByPosition(rowIndex, columnIndex);
 
             if (!!vehicle) {
                 return vehicle.license;
             }
 
-            return getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
+            return parkingSlot?.getSizeByCoordinates(rowIndex, columnIndex);
         }
     }
 
@@ -44,9 +51,7 @@ const ParkingMap = (props) => {
                             <tr key={'parking-map-row' + rowIndex}>
                                 {
                                     Array.from({ length: props.config.tableSize }, (column, columnIndex) => {
-                                        const isEntryPoint = props.entryPoints.some(
-                                            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-                                        );
+                                        const isEntryPoint = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
 
                                         return (
                                             <td

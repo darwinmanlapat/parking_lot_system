@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import "./App.scss";
 import { Wizard } from 'react-use-wizard';
 import { Size } from './enums/Size';
 import TableConstructor from './components/steps/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
-
-import "./App.scss";
+import ParkingLot from './lib/ParkingLot';
+import config from './config';
 
 function App() {
   const [entryPoints, setEntryPoints] = useState([]);
   const [parkingMapConfig, setParkingMapConfig] = useState({
-    numEntryPoints: 3,
-    tableSize: 3,
+    numEntryPoints: config.MIN_ENTRY_POINTS,
+    tableSize: config.MIN_ENTRY_POINTS,
   });
   const [parkingSlotSizes, setParkingSlotSizes] = useState({
     [Size.SMALL]: [],
     [Size.MEDIUM]: [],
     [Size.LARGE]: []
   });
-  // const [parkingLot, setParkingLot] = useState(null);
-  // const [vehiclePlateNumber, setVehiclePlateNumber] = useState('');
-  // const [vehicleType, setVehicleType] = useState('');
-  // const [parkedVehicle, setParkedVehicle] = useState(null);
 
   // Reset the entry point list whenever the table size changes
   useEffect(() => {
@@ -42,14 +39,13 @@ function App() {
 
     for (let rowIndex = 0; rowIndex < parkingMapConfig.tableSize; rowIndex++) {
       for (let columnIndex = 0; columnIndex < parkingMapConfig.tableSize; columnIndex++) {
-        const isEntryPoint = entryPoints.some(
-          entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
-        );
+        const isEntryPoint = ParkingLot.isEntryPoint(entryPoints, rowIndex, columnIndex);
 
         if (isEntryPoint) {
           // Remove the small slot from the array
-          smallSlots.filter(
-            smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
+          smallSlots.filter(smallSlot =>
+            smallSlot.rowIndex !== rowIndex &&
+            smallSlot.columnIndex !== columnIndex
           );
         } else {
           // Add the slot to the small slots array
@@ -63,6 +59,7 @@ function App() {
       [Size.MEDIUM]: [],
       [Size.LARGE]: [],
     });
+    // eslint-disable-next-line
   }, [entryPoints]);
 
   return (
@@ -76,8 +73,8 @@ function App() {
           <Wizard>
             <TableConstructor
               parkingMapConfig={parkingMapConfig}
-              setParkingMapConfig={setParkingMapConfig}
               entryPoints={entryPoints}
+              setParkingMapConfig={setParkingMapConfig}
             />
 
             <SetEntryPoints
@@ -94,7 +91,7 @@ function App() {
               setParkingMapConfig={setParkingMapConfig}
               setParkingSlotSizes={setParkingSlotSizes}
             />
-            
+
             <ControlPanel
               parkingMapConfig={parkingMapConfig}
               entryPoints={entryPoints}

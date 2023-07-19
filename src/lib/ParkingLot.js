@@ -1,73 +1,125 @@
-class ParkingLot {    
-    constructor(entryPoints, parkingMap) {
-        this._entryPoints = entryPoints;
-        // this._parkingSlots = parkingSlots;
-        this._map = parkingMap;
+import config from "../config";
+import ParkingFeeCalculator from "./ParkingFeeCalculator";
+import ParkingSlot from "./ParkingSlot";
+
+/**
+ * A class representing a parking lot and its associated operations.
+ */
+class ParkingLot {
+    /**
+     * Creates an instance of ParkingLot.
+     * 
+     * @param {Object} parkingSlotSizes - An object containing parking slot sizes.
+     * @param {Array} [vehicles=[]] - An array of parked vehicles in the parking lot.
+     * @param {Array} [unparkedVehicles=[]] - An array of unparked vehicles in the parking lot.
+     */
+    constructor(parkingSlotSizes, vehicles = [], unparkedVehicles = []) {
+        this._unparkedVehicles = unparkedVehicles;
+        this._parkingSlot = new ParkingSlot(parkingSlotSizes);
+        this._vehicles = vehicles;
     }
 
-    // get getMap() {
-    //     return this._map;
-    // }
-
-    // /**
-    //  * @param {Array} parkingMap
-    //  */
-    // set setMap(parkingMap) {
-    //     this._map = parkingMap;
-    // }
-
-    parkVehicle(vehicle) {
-        const entryPointDistances = this.parkingSlots.map(slot => slot.slotNumber);
-        const closestEntryPoint = entryPointDistances.indexOf(Math.min(...entryPointDistances));
-        const availableSlots = this.parkingSlots.filter(slot => !slot.isOccupied && slot.slotType.includes(this.vehicleMap[vehicle.vehicleType]));
-
-        if (availableSlots.length === 0) {
-            console.log("No available slots for parking.");
-            return;
-        }
-
-        const closestSlot = availableSlots.reduce((closest, slot) => {
-            const slotDistance = Math.abs(slot.slotNumber - closestEntryPoint);
-            return slotDistance < Math.abs(closest.slotNumber - closestEntryPoint) ? slot : closest;
-        });
-
-        closestSlot.allocate(vehicle);
-        console.log(`Vehicle ${vehicle.licensePlateNumber} parked at Slot ${closestSlot.slotNumber}`);
+    /**
+     * Parks a vehicle in the closest available slot from the selected entry point.
+     * 
+     * @param {Object} selectedEntryPoint - The selected entry point object coordinates.
+     * @param {string} vehicleSize - The size of the vehicle (S, M, or L).
+     * 
+     * @returns {Object | null} The coordinates of the closest available parking slot if found, otherwise null.
+     */
+    parkVehicle(selectedEntryPoint, vehicleSize) {
+        return this.#findClosestAvailableSlot(selectedEntryPoint, this._parkingSlot.getPossibleSlots(vehicleSize));
     }
 
+    /**
+     * Unparks a vehicle and calculates the parking fee based on its parked slot size.
+     * 
+     * @param {Object} vehicle - The vehicle object to unpark.
+     * 
+     * @returns {number} The calculated parking fee for the vehicle.
+     */
     unparkVehicle(vehicle) {
-        const slot = this.parkingSlots.find(slot => slot.isOccupied && slot.vehicle === vehicle);
-        if (!slot) {
-            console.log("Vehicle is not parked in the parking lot.");
-            return;
-        }
+        const parkedVehicleSlotSize = this._parkingSlot.getSizeByCoordinates(
+            vehicle.coordinates.rowIndex,
+            vehicle.coordinates.columnIndex,
+        );
 
-        const entryTime = slot.vehicle.entryTime;
-        const exitTime = new Date();
-        const fee = this.calculateFee(entryTime, exitTime, vehicle.vehicleType, slot.slotType);
-
-        slot.free();
-        console.log(`Vehicle ${vehicle.licensePlateNumber} has been unparked. Fee: ${fee} pesos.`);
-
-        return fee;
+        return ParkingFeeCalculator.calculateFee(vehicle, parkedVehicleSlotSize);
     }
 
-    calculateFee(entryTime, exitTime, vehicleType, slotType) {
-        const timeDiff = Math.ceil((exitTime - entryTime) / (1000 * 60 * 60)); // hours rounded up
-        const baseRate = 40;
+    /**
+     * Checks if a given slot coordinates represent an entry point in the parking lot.
+     * 
+     * @param {Array} entryPoints - An array of entry point objects with rowIndex and columnIndex.
+     * @param {number} rowIndex - The row index of the slot to check.
+     * @param {number} columnIndex - The column index of the slot to check.
+     * 
+     * @returns {boolean} True if the slot is an entry point, false otherwise.
+     */
+    static isEntryPoint(entryPoints, rowIndex, columnIndex) {
+        return entryPoints.some(entryPoint =>
+            entryPoint.rowIndex === rowIndex &&
+            entryPoint.columnIndex === columnIndex
+        );
+    }
 
-        let exceedingHourlyRate = 0;
-        if (slotType === "SP") exceedingHourlyRate = 20;
-        else if (slotType === "MP") exceedingHourlyRate = 60;
-        else if (slotType === "LP") exceedingHourlyRate = 100;
+    /**
+     * Calculates the distance between two points represented by their coordinates.
+     * 
+     * @param {Object} point1 - The first point object with coordinates.
+     * @param {Object} point2 - The second point object with coordinates.
+     * 
+     * @returns {number} The distance between the two points.
+     * 
+     * @private
+     */
+    #calculateDistance(point1, point2) {
+        const horizontalDifference = Math.abs(point1.rowIndex - point2.rowIndex);
+        const verticalDifference = Math.abs(point1.columnIndex - point2.columnIndex);
 
-        const exceedingHoursFee = Math.max(timeDiff - 3, 0) * exceedingHourlyRate;
-        const full24HoursFee = Math.floor(timeDiff / 24) * 5000;
-        const remainderHoursFee = (timeDiff % 24) * exceedingHourlyRate;
+        return Math.max(horizontalDifference, verticalDifference);
+    }
 
-        const fee = baseRate + exceedingHoursFee + full24HoursFee + remainderHoursFee;
+    /**
+     * Finds the closest available parking slot from the entry point among the given parking slot coordinates.
+     * 
+     * @param {Object} entryPoint - The selected entry point object with coordinates.
+     * @param {Array} parkingSlotCoordinates - An array of parking slot coordinates to search from.
+     * 
+     * @returns {Object | null} The coordinates of the closest available parking slot if found, otherwise null.
+     * 
+     * @private
+     */
+    #findClosestAvailableSlot(entryPoint, parkingSlotCoordinates) {
+        let closestSlot = null;
+        let minDistance = config.MAX_TABLE_SIZE;
 
-        return fee;
+        for (let coordinates of parkingSlotCoordinates) {
+            const distance = this.#calculateDistance(entryPoint, coordinates);
+
+            if (distance < minDistance && !this.#isSlotOccupied(coordinates)) {
+                minDistance = distance;
+                closestSlot = coordinates;
+            }
+        }
+
+        return closestSlot;
+    }
+
+    /**
+     * Checks if a parking slot is occupied by a vehicle.
+     * 
+     * @param {Object} coordinates - The coordinates of the parking slot to check.
+     * 
+     * @returns {boolean} True if the slot is occupied, false otherwise.
+     * 
+     * @private
+     */
+    #isSlotOccupied(coordinates) {
+        return this._vehicles.some(vehicle =>
+            vehicle.coordinates.rowIndex === coordinates.rowIndex &&
+            vehicle.coordinates.columnIndex === coordinates.columnIndex
+        );
     }
 }
 

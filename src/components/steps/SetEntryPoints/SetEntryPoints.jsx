@@ -1,7 +1,7 @@
 import { useWizard } from "react-use-wizard";
-
 import "./SetEntryPoints.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
+import ParkingLot from "../../../lib/ParkingLot";
 
 const SetEntryPoints = (props) => {
     const { activeStep, previousStep, nextStep } = useWizard();
@@ -11,13 +11,13 @@ const SetEntryPoints = (props) => {
         const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.tableSize - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.tableSize - 1;
 
         if (isOuterCell) {
-            const isEntryPointCell = props.entryPoints.some(
-                clickedCell => clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex
-            );
+            const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
 
             // Check if a cell is clicked so we can toggle it.
             if (isEntryPointCell) {
-                props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
+                props.setEntryPoints(props.entryPoints.filter(clickedCell =>
+                    !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)
+                ));
             } else {
                 // If the is cell is not yet clicked, we should check if we have the desired amount of entry points
                 if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {

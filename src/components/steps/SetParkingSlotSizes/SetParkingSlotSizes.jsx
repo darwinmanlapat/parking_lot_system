@@ -1,22 +1,17 @@
 import { useWizard } from "react-use-wizard";
-
 import "./SetParkingSlotSizes.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
-import { getParkingSlotSize } from "../../../helpers/getParkingSlotSize";
+import { useEffect, useState } from "react";
+import ParkingSlot from "../../../lib/ParkingSlot";
 
 const SetParkingSlotSizes = (props) => {
     const { activeStep, previousStep, nextStep } = useWizard();
+    const [ parkingSlot, setParkingSLot ] = useState(null);
 
+    useEffect(() => setParkingSLot(new ParkingSlot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
+    
     const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
-        const previousSize = getParkingSlotSize(rowIndex, columnIndex, props.parkingSlotSizes);
-
-        const updatedSizes = { ...props.parkingSlotSizes };
-
-        updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord => coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex)
-
-        updatedSizes[cellValue] = [...updatedSizes[cellValue], { rowIndex, columnIndex }];
-
-        props.setParkingSlotSizes(updatedSizes)
+        props.setParkingSlotSizes(parkingSlot.updateSizes(rowIndex, columnIndex, cellValue));
     }
 
     return (
