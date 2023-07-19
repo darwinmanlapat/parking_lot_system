@@ -55,7 +55,7 @@ const ControlPanel = (props) => {
     }
 
     const handleParkButton = () => {
-        const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle);
+        const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle.size);
 
         if (!!parkedVehicleCoordinates) {
             const isReturningVehicle = vehicleManager?.isReturningVehicle(currentVehicle);

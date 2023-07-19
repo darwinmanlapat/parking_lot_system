@@ -1,3 +1,4 @@
+import config from "../config";
 import { Size } from "../enums/Size";
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
 
@@ -8,16 +9,8 @@ class ParkingLot {
         this._vehicles = vehicles;
     }
 
-    parkVehicle(selectedEntryPoint, vehicle) {
-        const parkingSlotCoordinates = this.#possibleParkingSlots(vehicle.size);
-
-        const availableSlot = this.#findClosestAvailableSlot(selectedEntryPoint, parkingSlotCoordinates);
-
-        if (availableSlot) {
-            return availableSlot;
-        } else {
-            return null;
-        }
+    parkVehicle(selectedEntryPoint, vehicleSize) {
+        return this.#findClosestAvailableSlot(selectedEntryPoint, this.#possibleParkingSlots(vehicleSize));
     }
 
     unparkVehicle(vehicle) {
@@ -70,15 +63,15 @@ class ParkingLot {
     }
 
     #calculateDistance(point1, point2) {
-        const dx = Math.abs(point1.rowIndex - point2.rowIndex);
-        const dy = Math.abs(point1.columnIndex - point2.columnIndex);
+        const horizontalDifference = Math.abs(point1.rowIndex - point2.rowIndex);
+        const verticalDifference = Math.abs(point1.columnIndex - point2.columnIndex);
 
-        return Math.max(dx, dy);
+        return Math.max(horizontalDifference, verticalDifference);
     }
 
     #findClosestAvailableSlot(entryPoint, parkingSlotCoordinates) {
         let closestSlot = null;
-        let minDistance = Infinity;
+        let minDistance = config.MAX_TABLE_SIZE;
 
         for (let coordinates of parkingSlotCoordinates) {
             const distance = this.#calculateDistance(entryPoint, coordinates);
