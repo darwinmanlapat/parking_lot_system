@@ -25,7 +25,10 @@ class VehicleManager {
             return null;
         }
 
-        return this._vehicles.filter(vehicle => vehicle.coordinates.rowIndex === rowIndex && vehicle.coordinates.columnIndex === columnIndex)[0]
+        return this._vehicles.filter(vehicle =>
+            vehicle.coordinates.rowIndex === rowIndex &&
+            vehicle.coordinates.columnIndex === columnIndex
+        )[0];
     }
 
     static getTimeDifference(timeIn, timeOut) {

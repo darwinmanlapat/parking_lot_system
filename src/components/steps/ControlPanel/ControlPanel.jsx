@@ -57,10 +57,10 @@ const ControlPanel = (props) => {
     }
 
     const handleParkButton = () => {
-        const parkedVehicleCoordinates = parkingLot.parkVehicle(selectedEntryPoint, currentVehicle);
+        const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle);
 
         if (!!parkedVehicleCoordinates) {
-            const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
+            const isReturningVehicle = vehicleManager?.isReturningVehicle(currentVehicle);
             let vehicleTimeIn = currentVehicle.timeIn;  
 
             // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
@@ -90,7 +90,7 @@ const ControlPanel = (props) => {
             vehicle => parkedVehicle.coordinates.rowIndex === vehicle.rowIndex && parkedVehicle.coordinates.columnIndex === vehicle.columnIndex
         );
 
-        const parkingFee = parkingLot.unparkVehicle(parkedVehicle);
+        const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 
         alert(parkingFee);
 

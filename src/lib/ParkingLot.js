@@ -32,25 +32,35 @@ class ParkingLot {
 
     static getParkingSlotSize(rowIndex, columnIndex, parkingSlotSizes) {
         const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = parkingSlotSizes;
+        const isSmall = small.some(slot =>
+            slot.rowIndex === rowIndex && slot.columnIndex === columnIndex
+        );
+        const isMedium = medium.some(slot =>
+            slot.rowIndex === rowIndex && slot.columnIndex === columnIndex
+        );
 
-        const previousSize = small.some((slot) => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-            ? Size.SMALL
-            : medium.some((slot) => slot.rowIndex === rowIndex && slot.columnIndex === columnIndex)
-                ? Size.MEDIUM
-                : Size.LARGE;
+        if (isSmall) {
+            return Size.SMALL;
+        }
 
-        return previousSize;
+        if (isMedium) {
+            return Size.MEDIUM;
+        }
+
+        return Size.LARGE;
     }
 
     static isEntryPoint(entryPoints, rowIndex, columnIndex) {
-        return entryPoints.some(
-            entryPoint => entryPoint.rowIndex === rowIndex && entryPoint.columnIndex === columnIndex
+        return entryPoints.some(entryPoint =>
+            entryPoint.rowIndex === rowIndex &&
+            entryPoint.columnIndex === columnIndex
         );
     }
 
     #calculateDistance(point1, point2) {
         const dx = Math.abs(point1.rowIndex - point2.rowIndex);
         const dy = Math.abs(point1.columnIndex - point2.columnIndex);
+
         return Math.max(dx, dy);
     }
 
@@ -60,6 +70,7 @@ class ParkingLot {
 
         for (let coordinates of parkingSlotCoordinates) {
             const distance = this.#calculateDistance(entryPoint, coordinates);
+
             if (distance < minDistance && !this.#isSlotOccupied(coordinates)) {
                 minDistance = distance;
                 closestSlot = coordinates;
@@ -70,10 +81,9 @@ class ParkingLot {
     }
 
     #isSlotOccupied(coordinates) {
-        return this._vehicles.some(
-            (vehicle) =>
-                vehicle.coordinates.rowIndex === coordinates.rowIndex &&
-                vehicle.coordinates.columnIndex === coordinates.columnIndex
+        return this._vehicles.some(vehicle =>
+            vehicle.coordinates.rowIndex === coordinates.rowIndex &&
+            vehicle.coordinates.columnIndex === coordinates.columnIndex
         );
     }
 

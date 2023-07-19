@@ -12,11 +12,13 @@ const SetParkingSlotSizes = (props) => {
 
         const updatedSizes = { ...props.parkingSlotSizes };
 
-        updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord => coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex)
+        updatedSizes[previousSize] = updatedSizes[previousSize].filter(coord =>
+            coord.rowIndex !== rowIndex || coord.columnIndex !== columnIndex
+        );
 
         updatedSizes[cellValue] = [...updatedSizes[cellValue], { rowIndex, columnIndex }];
 
-        props.setParkingSlotSizes(updatedSizes)
+        props.setParkingSlotSizes(updatedSizes);
     }
 
     return (

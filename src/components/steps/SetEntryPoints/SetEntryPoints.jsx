@@ -16,7 +16,9 @@ const SetEntryPoints = (props) => {
 
             // Check if a cell is clicked so we can toggle it.
             if (isEntryPointCell) {
-                props.setEntryPoints(props.entryPoints.filter(clickedCell => !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)));
+                props.setEntryPoints(props.entryPoints.filter(clickedCell =>
+                    !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)
+                ));
             } else {
                 // If the is cell is not yet clicked, we should check if we have the desired amount of entry points
                 if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {

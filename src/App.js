@@ -40,12 +40,12 @@ function App() {
     for (let rowIndex = 0; rowIndex < parkingMapConfig.tableSize; rowIndex++) {
       for (let columnIndex = 0; columnIndex < parkingMapConfig.tableSize; columnIndex++) {
         const isEntryPoint = ParkingLot.isEntryPoint(entryPoints, rowIndex, columnIndex);
-        
 
         if (isEntryPoint) {
           // Remove the small slot from the array
-          smallSlots.filter(
-            smallSlot => smallSlot.rowIndex !== rowIndex && smallSlot.columnIndex !== columnIndex
+          smallSlots.filter(smallSlot =>
+            smallSlot.rowIndex !== rowIndex &&
+            smallSlot.columnIndex !== columnIndex
           );
         } else {
           // Add the slot to the small slots array
