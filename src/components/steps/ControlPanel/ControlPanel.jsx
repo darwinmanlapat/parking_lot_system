@@ -73,7 +73,7 @@ const ControlPanel = (props) => {
 
                 adjustedUnparkedVehicles.splice(isReturningVehicle, 1);
 
-                setUnparkedVehicles(...adjustedUnparkedVehicles);
+                setUnparkedVehicles([...adjustedUnparkedVehicles]);
             }
 
             alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${parkedVehicleCoordinates.rowIndex}, ${parkedVehicleCoordinates.columnIndex})`);
