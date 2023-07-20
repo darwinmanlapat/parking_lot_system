@@ -2,9 +2,19 @@ import { useWizard } from "react-use-wizard";
 import "./SetEntryPoints.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
+import { useEffect, useState } from "react";
 
 const SetEntryPoints = (props) => {
     const { activeStep, previousStep, nextStep } = useWizard();
+    const [showNextButton, setShowNextButton] = useState(false)
+
+    useEffect(() => {
+        if (props.entryPoints.length !== 0) {
+            setShowNextButton(true);
+        } else {
+            setShowNextButton(false);
+        }
+    }, [props.entryPoints]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
@@ -30,9 +40,7 @@ const SetEntryPoints = (props) => {
     return (
         <div className="set-entry-points">
             <div className="row">
-                <h2>Select the entry points of the parking lot</h2>
-
-                <div className="col-8">
+                <div className="col-6">
                     <ParkingMap
                         step={activeStep}
                         config={props.parkingMapConfig}
@@ -41,18 +49,33 @@ const SetEntryPoints = (props) => {
                     />
                 </div>
 
-                <div className="col-4">
-                    <div className="entry-point-list">
-                        {
-                            props.entryPoints.map((entryPoint, cellIndex) => (
-                                <div key={"entry-point-cell" + cellIndex}>Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})</div>
-                            ))
-                        }
+                <div className="col-6 input-col">
+                    <h5>Select the entry points of the parking lot</h5>
+                    <div className="row">
+                        <div className="entry-point-list col-10">
+                            <ul class="list-group">
+                                {
+                                    props.entryPoints.map((entryPoint, cellIndex) => (
+                                        <li class="list-group-item" key={"entry-point-cell" + cellIndex}>
+                                            Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
                     </div>
 
-                    <div className="step-nav-buttons">
-                        <button onClick={() => previousStep()}>Previous</button>
-                        <button onClick={() => nextStep()}>Next</button>
+                    <div className="row col-11 step-nav-buttons">
+                        <div className="col">
+                            <button className="btn btn-primary prev-button" onClick={() => previousStep()}>Previous</button>
+                        </div>
+
+                        {
+                            showNextButton ?
+                                <div className="col">
+                                    <button className="btn btn-success next-button" onClick={() => nextStep()}>Next</button>
+                                </div> : null
+                        }
                     </div>
                 </div>
             </div>

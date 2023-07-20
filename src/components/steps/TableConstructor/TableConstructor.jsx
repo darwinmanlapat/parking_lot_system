@@ -10,9 +10,7 @@ const TableConstructor = (props) => {
     return (
         <div className="table-constructor">
             <div className="row">
-                <h2>Set table size and number of entry points</h2>
-
-                <div className="col-8">
+                <div className="col-6">
                     <ParkingMap
                         step={activeStep}
                         config={props.parkingMapConfig}
@@ -20,13 +18,14 @@ const TableConstructor = (props) => {
                     />
                 </div>
 
-                <div className="col-4 input-col">
+                <div className="col-6 input-col">
+                    <h5>Set table size and number of entry points</h5>
                     <div className="row">
                         <div className="col-8">
                             <label className="form-label">Number of Entry Points:</label>
                             <Stepper 
                                 min={config.MIN_ENTRY_POINTS}
-                                max={props.parkingMapConfig.tableSize * 2}
+                                max={props.parkingMapConfig.tableSize}
                                 value={props.parkingMapConfig.numEntryPoints}
                                 setCurrentValue={stepValue => {
                                     props.setParkingMapConfig(prevConfig => {
@@ -60,7 +59,7 @@ const TableConstructor = (props) => {
                     </div>
 
                     <div className="row">
-                        <div className="col-8">
+                        <div className="col-8 col-xl-5">
                             <button className="btn btn-success next-button" type="button" onClick={() => nextStep()}>Next</button>
                         </div>
                     </div>

@@ -5,5 +5,17 @@
 
     section {
         height: 85vh;
+
+        .input-col {
+            margin-top: 1rem;
+    
+            .row {
+                margin-top: 1.5rem;
+    
+                .prev-button,.next-button {
+                    width: 100%;
+                }
+            }
+        }
     }
 }

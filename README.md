@@ -84,7 +84,7 @@ Here are some of my personal assumptions and constraints for the system:
 
 - We will only let the user designate the table's outer cells (edges and sides) as an entry point to mimick a simple parking lot.
 
-- We will limit the maximum number of entry point to twice the table size so that the user cannot designate all the outer cells as an entry point.
+- We will limit the maximum number of entry point equal to the table size so that the user cannot designate all the outer cells as an entry point.
 
 ### Parking
 
