@@ -1,5 +1,5 @@
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
-import isEqual from "lodash/isEqual";
+import { isEmpty, isEqual, isEqualWith, isNull, isNil } from "lodash";
 
 /**
  * A class that manages vehicles and unparked vehicles in a parking lot system.
@@ -17,6 +17,26 @@ class VehicleManager {
     }
 
     /**
+     * Checks if a vehicle is parked in the parking lot.
+     * 
+     * @param {object} vehicle - The vehicle object to check.
+     * 
+     * @returns {boolean} - True if the vehicle is parked, false otherwise.
+     */
+    isParked(vehicle) {
+        if (isEmpty(this._parkedVehicles)) {
+            return false;
+        }
+
+        // Check if there is a similar object in the parked vehicle array but don't check for the timeOut property
+        return this._parkedVehicles.some(parkedVehicle => {
+            return isEqualWith(parkedVehicle, vehicle, (value1, value2, key) => {
+                return key === "timeOut" ? true : undefined;
+            });
+        });
+    }
+
+    /**
      * Checks if a given vehicle is a returning vehicle.
      * 
      * @param {Object} vehicle - The vehicle object to check.
@@ -24,31 +44,26 @@ class VehicleManager {
      * @returns {boolean} True if the vehicle is returning, false otherwise.
      */
     isReturningVehicle(vehicle) {
-        return !!this.getReturningVehicle(vehicle);
+        return !isNil(this.getReturningVehicle(vehicle));
     }
 
+    /**
+     * Checks if a vehicle is valid with complete details for parking and unparking.
+     * 
+     * @param {object} vehicle - The vehicle object to check.
+     * 
+     * @returns {boolean} - True if the vehicle is valid, false otherwise.
+     */
     isValidVehicle(vehicle) {
-        // if (vehicle && vehicle.license && vehicle.size && vehicle.timeIn) {
-        //     if (Object.keys(currentVehicle.coordinates).length !== 0 && currentVehicle.timeOut) {
-        //         setIsButtonDisabled(false);
-        //     } else {
-        //         setIsButtonDisabled(true);
-        //     }
-        // } else {
-        //     setIsButtonDisabled(true);
-        // }
-
-        // return Object.values(vehicle).some(x => x !== null && x !== '' && x !== {});
-    }
-
-    isParked(vehicle) {
-        if (this._parkedVehicles.length === 0) {
+        if (isNull(vehicle)) {
             return false;
         }
 
-        return this._parkedVehicles.some(parkedVehicle => {
-            return isEqual(parkedVehicle, vehicle);
-        });
+        if (this.isParked(vehicle)) {
+            return !isEmpty(vehicle.timeOut);
+        } else {
+            return !isEmpty(vehicle.timeIn, vehicle.license, vehicle.size);
+        }
     }
 
     /**
@@ -56,13 +71,14 @@ class VehicleManager {
      * 
      * @param {Object} vehicle - The vehicle object to check for returning status.
      * 
-     * @returns {Object | boolean} The returning vehicle if found, otherwise false.
+     * @returns {Object | null} The returning vehicle if found, null otherwise.
      */
     getReturningVehicle(vehicle) {
-        if (this._unparkedVehicles.length === 0) {
-            return false;
+        if (isEmpty(this._unparkedVehicles)) {
+            return null;
         }
 
+        // Get the unparked vehicle that has the same license and has timed out within 1 hour
         return this._unparkedVehicles.filter((unParkedVehicle) => {
             return (
                 unParkedVehicle.license === vehicle.license &&
@@ -80,13 +96,12 @@ class VehicleManager {
      * @returns {Object | null} The vehicle object if found, null otherwise.
      */
     getVehicleByPosition(rowIndex, columnIndex) {
-        if (this._parkedVehicles.length === 0) {
+        if (isEmpty(this._parkedVehicles)) {
             return null;
         }
 
         return this._parkedVehicles.filter(vehicle =>
-            vehicle.coordinates.rowIndex === rowIndex &&
-            vehicle.coordinates.columnIndex === columnIndex
+            isEqual(vehicle.coordinates, {rowIndex, columnIndex})
         )[0];
     }
 }

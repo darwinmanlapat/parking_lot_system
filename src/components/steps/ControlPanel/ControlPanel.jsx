@@ -5,6 +5,7 @@ import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
 import ReactInputMask from "react-input-mask";
+import { isNil } from "lodash";
 
 const ControlPanel = (props) => {
     const {
@@ -41,24 +42,8 @@ const ControlPanel = (props) => {
     }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
     useEffect(() => {
-        // if (currentVehicle && currentVehicle.license && currentVehicle.size && currentVehicle.timeIn) {
-        //     if (Object.keys(currentVehicle.coordinates).length !== 0 && currentVehicle.timeOut) {
-        //         setIsButtonDisabled(false);
-        //     } else {
-        //         setIsButtonDisabled(true);
-        //     }
-        // } else {
-        //     setIsButtonDisabled(true);
-        // }
-
-        // if (!!currentVehicle) {
-        //     return false;
-        // }
-
-        // if (currentVehicle.coordinates !== {} && )
-
-        setIsButtonDisabled(vehicleManager?.isValidVehicle(currentVehicle));
-    }, [currentVehicle]);
+        setIsButtonDisabled(!vehicleManager?.isValidVehicle(currentVehicle));
+    }, [vehicleManager, currentVehicle]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
@@ -67,7 +52,7 @@ const ControlPanel = (props) => {
         if (isEntryPointCell) {
             setSelectedEntryPoint({ rowIndex, columnIndex });
             setCurrentVehicle(defaultVehicle);
-        } else if (!!parkedVehicle) {
+        } else if (!isNil(parkedVehicle)) {
             setCurrentVehicle(parkedVehicle);
         } else {
             setCurrentVehicle(null);
@@ -78,7 +63,7 @@ const ControlPanel = (props) => {
     const handleParkButton = () => {
         const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle.size);
 
-        if (!!parkedVehicleCoordinates) {
+        if (!isNil(parkedVehicleCoordinates)) {
             const isReturningVehicle = vehicleManager?.isReturningVehicle(currentVehicle);
             let vehicleTimeIn = currentVehicle.timeIn;
 
@@ -139,7 +124,7 @@ const ControlPanel = (props) => {
                     <div className="row">
                         <div className="col-8">
                             {
-                                selectedEntryPoint || !!currentVehicle ?
+                                selectedEntryPoint || !isNil(currentVehicle) ?
                                     <div className="park-vehicle">
                                         <h6><u>Vehicle Details</u></h6>
 

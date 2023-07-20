@@ -5,6 +5,7 @@ import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
 import ParkingSlot from "../../../lib/ParkingSlot";
 import config from "../../../config";
+import { isNil } from "lodash";
 
 const ParkingMap = (props) => {
     const [parkingSlot, setParkingSLot] = useState(null);
@@ -35,7 +36,7 @@ const ParkingMap = (props) => {
         if (props.step === 3) {
             const vehicle = vehicleManager?.getVehicleByPosition(rowIndex, columnIndex);
 
-            if (!!vehicle) {
+            if (!isNil(vehicle)) {
                 return (<div className="parked-vehicle">{vehicle.license}</div>);
             }
 
