@@ -113,6 +113,7 @@ const ControlPanel = (props) => {
                 position="top-right"
                 toastOptions={{
                     duration: config.TOAST_DURATION,
+                    className: "custom-toast",
                 }}
             />
 
