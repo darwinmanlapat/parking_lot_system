@@ -106,8 +106,13 @@ Here are some of my personal assumptions and constraints for the system:
 
 ## Improvements
 
+### UI/UX
 - [ ] Add proper input validations
 - [ ] Add styling
-- [ ] Improve visual map (include animations?)
-- [ ] Add Cypress e2e testing
+- [ ] Add indicator on which vehicle/entry point is selected on the map
 - [ ] Improve validation on returning vehicles
+- [ ] Improve visual map (include animations?)
+
+### Internal System Design
+- [ ] Add Cypress e2e testing
+- [ ] Use React Redux for state management
