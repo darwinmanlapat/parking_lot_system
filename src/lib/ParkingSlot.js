@@ -1,4 +1,5 @@
 import { Size } from "../enums/Size";
+import { findKey, isEqual } from "lodash";
 
 /**
  * A class representing parking slots and associated operations.
@@ -22,23 +23,7 @@ class ParkingSlot {
      * @returns {string} The size of the parking slot (S, M, or L).
      */
     getSizeByCoordinates(rowIndex, columnIndex) {
-        const { [Size.SMALL]: small, [Size.MEDIUM]: medium } = this._sizes;
-        const isSmall = small.some(slot =>
-            slot.rowIndex === rowIndex && slot.columnIndex === columnIndex
-        );
-        const isMedium = medium.some(slot =>
-            slot.rowIndex === rowIndex && slot.columnIndex === columnIndex
-        );
-
-        if (isSmall) {
-            return Size.SMALL;
-        }
-
-        if (isMedium) {
-            return Size.MEDIUM;
-        }
-
-        return Size.LARGE;
+        return findKey(this._sizes, slots => slots.some((slot) => isEqual(slot, { rowIndex, columnIndex })));
     }
 
     /**
