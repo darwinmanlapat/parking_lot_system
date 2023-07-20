@@ -1,4 +1,5 @@
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
+import isEqual from "lodash/isEqual";
 
 /**
  * A class that manages vehicles and unparked vehicles in a parking lot system.
@@ -24,6 +25,30 @@ class VehicleManager {
      */
     isReturningVehicle(vehicle) {
         return !!this.getReturningVehicle(vehicle);
+    }
+
+    isValidVehicle(vehicle) {
+        // if (vehicle && vehicle.license && vehicle.size && vehicle.timeIn) {
+        //     if (Object.keys(currentVehicle.coordinates).length !== 0 && currentVehicle.timeOut) {
+        //         setIsButtonDisabled(false);
+        //     } else {
+        //         setIsButtonDisabled(true);
+        //     }
+        // } else {
+        //     setIsButtonDisabled(true);
+        // }
+
+        // return Object.values(vehicle).some(x => x !== null && x !== '' && x !== {});
+    }
+
+    isParked(vehicle) {
+        if (this._parkedVehicles.length === 0) {
+            return false;
+        }
+
+        return this._parkedVehicles.some(parkedVehicle => {
+            return isEqual(parkedVehicle, vehicle);
+        });
     }
 
     /**

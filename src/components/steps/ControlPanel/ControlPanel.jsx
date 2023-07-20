@@ -25,7 +25,7 @@ const ControlPanel = (props) => {
     const [currentVehicle, setCurrentVehicle] = useState(null);
     const [vehicles, setVehicles] = useState([]);
     const [unparkedVehicles, setUnparkedVehicles] = useState([]);
-    const [isParkedVehicle, setIsParkedVehicle] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
 
@@ -40,6 +40,26 @@ const ControlPanel = (props) => {
         setVehicleManager(new VehicleManager(vehicles, unparkedVehicles));
     }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
+    useEffect(() => {
+        // if (currentVehicle && currentVehicle.license && currentVehicle.size && currentVehicle.timeIn) {
+        //     if (Object.keys(currentVehicle.coordinates).length !== 0 && currentVehicle.timeOut) {
+        //         setIsButtonDisabled(false);
+        //     } else {
+        //         setIsButtonDisabled(true);
+        //     }
+        // } else {
+        //     setIsButtonDisabled(true);
+        // }
+
+        // if (!!currentVehicle) {
+        //     return false;
+        // }
+
+        // if (currentVehicle.coordinates !== {} && )
+
+        setIsButtonDisabled(vehicleManager?.isValidVehicle(currentVehicle));
+    }, [currentVehicle]);
+
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
         const parkedVehicle = vehicleManager.getVehicleByPosition(rowIndex, columnIndex);
@@ -47,10 +67,8 @@ const ControlPanel = (props) => {
         if (isEntryPointCell) {
             setSelectedEntryPoint({ rowIndex, columnIndex });
             setCurrentVehicle(defaultVehicle);
-            setIsParkedVehicle(false);
         } else if (!!parkedVehicle) {
             setCurrentVehicle(parkedVehicle);
-            setIsParkedVehicle(true);
         } else {
             setCurrentVehicle(null);
             setSelectedEntryPoint(null);
@@ -126,17 +144,19 @@ const ControlPanel = (props) => {
                                         <h6><u>Vehicle Details</u></h6>
 
                                         {
-                                            selectedEntryPoint ? <span><i>Entry Point: Row {selectedEntryPoint.rowIndex} Column {selectedEntryPoint.columnIndex}</i></span> : null
+                                            selectedEntryPoint ? <span><i>Entry Point: Row {selectedEntryPoint.rowIndex + 1} Column {selectedEntryPoint.columnIndex + 1}</i></span> : null
                                         }
 
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="license-plate">License Plate</label>
-                                                <ReactInputMask alwaysShowMask
-                                                    disabled={isParkedVehicle}
+                                                <ReactInputMask
+                                                    alwaysShowMask
+                                                    autoFocus
                                                     id="license-plate"
                                                     className="form-control"
                                                     mask="aaa-9999"
+                                                    disabled={vehicleManager.isParked(currentVehicle)}
                                                     value={currentVehicle.license}
                                                     beforeMaskedStateChange={({ nextState }) => {
                                                         let { value } = nextState;
@@ -161,14 +181,19 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="vehicle-size">Vehicle Size</label>
-                                                <select disabled={isParkedVehicle} className="form-select" id="vehicle-size" value={currentVehicle.size} onChange={(e) => {
-                                                    setCurrentVehicle(prevVehicle => {
-                                                        return {
-                                                            ...prevVehicle,
-                                                            size: e.target.value,
-                                                        }
-                                                    });
-                                                }}>
+                                                <select
+                                                    className="form-select"
+                                                    id="vehicle-size"
+                                                    value={currentVehicle.size}
+                                                    disabled={vehicleManager.isParked(currentVehicle)}
+                                                    onChange={(e) => {
+                                                        setCurrentVehicle(prevVehicle => {
+                                                            return {
+                                                                ...prevVehicle,
+                                                                size: e.target.value,
+                                                            }
+                                                        });
+                                                    }}>
                                                     <option>S</option>
                                                     <option>M</option>
                                                     <option>L</option>
@@ -179,30 +204,41 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="time-in">Time in</label>
-                                                <input disabled={isParkedVehicle} className="form-control" id="time-in" type="datetime-local" value={currentVehicle.timeIn} onChange={(e) => {
-                                                    setCurrentVehicle(prevVehicle => {
-                                                        return {
-                                                            ...prevVehicle,
-                                                            timeIn: e.target.value,
-                                                        }
-                                                    });
-                                                }} />
+                                                <input
+                                                    className="form-control"
+                                                    id="time-in"
+                                                    type="datetime-local"
+                                                    value={currentVehicle.timeIn}
+                                                    disabled={vehicleManager.isParked(currentVehicle)}
+                                                    onChange={(e) => {
+                                                        setCurrentVehicle(prevVehicle => {
+                                                            return {
+                                                                ...prevVehicle,
+                                                                timeIn: e.target.value,
+                                                            }
+                                                        });
+                                                    }} />
                                             </div>
                                         </div>
 
                                         {
-                                            Object.keys(currentVehicle.coordinates).length !== 0 ?
+                                            vehicleManager.isParked(currentVehicle) ?
                                                 <div className="row">
                                                     <div className="col-8">
                                                         <label htmlFor="time-out">Time out</label>
-                                                        <input className="form-control" id="time-out" type="datetime-local" value={currentVehicle.timeOut} onChange={(e) => {
-                                                            setCurrentVehicle(prevVehicle => {
-                                                                return {
-                                                                    ...prevVehicle,
-                                                                    timeOut: e.target.value,
-                                                                }
-                                                            });
-                                                        }} />
+                                                        <input
+                                                            className="form-control"
+                                                            id="time-out"
+                                                            type="datetime-local"
+                                                            value={currentVehicle.timeOut}
+                                                            onChange={(e) => {
+                                                                setCurrentVehicle(prevVehicle => {
+                                                                    return {
+                                                                        ...prevVehicle,
+                                                                        timeOut: e.target.value,
+                                                                    }
+                                                                });
+                                                            }} />
                                                     </div>
                                                 </div> : null
                                         }
@@ -210,8 +246,18 @@ const ControlPanel = (props) => {
                                         <div className="row col-11 step-nav-buttons">
                                             <div className="col">
                                                 {
-                                                    Object.keys(currentVehicle.coordinates).length !== 0 ?
-                                                        <button className="btn btn-success" onClick={() => handleUnparkButton(currentVehicle)}>Unpark Vehicle</button> : <button className="btn btn-success" onClick={() => handleParkButton()}>Park Vehicle</button>
+                                                    vehicleManager.isParked(currentVehicle) ?
+                                                        <button
+                                                            className="btn btn-success"
+                                                            disabled={isButtonDisabled}
+                                                            onClick={() => handleUnparkButton(currentVehicle)}
+                                                        >Unpark Vehicle</button> :
+
+                                                        <button
+                                                            className="btn btn-success"
+                                                            onClick={() => handleParkButton()}
+                                                            disabled={isButtonDisabled}
+                                                        >Park Vehicle</button>
                                                 }
                                             </div>
                                         </div>
