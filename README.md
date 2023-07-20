@@ -61,7 +61,6 @@ You are free to design the system in any pattern you wish. However, take note th
 4. Two functions to park a vehicle and unpark it. The functions must consider the attributes of the vehicle as described above.
 When the unpark function is called, it must also return how much the vehicle concerned is charged.
 
-
 ## Goals
 
 - Complete all the requirements for the exam
@@ -104,15 +103,22 @@ Here are some of my personal assumptions and constraints for the system:
 
 - We assume that user will enter the same vehicle details (license and size) when trying to return and park.
 
+### Time-in/time-out
+
+- Vehicles can only set their time to specific ranges to prevent negative fees
+    - Time-in: starting from the current date and onwards
+    - Time-out: starting from their time-in and onwards
+
 ## Improvements
 
 ### UI/UX
-- [ ] Add proper input validations
-- [ ] Add styling
+- [x] Add styling
+- [x] Add proper input validations
 - [ ] Add indicator on which vehicle/entry point is selected on the map
 - [ ] Improve validation on returning vehicles
 - [ ] Improve visual map (include animations?)
 
 ### Internal System Design
+- [ ] Break down some of the bigger components to smaller components
 - [ ] Add Cypress e2e testing
 - [ ] Use React Redux for state management

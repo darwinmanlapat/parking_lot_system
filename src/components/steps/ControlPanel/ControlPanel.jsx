@@ -133,7 +133,7 @@ const ControlPanel = (props) => {
                                         }
 
                                         <div className="row">
-                                            <div className="col-8">
+                                            <div className="col-9">
                                                 <label htmlFor="license-plate">License Plate</label>
                                                 <ReactInputMask
                                                     alwaysShowMask
@@ -164,7 +164,7 @@ const ControlPanel = (props) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-8">
+                                            <div className="col-9">
                                                 <label htmlFor="vehicle-size">Vehicle Size</label>
                                                 <select
                                                     className="form-select"
@@ -187,12 +187,13 @@ const ControlPanel = (props) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-8">
+                                            <div className="col-9">
                                                 <label htmlFor="time-in">Time in</label>
                                                 <input
                                                     className="form-control"
                                                     id="time-in"
                                                     type="datetime-local"
+                                                    min={new Date().toISOString().slice(0, 16)}
                                                     value={currentVehicle.timeIn}
                                                     disabled={vehicleManager.isParked(currentVehicle)}
                                                     onChange={(e) => {
@@ -209,12 +210,13 @@ const ControlPanel = (props) => {
                                         {
                                             vehicleManager.isParked(currentVehicle) ?
                                                 <div className="row">
-                                                    <div className="col-8">
+                                                    <div className="col-9">
                                                         <label htmlFor="time-out">Time out</label>
                                                         <input
                                                             className="form-control"
                                                             id="time-out"
                                                             type="datetime-local"
+                                                            min={currentVehicle.timeIn.slice(0, 16)}
                                                             value={currentVehicle.timeOut}
                                                             onChange={(e) => {
                                                                 setCurrentVehicle(prevVehicle => {

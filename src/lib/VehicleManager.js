@@ -60,7 +60,7 @@ class VehicleManager {
         }
 
         if (this.isParked(vehicle)) {
-            return !isEmpty(vehicle.timeOut);
+            return !isEmpty(vehicle.timeOut) && vehicle.timeIn <= vehicle.timeOut;
         } else {
             return !isEmpty(vehicle.timeIn, vehicle.license, vehicle.size);
         }
