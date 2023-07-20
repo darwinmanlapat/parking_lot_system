@@ -9,7 +9,6 @@ import ReactInputMask from "react-input-mask";
 const ControlPanel = (props) => {
     const {
         activeStep,
-        previousStep,
     } = useWizard();
 
     const defaultVehicle = {
@@ -26,6 +25,7 @@ const ControlPanel = (props) => {
     const [currentVehicle, setCurrentVehicle] = useState(null);
     const [vehicles, setVehicles] = useState([]);
     const [unparkedVehicles, setUnparkedVehicles] = useState([]);
+    const [isParkedVehicle, setIsParkedVehicle] = useState(false);
 
     useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
 
@@ -47,8 +47,10 @@ const ControlPanel = (props) => {
         if (isEntryPointCell) {
             setSelectedEntryPoint({ rowIndex, columnIndex });
             setCurrentVehicle(defaultVehicle);
+            setIsParkedVehicle(false);
         } else if (!!parkedVehicle) {
             setCurrentVehicle(parkedVehicle);
+            setIsParkedVehicle(true);
         } else {
             setCurrentVehicle(null);
             setSelectedEntryPoint(null);
@@ -130,7 +132,9 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="license-plate">License Plate</label>
+                                                
                                                 <ReactInputMask alwaysShowMask
+                                                    disabled={isParkedVehicle}
                                                     id="license-plate"
                                                     className="form-control"
                                                     mask="aaa-9999"
@@ -158,7 +162,7 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="vehicle-size">Vehicle Size</label>
-                                                <select className="form-select" id="vehicle-size" value={currentVehicle.size} onChange={(e) => {
+                                                <select disabled={isParkedVehicle} className="form-select" id="vehicle-size" value={currentVehicle.size} onChange={(e) => {
                                                     setCurrentVehicle(prevVehicle => {
                                                         return {
                                                             ...prevVehicle,
@@ -176,7 +180,7 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="time-in">Time in</label>
-                                                <input className="form-control" id="time-in" type="datetime-local" value={currentVehicle.timeIn} onChange={(e) => {
+                                                <input disabled={isParkedVehicle} className="form-control" id="time-in" type="datetime-local" value={currentVehicle.timeIn} onChange={(e) => {
                                                     setCurrentVehicle(prevVehicle => {
                                                         return {
                                                             ...prevVehicle,
