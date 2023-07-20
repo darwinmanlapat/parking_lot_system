@@ -24,6 +24,18 @@
             &:hover {
                 cursor: pointer;
             }
+
+            .size-select {
+                border: none;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &:focus-visible {
+                    outline: none;
+                }
+            }
         }
     }
 }

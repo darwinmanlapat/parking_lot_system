@@ -24,7 +24,7 @@ const ParkingMap = (props) => {
     const renderCell = (rowIndex, columnIndex) => {
         if (props.step === 2) {
             return (
-                <select onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
+                <select className="size-select" onChange={e => props.handleParkingSlotSizeChange(rowIndex, columnIndex, e.target.value)}>
                     <option>{Size.SMALL}</option>
                     <option>{Size.MEDIUM}</option>
                     <option>{Size.LARGE}</option>
