@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ControlPanel.scss";
 import { useWizard } from "react-use-wizard";
-import { isNil } from "lodash";
+import { isEqual, isNil } from "lodash";
 import toast, { Toaster } from 'react-hot-toast';
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
@@ -67,27 +67,26 @@ const ControlPanel = (props) => {
         if (vehicleManager.isParked(currentVehicle, true)) {
             toast.error(`Vehicle ${currentVehicle.license} is already parked.`);
         } else {
-            const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle.size);
+            const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
+            let incomingVehicle = currentVehicle;
+
+            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
+            if (isReturningVehicle) {
+                const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
+                
+                incomingVehicle = {...incomingVehicle, timeIn: returningVehicle.timeIn, size: returningVehicle.size};
+
+                setUnparkedVehicles(unparkedVehicles.filter(unparkedVehicle =>
+                    !isEqual(unparkedVehicle.coordinates, returningVehicle.coordinates)
+                ));
+            }
+
+            const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, incomingVehicle.size);
 
             if (!isNil(parkedVehicleCoordinates)) {
-                const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
-                let vehicleTimeIn = currentVehicle.timeIn;
+                toast.success(`Vehicle ${incomingVehicle.license} parked at row ${parkedVehicleCoordinates.rowIndex + 1} column ${parkedVehicleCoordinates.columnIndex + 1}.`);
 
-                // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
-                if (isReturningVehicle) {
-                    const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
-
-                    vehicleTimeIn = returningVehicle.timeIn;
-
-                    setUnparkedVehicles(unparkedVehicles.filter(unparkedVehicle =>
-                        !(unparkedVehicle.coordinates.rowIndex === returningVehicle.coordinates.rowIndex &&
-                            unparkedVehicle.coordinates.columnIndex === returningVehicle.coordinates.columnIndex)
-                    ));
-                }
-
-                toast.success(`Vehicle ${currentVehicle.license} parked at row ${parkedVehicleCoordinates.rowIndex} column ${parkedVehicleCoordinates.columnIndex}.`);
-
-                setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates, timeIn: vehicleTimeIn }]);
+                setVehicles([...vehicles, { ...incomingVehicle, coordinates: parkedVehicleCoordinates }]);
             } else {
                 toast.error('Sorry, no available parking slot for your vehicle.');
             }
@@ -105,8 +104,7 @@ const ControlPanel = (props) => {
         setCurrentVehicle(null);
         setUnparkedVehicles(prevUnparkedVehicles => [...prevUnparkedVehicles, parkedVehicle]);
         setVehicles(vehicles.filter(vehicle =>
-            !(vehicle.coordinates.rowIndex === parkedVehicle.coordinates.rowIndex &&
-                vehicle.coordinates.columnIndex === parkedVehicle.coordinates.columnIndex)
+            !isEqual(vehicle.coordinates, parkedVehicle.coordinates)
         ));
     }
 
@@ -115,6 +113,7 @@ const ControlPanel = (props) => {
             <Toaster
                 position="top-right"
                 toastOptions={{
+                    reverseOrder: true,
                     duration: config.TOAST_DURATION,
                     className: "custom-toast",
                 }}
