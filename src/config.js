@@ -10,7 +10,8 @@ const config = {
         [Size.MEDIUM]: 60,
         [Size.LARGE]: 100,
     },
-    "DAILY_RATE": 5000
+    "DAILY_RATE": 5000,
+    "TOAST_DURATION": 6000,
 }
 
 export default config;

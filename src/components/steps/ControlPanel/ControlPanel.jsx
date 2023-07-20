@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import "./ControlPanel.scss";
 import { useWizard } from "react-use-wizard";
+import { isNil } from "lodash";
+import toast, { Toaster } from 'react-hot-toast';
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
 import VehicleManager from "../../../lib/VehicleManager";
 import ReactInputMask from "react-input-mask";
-import { isNil } from "lodash";
+import config from "../../../config";
 
 const ControlPanel = (props) => {
     const {
@@ -80,11 +82,11 @@ const ControlPanel = (props) => {
                 ));
             }
 
-            alert(`Vehicle with license plate ${currentVehicle.license} parked at coordinates (${parkedVehicleCoordinates.rowIndex}, ${parkedVehicleCoordinates.columnIndex})`);
+            toast.success(`Vehicle ${currentVehicle.license} parked at row ${parkedVehicleCoordinates.rowIndex} column ${parkedVehicleCoordinates.columnIndex}.`);
 
             setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates, timeIn: vehicleTimeIn }]);
         } else {
-            alert('No available parking slots for the vehicle type.');
+            toast.error('Sorry, no available parking slot for your vehicle.');
         }
 
         setCurrentVehicle(null);
@@ -95,7 +97,7 @@ const ControlPanel = (props) => {
         const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 
         // TODO: Add this to the screen instead of using an alert
-        alert(parkingFee);
+        toast.success(`Vehicle ${parkedVehicle.license}'s parking fee is ₱${parkingFee}`);
 
         setCurrentVehicle(null);
         setUnparkedVehicles(prevUnparkedVehicles => [...prevUnparkedVehicles, parkedVehicle]);
@@ -107,6 +109,13 @@ const ControlPanel = (props) => {
 
     return (
         <div className="control-panel">
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: config.TOAST_DURATION,
+                }}
+            />
+
             <div className="row">
                 <div className="col-6">
                     <ParkingMap
