@@ -70,12 +70,13 @@ const SetEntryPoints = (props) => {
                             <button className="btn btn-primary prev-button" onClick={() => previousStep()}>Previous</button>
                         </div>
 
-                        {
-                            showNextButton ?
-                                <div className="col">
-                                    <button className="btn btn-success next-button" onClick={() => nextStep()}>Next</button>
-                                </div> : null
-                        }
+                        <div className="col">
+                            <button
+                                className="btn btn-success next-button"
+                                disabled={!showNextButton}
+                                onClick={() => nextStep()}
+                            >Next</button>
+                        </div>
                     </div>
                 </div>
             </div>
