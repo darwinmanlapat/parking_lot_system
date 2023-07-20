@@ -124,7 +124,7 @@ const ControlPanel = (props) => {
                                 selectedEntryPoint || !!currentVehicle ?
                                     <div className="park-vehicle">
                                         <h6><u>Vehicle Details</u></h6>
-                                        
+
                                         {
                                             selectedEntryPoint ? <span><i>Entry Point: Row {selectedEntryPoint.rowIndex} Column {selectedEntryPoint.columnIndex}</i></span> : null
                                         }
@@ -132,7 +132,6 @@ const ControlPanel = (props) => {
                                         <div className="row">
                                             <div className="col-8">
                                                 <label htmlFor="license-plate">License Plate</label>
-                                                
                                                 <ReactInputMask alwaysShowMask
                                                     disabled={isParkedVehicle}
                                                     id="license-plate"

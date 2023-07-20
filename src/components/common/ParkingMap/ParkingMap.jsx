@@ -36,7 +36,7 @@ const ParkingMap = (props) => {
             const vehicle = vehicleManager?.getVehicleByPosition(rowIndex, columnIndex);
 
             if (!!vehicle) {
-                return vehicle.license;
+                return (<div className="parked-vehicle">{vehicle.license}</div>);
             }
 
             return parkingSlot?.getSizeByCoordinates(rowIndex, columnIndex);
