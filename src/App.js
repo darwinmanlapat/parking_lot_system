@@ -24,7 +24,7 @@ function App() {
   // Reset the entry point list whenever the table size changes
   useEffect(() => {
     setEntryPoints([]);
-  }, [parkingMapConfig.tableSize]);
+  }, [parkingMapConfig.tableSize, parkingMapConfig.numEntryPoints]);
 
   useEffect(() => {
     console.log('parkingMapConfig', parkingMapConfig);

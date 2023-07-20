@@ -53,10 +53,10 @@ const SetEntryPoints = (props) => {
                     <h5>Select the entry points of the parking lot</h5>
                     <div className="row">
                         <div className="entry-point-list col-10">
-                            <ul class="list-group">
+                            <ul className="list-group">
                                 {
                                     props.entryPoints.map((entryPoint, cellIndex) => (
-                                        <li class="list-group-item" key={"entry-point-cell" + cellIndex}>
+                                        <li className="list-group-item" key={"entry-point-cell" + cellIndex}>
                                             Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})
                                         </li>
                                     ))
