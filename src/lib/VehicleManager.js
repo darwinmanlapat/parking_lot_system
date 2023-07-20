@@ -62,7 +62,7 @@ class VehicleManager {
         if (this.isParked(vehicle)) {
             return !isEmpty(vehicle.timeOut) && vehicle.timeIn <= vehicle.timeOut;
         } else {
-            return !isEmpty(vehicle.timeIn, vehicle.license, vehicle.size);
+            return !isEmpty(vehicle.timeIn, vehicle.license, vehicle.size) && this.#isValidLicense(vehicle.license);
         }
     }
 
@@ -103,6 +103,17 @@ class VehicleManager {
         return this._parkedVehicles.filter(vehicle =>
             isEqual(vehicle.coordinates, {rowIndex, columnIndex})
         )[0];
+    }
+
+    /**
+     * Checks if a given string represents a valid license plate with the pattern: first 3 letters, a dash, and then 4 numbers.
+     * 
+     * @param {string} plate - The string to check for a valid license plate.
+     * 
+     * @returns {boolean} True if the input string is a valid license plate, false otherwise.
+     */
+    #isValidLicense(license) {
+        return (/^[A-Z]{3}-\d{4}$/).test(license);
     }
 }
 
