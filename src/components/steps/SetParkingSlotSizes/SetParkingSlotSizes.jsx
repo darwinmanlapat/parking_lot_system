@@ -29,7 +29,7 @@ const SetParkingSlotSizes = (props) => {
                 <div className="col-6 input-col">
                     <h5>Set the parking slot sizes</h5>
 
-                    <div>Please set the parking slot sizes on the table on the right.</div>
+                    <div>Please set the parking slot sizes on the table.</div>
 
                     <div className="row col-11 step-nav-buttons">
                         <div className="col">

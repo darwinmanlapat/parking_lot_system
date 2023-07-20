@@ -57,7 +57,7 @@ const SetEntryPoints = (props) => {
                                 {
                                     props.entryPoints.map((entryPoint, cellIndex) => (
                                         <li className="list-group-item" key={"entry-point-cell" + cellIndex}>
-                                            Entry Point # {cellIndex + 1}: ({entryPoint.rowIndex}, {entryPoint.columnIndex})
+                                            Entry Point # {cellIndex + 1}: (Row {entryPoint.rowIndex + 1}, Column {entryPoint.columnIndex + 1})
                                         </li>
                                     ))
                                 }

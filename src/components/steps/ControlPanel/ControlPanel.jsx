@@ -54,6 +54,7 @@ const ControlPanel = (props) => {
             setCurrentVehicle(defaultVehicle);
         } else if (!isNil(parkedVehicle)) {
             setCurrentVehicle(parkedVehicle);
+            setSelectedEntryPoint(null);
         } else {
             setCurrentVehicle(null);
             setSelectedEntryPoint(null);
@@ -126,8 +127,10 @@ const ControlPanel = (props) => {
                             {
                                 selectedEntryPoint || !isNil(currentVehicle) ?
                                     <div className="park-vehicle">
-                                        <h6><u>Vehicle Details</u></h6>
-
+                                        {
+                                            vehicleManager.isParked(currentVehicle) ? <h6><u>Vehicle Details</u></h6> : null
+                                        }
+                                        
                                         {
                                             selectedEntryPoint ? <span><i>Entry Point: Row {selectedEntryPoint.rowIndex + 1} Column {selectedEntryPoint.columnIndex + 1}</i></span> : null
                                         }
@@ -248,7 +251,7 @@ const ControlPanel = (props) => {
                                                 }
                                             </div>
                                         </div>
-                                    </div> : <div>Please select an entry point to park a vehicle.</div>
+                                    </div> : <div>Please select an entry point to park a vehicle or a parked vehicle's license plate to unpark it.</div>
                             }
                         </div>
                     </div>
