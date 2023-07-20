@@ -20,18 +20,19 @@ class VehicleManager {
      * Checks if a vehicle is parked in the parking lot.
      * 
      * @param {object} vehicle - The vehicle object to check.
+     * @param {boolean} isSubmitted - If the vehicle is submitted from the form.
      * 
      * @returns {boolean} - True if the vehicle is parked, false otherwise.
      */
-    isParked(vehicle) {
+    isParked(vehicle, isSubmitted = false) {
         if (isEmpty(this._parkedVehicles)) {
             return false;
         }
 
-        // Check if there is a similar object in the parked vehicle array but don't check for the timeOut property
+        // Check if there is a similar object in the parked vehicle array but don't check for the certain properties
         return this._parkedVehicles.some(parkedVehicle => {
             return isEqualWith(parkedVehicle, vehicle, (value1, value2, key) => {
-                return key === "timeOut" ? true : undefined;
+                return (isSubmitted && (key === "timeIn" || key === "coordinates")) || key === "timeOut" ? true : undefined;
             });
         });
     }

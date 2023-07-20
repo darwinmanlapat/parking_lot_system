@@ -64,29 +64,33 @@ const ControlPanel = (props) => {
     }
 
     const handleParkButton = () => {
-        const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle.size);
-
-        if (!isNil(parkedVehicleCoordinates)) {
-            const isReturningVehicle = vehicleManager?.isReturningVehicle(currentVehicle);
-            let vehicleTimeIn = currentVehicle.timeIn;
-
-            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
-            if (isReturningVehicle) {
-                const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
-
-                vehicleTimeIn = returningVehicle.timeIn;
-
-                setUnparkedVehicles(unparkedVehicles.filter(unparkedVehicle =>
-                    !(unparkedVehicle.coordinates.rowIndex === returningVehicle.coordinates.rowIndex &&
-                        unparkedVehicle.coordinates.columnIndex === returningVehicle.coordinates.columnIndex)
-                ));
-            }
-
-            toast.success(`Vehicle ${currentVehicle.license} parked at row ${parkedVehicleCoordinates.rowIndex} column ${parkedVehicleCoordinates.columnIndex}.`);
-
-            setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates, timeIn: vehicleTimeIn }]);
+        if (vehicleManager.isParked(currentVehicle, true)) {
+            toast.error(`Vehicle ${currentVehicle.license} is already parked.`);
         } else {
-            toast.error('Sorry, no available parking slot for your vehicle.');
+            const parkedVehicleCoordinates = parkingLot?.parkVehicle(selectedEntryPoint, currentVehicle.size);
+
+            if (!isNil(parkedVehicleCoordinates)) {
+                const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
+                let vehicleTimeIn = currentVehicle.timeIn;
+
+                // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
+                if (isReturningVehicle) {
+                    const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
+
+                    vehicleTimeIn = returningVehicle.timeIn;
+
+                    setUnparkedVehicles(unparkedVehicles.filter(unparkedVehicle =>
+                        !(unparkedVehicle.coordinates.rowIndex === returningVehicle.coordinates.rowIndex &&
+                            unparkedVehicle.coordinates.columnIndex === returningVehicle.coordinates.columnIndex)
+                    ));
+                }
+
+                toast.success(`Vehicle ${currentVehicle.license} parked at row ${parkedVehicleCoordinates.rowIndex} column ${parkedVehicleCoordinates.columnIndex}.`);
+
+                setVehicles([...vehicles, { ...currentVehicle, coordinates: parkedVehicleCoordinates, timeIn: vehicleTimeIn }]);
+            } else {
+                toast.error('Sorry, no available parking slot for your vehicle.');
+            }
         }
 
         setCurrentVehicle(null);
@@ -96,7 +100,6 @@ const ControlPanel = (props) => {
     const handleUnparkButton = (parkedVehicle) => {
         const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 
-        // TODO: Add this to the screen instead of using an alert
         toast.success(`Vehicle ${parkedVehicle.license}'s parking fee is ₱${parkingFee}`);
 
         setCurrentVehicle(null);
@@ -140,7 +143,7 @@ const ControlPanel = (props) => {
                                         {
                                             vehicleManager.isParked(currentVehicle) ? <h6><u>Vehicle Details</u></h6> : null
                                         }
-                                        
+
                                         {
                                             selectedEntryPoint ? <span><i>Entry Point: Row {selectedEntryPoint.rowIndex + 1} Column {selectedEntryPoint.columnIndex + 1}</i></span> : null
                                         }
