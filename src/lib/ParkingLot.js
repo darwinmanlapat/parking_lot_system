@@ -1,6 +1,7 @@
 import config from "../config";
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
 import ParkingSlot from "./ParkingSlot";
+import { isEqual } from "lodash";
 
 /**
  * A class representing a parking lot and its associated operations.
@@ -57,10 +58,7 @@ class ParkingLot {
      * @returns {boolean} True if the slot is an entry point, false otherwise.
      */
     static isEntryPoint(entryPoints, rowIndex, columnIndex) {
-        return entryPoints.some(entryPoint =>
-            entryPoint.rowIndex === rowIndex &&
-            entryPoint.columnIndex === columnIndex
-        );
+        return entryPoints.some(entryPoint => isEqual(entryPoint, {rowIndex, columnIndex}));
     }
 
     /**
@@ -116,10 +114,7 @@ class ParkingLot {
      * @private
      */
     #isSlotOccupied(coordinates) {
-        return this._vehicles.some(vehicle =>
-            vehicle.coordinates.rowIndex === coordinates.rowIndex &&
-            vehicle.coordinates.columnIndex === coordinates.columnIndex
-        );
+        return this._vehicles.some(vehicle => isEqual(vehicle.coordinates, coordinates));
     }
 }
 
