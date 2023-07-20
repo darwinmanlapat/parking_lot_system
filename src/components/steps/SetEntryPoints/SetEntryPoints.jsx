@@ -9,12 +9,12 @@ const SetEntryPoints = (props) => {
     const [showNextButton, setShowNextButton] = useState(false)
 
     useEffect(() => {
-        if (props.entryPoints.length !== 0) {
+        if (props.entryPoints.length === props.parkingMapConfig.numEntryPoints) {
             setShowNextButton(true);
         } else {
             setShowNextButton(false);
         }
-    }, [props.entryPoints]);
+    }, [props.entryPoints, props.parkingMapConfig.numEntryPoints]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
