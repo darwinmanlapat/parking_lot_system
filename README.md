@@ -2,6 +2,17 @@
 
 This is a parking lot system designed for the PayMongo technical exam.
 
+## Running Locally
+
+### Prerequisite
+- Node: 16.20.1
+
+### Steps
+1. Clone this repository to your desired directory.
+2. Go into the project directory and run `npm install` to install dependencies.
+3. After all the dependencies are installed, run `npm run start` to start the local server.
+4. When the server is up and running, it will open a tab for the app (usually it is `localhost:3000`).
+
 ## Constraints
 
 ### Entry Points
