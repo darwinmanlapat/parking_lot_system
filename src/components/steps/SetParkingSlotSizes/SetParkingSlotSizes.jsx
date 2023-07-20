@@ -17,7 +17,7 @@ const SetParkingSlotSizes = (props) => {
     return (
         <div className="set-parking-slot-sizes">
             <div className="row">
-                <div className="col-8">
+                <div className="col-6">
                     <ParkingMap
                         step={activeStep}
                         config={props.parkingMapConfig}
@@ -26,8 +26,10 @@ const SetParkingSlotSizes = (props) => {
                     />
                 </div>
 
-                <div className="col-4 input-col">
+                <div className="col-6 input-col">
                     <h5>Set the parking slot sizes</h5>
+
+                    <div>Please set the parking slot sizes on the table on the right.</div>
 
                     <div className="row col-11 step-nav-buttons">
                         <div className="col">
