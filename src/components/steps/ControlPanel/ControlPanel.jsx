@@ -30,23 +30,22 @@ const ControlPanel = (props) => {
     const [unparkedVehicles, setUnparkedVehicles] = useState([]);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-    useEffect(() => console.log('selectedEntryPoint', selectedEntryPoint), [selectedEntryPoint]);
-
-    useEffect(() => console.log('currentVehicle', currentVehicle), [currentVehicle]);
-
-    useEffect(() => console.log('vehicles', vehicles), [vehicles]);
-
-    useEffect(() => console.log('unparkedVehicles', unparkedVehicles), [unparkedVehicles]);
-
     useEffect(() => {
         setParkingLot(new ParkingLot(props.parkingSlotSizes, vehicles, unparkedVehicles));
         setVehicleManager(new VehicleManager(vehicles, unparkedVehicles));
     }, [props.parkingSlotSizes, vehicles, unparkedVehicles]);
 
+    // Disable the park/unpark button if the vehicle is valid
     useEffect(() => {
         setIsButtonDisabled(!vehicleManager?.isValidVehicle(currentVehicle));
     }, [vehicleManager, currentVehicle]);
 
+    /**
+     * Handles the click event on a parking lot cell.
+     *
+     * @param {number} rowIndex - The row index of the clicked cell.
+     * @param {number} columnIndex - The column index of the clicked cell.
+     */
     const handleCellClick = (rowIndex, columnIndex) => {
         const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
         const parkedVehicle = vehicleManager.getVehicleByPosition(rowIndex, columnIndex);
@@ -63,6 +62,9 @@ const ControlPanel = (props) => {
         }
     }
 
+    /**
+     * Handles the click event on the Park button.
+     */
     const handleParkButton = () => {
         if (vehicleManager.isParked(currentVehicle, true)) {
             toast.error(`Vehicle ${currentVehicle.license} is already parked.`);
@@ -96,6 +98,11 @@ const ControlPanel = (props) => {
         setSelectedEntryPoint(null);
     }
 
+    /**
+     * Handles the click event on the Unpark button for a parked vehicle.
+     *
+     * @param {Object} parkedVehicle - The parked vehicle object to unpark.
+     */
     const handleUnparkButton = (parkedVehicle) => {
         const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 
