@@ -8,6 +8,7 @@ import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParki
 import ControlPanel from './components/steps/ControlPanel/ControlPanel';
 import ParkingLot from './lib/ParkingLot';
 import config from './config';
+import { isEqual } from 'lodash';
 
 function App() {
   const [entryPoints, setEntryPoints] = useState([]);
@@ -25,15 +26,8 @@ function App() {
   useEffect(() => {
     setEntryPoints([]);
   }, [parkingMapConfig.tableSize, parkingMapConfig.numEntryPoints]);
-
-  useEffect(() => {
-    console.log('parkingMapConfig', parkingMapConfig);
-  }, [parkingMapConfig]);
-
-  useEffect(() => {
-    console.log('parkingSlotSizes', parkingSlotSizes);
-  }, [parkingSlotSizes]);
-
+ 
+  // Default all the other parking slots to small except the entry points
   useEffect(() => {
     const smallSlots = [];
 
@@ -42,13 +36,8 @@ function App() {
         const isEntryPoint = ParkingLot.isEntryPoint(entryPoints, rowIndex, columnIndex);
 
         if (isEntryPoint) {
-          // Remove the small slot from the array
-          smallSlots.filter(smallSlot =>
-            smallSlot.rowIndex !== rowIndex &&
-            smallSlot.columnIndex !== columnIndex
-          );
+          smallSlots.filter(smallSlot => !isEqual(smallSlot, {rowIndex, columnIndex}));
         } else {
-          // Add the slot to the small slots array
           smallSlots.push({ rowIndex, columnIndex });
         }
       }
