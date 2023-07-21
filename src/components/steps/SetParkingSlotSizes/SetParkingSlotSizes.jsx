@@ -10,10 +10,6 @@ const SetParkingSlotSizes = (props) => {
 
     useEffect(() => setParkingSlot(new ParkingSlot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
 
-    const handleParkingSlotSizeChange = (rowIndex, columnIndex, cellValue) => {
-        props.setParkingSlotSizes(parkingSlot.updateSizes(rowIndex, columnIndex, cellValue));
-    }
-
     return (
         <div className="set-parking-slot-sizes">
             <div className="row">
@@ -22,7 +18,9 @@ const SetParkingSlotSizes = (props) => {
                         step={activeStep}
                         config={props.parkingMapConfig}
                         entryPoints={props.entryPoints}
-                        handleParkingSlotSizeChange={handleParkingSlotSizeChange}
+                        handleParkingSlotSizeChange={(rowIndex, columnIndex, cellValue) => 
+                            props.setParkingSlotSizes(parkingSlot.updateSizes(rowIndex, columnIndex, cellValue))
+                        }
                     />
                 </div>
 
@@ -36,7 +34,7 @@ const SetParkingSlotSizes = (props) => {
                             <button
                                 data-cy="set-parking-slot-sizes-prev-button"
                                 className="btn btn-primary prev-button"
-                                onClick={() => previousStep()}
+                                onClick={previousStep}
                             >Previous</button>
                         </div>
 
@@ -44,7 +42,7 @@ const SetParkingSlotSizes = (props) => {
                             <button
                                 data-cy="set-parking-slot-sizes-next-button"
                                 className="btn btn-success next-button"
-                                onClick={() => nextStep()}
+                                onClick={nextStep}
                             >Save</button>
                         </div>
                     </div>
