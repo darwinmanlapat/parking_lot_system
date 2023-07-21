@@ -115,7 +115,7 @@ Here are some of my personal assumptions and constraints for the system:
 - [x] ~~Add styling~~
 - [x] ~~Add proper input validations~~
 - [ ] Add indicator on which vehicle/entry point is selected on the map
-- [ ] Improve validation on returning vehicles
+- [x] Improve validation on returning vehicles
 - [ ] Improve visual map (include animations?)
 
 ### Internal System Design

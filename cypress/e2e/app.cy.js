@@ -1,6 +1,10 @@
 import { times } from "lodash";
 import config from "../../src/config";
 
+function getTableCell(rowIndex, columnIndex) {
+  return cy.get('[data-cy="parking-map"] table').should('be.visible').find(`tr:nth-of-type(${rowIndex + 1}) td:nth-of-type(${columnIndex + 1})`);
+}
+
 describe('App', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -97,5 +101,64 @@ describe('First step: Table Constructor', () => {
   it('should go to the next step when the next button is clicked', () => {
     cy.get('[data-cy="table-constructor-next-button"]').click();
     cy.get('[data-cy="section-title"]').should('be.visible').should('not.have.text', 'Set table size and number of entry points');
+  });
+});
+
+describe('Second step: Table Constructor', () => {
+  let minEntryPoints = 3;
+  let tableSize = 10;
+
+  beforeEach(() => {
+    cy.visit('/');
+
+    times(tableSize - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="table-size-input"] [data-cy="stepper-increment"]').should('be.visible').click());
+
+    times(minEntryPoints - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="entry-point-input"] [data-cy="stepper-increment"]').should('be.visible').click());
+
+    cy.get('[data-cy="table-constructor-next-button"]').click();
+  });
+
+  it('should show the correct title', () => {
+    cy.get('[data-cy="section-title"]').should('be.visible').should('have.text', 'Select the entry points of the parking lot');
+  });
+
+  it('should show parking map with the correct table size', () => {
+    cy.get('[data-cy="parking-map"] table tr').its('length').should('eq', tableSize);
+    cy.get('[data-cy="parking-map"] table tr').each(row => {
+      cy.wrap(row).find('td').its('length').should('eq', tableSize);
+    });
+  });
+
+  it('should set a table cell as an entry point when clicked', () => {
+    cy.get('[data-cy="entry-point-list"] ul').children().should('have.length', 0);
+
+    getTableCell(0, 0).click().should('have.class', 'clicked');
+    getTableCell(0, 4).click().should('have.class', 'clicked');
+    getTableCell(9, 8).click().should('have.class', 'clicked');
+
+    cy.get('[data-cy="entry-point-list"] li').its('length').should('eq', 3);
+
+    cy.get('[data-cy="entry-point-list"] li').contains('Row 1, Column 1').should('be.visible');
+    cy.get('[data-cy="entry-point-list"] li').contains('Row 1, Column 5').should('be.visible');
+    cy.get('[data-cy="entry-point-list"] li').contains('Row 10, Column 9').should('be.visible');
+  });
+
+  it('should unset an entry point table cell when clicked', () => {
+    getTableCell(0, 0).click();
+
+    cy.get('[data-cy="entry-point-list"] li').contains('Row 1, Column 1').should('be.visible');
+
+    getTableCell(0, 0).click().should('have.not.class', 'clicked');
+
+    cy.get('[data-cy="entry-point-list"] ul').children().should('have.length', 0);
+  });
+
+  it('should not set a table cell as an entry point if its not an edge or side cell', () => {
+    getTableCell(1, 2).click().should('have.not.class', 'clicked');
+    getTableCell(2, 4).click().should('have.not.class', 'clicked');
+    getTableCell(3, 6).click().should('have.not.class', 'clicked');
+    getTableCell(4, 8).click().should('have.not.class', 'clicked');
+
+    cy.get('[data-cy="entry-point-list"] ul').children().should('have.length', 0);
   });
 });
