@@ -132,7 +132,7 @@ const ControlPanel = (props) => {
                 </div>
 
                 <div className="col-6 input-col">
-                    <h5>Control Panel</h5>
+                    <h5 data-cy="section-title">Control Panel</h5>
 
                     <div className="row">
                         <div className="col-8">

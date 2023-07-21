@@ -14,14 +14,14 @@ const Stepper = (props) => {
     }
 
     return (
-        <div className="col-xl-7">
+        <div className="col-xl-7" data-cy={props.data_cy}>
             <div className="input-group">
                 <div className="input-group-prepend">
-                    <button className="btn btn-outline-primary" type="button" onClick={decrement}>-</button>
+                    <button className="btn btn-outline-primary" data-cy="stepper-decrement" type="button" onClick={decrement}>-</button>
                 </div>
                 <input type="text" className="form-control text-center" value={currentValue} disabled />
                 <div className="input-group-prepend">
-                    <button className="btn btn-outline-primary" type="button" onClick={increment}>+</button>
+                    <button className="btn btn-outline-primary" data-cy="stepper-increment" type="button" onClick={increment}>+</button>
                 </div>
             </div>
         </div>

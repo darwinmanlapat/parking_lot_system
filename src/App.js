@@ -66,10 +66,10 @@ function App() {
     <div className="app">
       <div className="container-fluid">
         <header>
-          <h1 className="title">Parking Lot System</h1>
+          <h1 className="title" data-cy="title">Parking Lot System</h1>
         </header>
 
-        <section>
+        <section data-cy="wizard-section">
           <Wizard>
             <TableConstructor
               parkingMapConfig={parkingMapConfig}

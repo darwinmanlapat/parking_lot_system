@@ -19,11 +19,12 @@ const TableConstructor = (props) => {
                 </div>
 
                 <div className="col-6 input-col">
-                    <h5>Set table size and number of entry points</h5>
+                    <h5 data-cy="section-title">Set table size and number of entry points</h5>
                     <div className="row">
                         <div className="col-8">
                             <label className="form-label">Number of Entry Points:</label>
                             <Stepper 
+                                data_cy="entry-point-input"
                                 min={config.MIN_ENTRY_POINTS}
                                 max={props.parkingMapConfig.tableSize}
                                 value={props.parkingMapConfig.numEntryPoints}
@@ -43,6 +44,7 @@ const TableConstructor = (props) => {
                         <div className="col-8">
                             <label className="form-label">Size of the table:</label>
                             <Stepper 
+                                data_cy="table-size-input"
                                 min={config.MIN_ENTRY_POINTS}
                                 max={config.MAX_TABLE_SIZE}
                                 value={props.parkingMapConfig.tableSize}
@@ -60,7 +62,12 @@ const TableConstructor = (props) => {
 
                     <div className="row">
                         <div className="col-8 col-xl-5">
-                            <button className="btn btn-success next-button" type="button" onClick={() => nextStep()}>Next</button>
+                            <button 
+                                className="btn btn-success next-button" 
+                                type="button" 
+                                data-cy="table-constructor-next-button"
+                                onClick={() => nextStep()}
+                                >Next</button>
                         </div>
                     </div>
                 </div>

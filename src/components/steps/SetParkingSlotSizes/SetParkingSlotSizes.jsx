@@ -27,7 +27,7 @@ const SetParkingSlotSizes = (props) => {
                 </div>
 
                 <div className="col-6 input-col">
-                    <h5>Set the parking slot sizes</h5>
+                    <h5 data-cy="section-title">Set the parking slot sizes</h5>
 
                     <div>Please set the parking slot sizes on the table.</div>
 

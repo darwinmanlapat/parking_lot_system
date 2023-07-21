@@ -50,7 +50,7 @@ const SetEntryPoints = (props) => {
                 </div>
 
                 <div className="col-6 input-col">
-                    <h5>Select the entry points of the parking lot</h5>
+                    <h5 data-cy="section-title">Select the entry points of the parking lot</h5>
                     <div className="row">
                         <div className="entry-point-list col-10">
                             <ul className="list-group">
