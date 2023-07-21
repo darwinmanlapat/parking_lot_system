@@ -120,5 +120,5 @@ Here are some of my personal assumptions and constraints for the system:
 
 ### Internal System Design
 - [ ] Break down some of the bigger components to smaller components
-- [ ] Add Cypress e2e testing
+- [x] ~~Add Cypress e2e testing~~
 - [ ] Use React Redux for state management

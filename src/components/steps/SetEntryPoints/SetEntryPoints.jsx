@@ -1,21 +1,28 @@
 import { useWizard } from "react-use-wizard";
-import "./SetEntryPoints.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import ParkingLot from "../../../lib/ParkingLot";
 import { useEffect, useState } from "react";
+import { isEqual } from "lodash";
 
 const SetEntryPoints = (props) => {
     const { activeStep, previousStep, nextStep } = useWizard();
-    const [showNextButton, setShowNextButton] = useState(false)
+    const [disableNextButton, setDisableNextButton] = useState(false)
 
+    // Disable the next button if not all entry points are set
     useEffect(() => {
         if (props.entryPoints.length === props.parkingMapConfig.numEntryPoints) {
-            setShowNextButton(true);
+            setDisableNextButton(true);
         } else {
-            setShowNextButton(false);
+            setDisableNextButton(false);
         }
     }, [props.entryPoints, props.parkingMapConfig.numEntryPoints]);
 
+    /**
+     * Handles the click event on a parking lot cell.
+     *
+     * @param {number} rowIndex - The row index of the clicked cell.
+     * @param {number} columnIndex - The column index of the clicked cell.
+     */
     const handleCellClick = (rowIndex, columnIndex) => {
         // Check if the cell is an outer cell
         const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.tableSize - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.tableSize - 1;
@@ -25,9 +32,7 @@ const SetEntryPoints = (props) => {
 
             // Check if a cell is clicked so we can toggle it.
             if (isEntryPointCell) {
-                props.setEntryPoints(props.entryPoints.filter(clickedCell =>
-                    !(clickedCell.rowIndex === rowIndex && clickedCell.columnIndex === columnIndex)
-                ));
+                props.setEntryPoints(props.entryPoints.filter(clickedCell => !isEqual(clickedCell, {rowIndex, columnIndex})));
             } else {
                 // If the is cell is not yet clicked, we should check if we have the desired amount of entry points
                 if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {
@@ -70,7 +75,7 @@ const SetEntryPoints = (props) => {
                             <button
                                 data-cy="set-entry-points-prev-button"
                                 className="btn btn-primary prev-button"
-                                onClick={() => previousStep()}
+                                onClick={previousStep}
                             >Previous</button>
                         </div>
 
@@ -78,8 +83,8 @@ const SetEntryPoints = (props) => {
                             <button
                                 data-cy="set-entry-points-next-button"
                                 className="btn btn-success next-button"
-                                disabled={!showNextButton}
-                                onClick={() => nextStep()}
+                                disabled={!disableNextButton}
+                                onClick={nextStep}
                             >Next</button>
                         </div>
                     </div>

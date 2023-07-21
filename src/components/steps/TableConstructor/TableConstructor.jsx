@@ -65,7 +65,7 @@ const TableConstructor = (props) => {
                                 className="btn btn-success next-button" 
                                 type="button" 
                                 data-cy="table-constructor-next-button"
-                                onClick={() => nextStep()}
+                                onClick={nextStep}
                                 >Next</button>
                         </div>
                     </div>
