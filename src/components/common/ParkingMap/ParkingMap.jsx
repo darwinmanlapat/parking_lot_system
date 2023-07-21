@@ -14,14 +14,16 @@ const ParkingMap = (props) => {
     useEffect(() => setParkingSLot(new ParkingSlot(props.parkingSlotSizes)), [props.parkingSlotSizes]);
     useEffect(() => setVehicleManager(new VehicleManager(props.vehicles)), [props.vehicles]);
 
-    useEffect(() => console.log(vehicleManager), [vehicleManager]);
-
-    const handleCellClick = (rowIndex, columnIndex) => {
-        if (props.handleCellClick) {
-            props.handleCellClick(rowIndex, columnIndex);
-        }
-    }
-
+    /**
+     * Renders the content of a parking lot cell based on the current step.
+     * Step 2 - Renders a select input
+     * Step 3 - Renders the parking slot size or the parked vehicle's license plate
+     *
+     * @param {number} rowIndex - The row index of the cell to render.
+     * @param {number} columnIndex - The column index of the cell to render.
+     * 
+     * @returns {JSX.Element} The JSX element to render in the cell.
+     */
     const renderCell = (rowIndex, columnIndex) => {
         if (props.step === 2) {
             return (
@@ -61,7 +63,11 @@ const ParkingMap = (props) => {
                                                     <td
                                                         key={'parking-map-column' + columnIndex}
                                                         className={isEntryPoint && props.step !== 0 ? 'clicked' : ''}
-                                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
+                                                        onClick={() => {
+                                                            if (props.handleCellClick) {
+                                                                props.handleCellClick(rowIndex, columnIndex);
+                                                            }
+                                                        }}
                                                     >
                                                         {!isEntryPoint ? renderCell(rowIndex, columnIndex) : null}
                                                     </td>
