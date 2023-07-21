@@ -270,7 +270,7 @@ describe('Third step: Set Parking Slot Sizes', () => {
   });
 });
 
-describe.only('Final step: Control Panel', () => {
+describe('Final step: Control Panel', () => {
   beforeEach(() => {
     cy.visit('/');
 
@@ -1299,7 +1299,7 @@ describe.only('Final step: Control Panel', () => {
     cy.get('.custom-toast:visible:last-of-type', { timeout: 10000 }).contains("Vehicle AAA-1111's parking fee is ₱5200");
   });
 
-  it.only('should set a vehicle as returning if it has the same license and returned within 1 hour', () => {
+  it('should set a vehicle as returning if it has the same license and returned within 1 hour', () => {
     // Park 1st vehicle
     getTableCell(0, 0).click();
 
@@ -1359,7 +1359,7 @@ describe.only('Final step: Control Panel', () => {
       .should('have.value', '2023-07-21T13:28');
   });
 
-  it.only('should set a different sized vehicle as returning if it has the same license and returned within 1 hour', () => {
+  it('should set a different sized vehicle as returning if it has the same license and returned within 1 hour', () => {
     // Park 1st vehicle
     getTableCell(0, 0).click();
 
