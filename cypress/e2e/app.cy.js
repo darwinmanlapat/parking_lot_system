@@ -1,6 +1,9 @@
 import { times } from "lodash";
 import config from "../../src/config";
 
+const entryPoints = 3;
+const tableSize = 10;
+
 function getTableCell(rowIndex, columnIndex) {
   return cy.get('[data-cy="parking-map"] table').should('be.visible').find(`tr:nth-of-type(${rowIndex + 1}) td:nth-of-type(${columnIndex + 1})`);
 }
@@ -104,16 +107,13 @@ describe('First step: Table Constructor', () => {
   });
 });
 
-describe('Second step: Table Constructor', () => {
-  let minEntryPoints = 3;
-  let tableSize = 10;
-
+describe('Second step: Set Entry Points', () => {
   beforeEach(() => {
     cy.visit('/');
 
     times(tableSize - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="table-size-input"] [data-cy="stepper-increment"]').should('be.visible').click());
 
-    times(minEntryPoints - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="entry-point-input"] [data-cy="stepper-increment"]').should('be.visible').click());
+    times(entryPoints - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="entry-point-input"] [data-cy="stepper-increment"]').should('be.visible').click());
 
     cy.get('[data-cy="table-constructor-next-button"]').click();
   });
@@ -160,5 +160,112 @@ describe('Second step: Table Constructor', () => {
     getTableCell(4, 8).click().should('have.not.class', 'clicked');
 
     cy.get('[data-cy="entry-point-list"] ul').children().should('have.length', 0);
+  });
+
+  it('should disable the next button if the selected entry points are not yet complete', () => {
+    cy.get('[data-cy="set-entry-points-next-button"]').should('be.disabled');
+
+    getTableCell(0, 0).click();
+
+    cy.get('[data-cy="set-entry-points-next-button"]').should('be.disabled');
+
+    getTableCell(0, 1).click();
+
+    cy.get('[data-cy="set-entry-points-next-button"]').should('be.disabled');
+
+    getTableCell(0, 2).click();
+
+    cy.get('[data-cy="set-entry-points-next-button"]').should('not.be.disabled');
+  });
+
+  it('should show the next and previous buttons', () => {
+    cy.get('[data-cy="set-entry-points-prev-button"]').should('be.visible');
+    cy.get('[data-cy="set-entry-points-next-button"]').should('be.visible');
+  });
+
+  it('should not disable the prev button and disable the next button', () => {
+    cy.get('[data-cy="set-entry-points-prev-button"]').should('not.be.disabled');
+    cy.get('[data-cy="set-entry-points-next-button"]').should('be.disabled');
+  });
+
+  it('should go to the prev step when the prev button is clicked', () => {
+    cy.get('[data-cy="set-entry-points-prev-button"]').click();
+
+    cy.get('[data-cy="section-title"]').should('be.visible').should('have.text', 'Set table size and number of entry points');
+  });
+
+  it('should go to the next step when the next button is clicked', () => {
+    times(entryPoints, index => getTableCell(0, index + 1).click());
+
+    cy.get('[data-cy="set-entry-points-next-button"]').click();
+
+    cy.get('[data-cy="section-title"]').should('be.visible').should('not.have.text', 'Select the entry points of the parking lot');
+  });
+});
+
+describe('Third step: Set Parking Slot Sizes', () => {
+  beforeEach(() => {
+    cy.visit('/');
+
+    times(tableSize - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="table-size-input"] [data-cy="stepper-increment"]').should('be.visible').click());
+
+    times(entryPoints - config.MIN_ENTRY_POINTS, () => cy.get('[data-cy="entry-point-input"] [data-cy="stepper-increment"]').should('be.visible').click());
+
+    cy.get('[data-cy="table-constructor-next-button"]').click();
+
+    times(entryPoints, index => getTableCell(0, index + index).click());
+
+    cy.get('[data-cy="set-entry-points-next-button"]').click();
+  });
+
+  it('should show the correct title', () => {
+    cy.get('[data-cy="section-title"]').should('be.visible').should('have.text', 'Set the parking slot sizes');
+  });
+
+  it('should show parking map with the correct table size', () => {
+    cy.get('[data-cy="parking-map"] table tr').its('length').should('eq', tableSize);
+    cy.get('[data-cy="parking-map"] table tr').each(row => {
+      cy.wrap(row).find('td').its('length').should('eq', tableSize);
+    });
+  });
+
+  it('should have the correct entry points from the last step', () => {
+    times(entryPoints, index => getTableCell(0, index + index).should('have.class', 'clicked'));
+  });
+
+  it('should not have a select option on the entry point cells', () => {
+    times(entryPoints, index => getTableCell(0, index + index).find('select').should('have.length', 0));
+  });
+
+  it('should have the default slot sizes set to S (small)', () => {
+    cy.get('[data-cy="parking-map"] table tr').each(row => {
+      cy.wrap(row).find('td select').should('have.value', 'S');
+    });
+  });
+
+  it('should let the user select the parking slot size for each cell', () => {
+    getTableCell(1, 0).find('select').select('M').should('have.value', 'M');
+    getTableCell(2, 3).find('select').select('L').should('have.value', 'L');
+    getTableCell(3, 5).find('select').select('M').should('have.value', 'M');
+    getTableCell(4, 7).find('select').select('L').should('have.value', 'L');
+  });
+
+  it('should not disable the prev button and next button', () => {
+    cy.get('[data-cy="set-parking-slot-sizes-prev-button"]').should('not.be.disabled');
+    cy.get('[data-cy="set-parking-slot-sizes-next-button"]').should('not.be.disabled');
+  });
+
+  it('should go to the prev step when the prev button is clicked and all the entry points are still selected', () => {
+    cy.get('[data-cy="set-parking-slot-sizes-prev-button"]').click();
+
+    times(entryPoints, index => getTableCell(0, index + index).should('have.class', 'clicked'));
+
+    cy.get('[data-cy="section-title"]').should('be.visible').should('have.text', 'Select the entry points of the parking lot');
+  });
+
+  it('should go to the next step when the next button is clicked', () => {
+    cy.get('[data-cy="set-parking-slot-sizes-next-button"]').click();
+
+    cy.get('[data-cy="section-title"]').should('be.visible').should('not.have.text', 'Select the entry points of the parking lot');
   });
 });

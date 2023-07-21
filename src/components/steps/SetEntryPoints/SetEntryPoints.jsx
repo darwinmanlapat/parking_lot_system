@@ -67,11 +67,16 @@ const SetEntryPoints = (props) => {
 
                     <div className="row col-11 step-nav-buttons">
                         <div className="col">
-                            <button className="btn btn-primary prev-button" onClick={() => previousStep()}>Previous</button>
+                            <button
+                                data-cy="set-entry-points-prev-button"
+                                className="btn btn-primary prev-button"
+                                onClick={() => previousStep()}
+                            >Previous</button>
                         </div>
 
                         <div className="col">
                             <button
+                                data-cy="set-entry-points-next-button"
                                 className="btn btn-success next-button"
                                 disabled={!showNextButton}
                                 onClick={() => nextStep()}

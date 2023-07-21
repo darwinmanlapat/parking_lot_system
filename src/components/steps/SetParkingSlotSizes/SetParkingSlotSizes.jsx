@@ -33,11 +33,19 @@ const SetParkingSlotSizes = (props) => {
 
                     <div className="row col-11 step-nav-buttons">
                         <div className="col">
-                            <button className="btn btn-primary prev-button" onClick={() => previousStep()}>Previous</button>
+                            <button
+                                data-cy="set-parking-slot-sizes-prev-button"
+                                className="btn btn-primary prev-button"
+                                onClick={() => previousStep()}
+                            >Previous</button>
                         </div>
 
                         <div className="col">
-                            <button className="btn btn-success next-button" onClick={() => nextStep()}>Save</button>
+                            <button
+                                data-cy="set-parking-slot-sizes-next-button"
+                                className="btn btn-success next-button"
+                                onClick={() => nextStep()}
+                            >Save</button>
                         </div>
                     </div>
                 </div>
