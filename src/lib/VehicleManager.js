@@ -32,7 +32,7 @@ class VehicleManager {
         // Check if there is a similar object in the parked vehicle array but don't check for the certain properties
         return this._parkedVehicles.some(parkedVehicle => {
             return isEqualWith(parkedVehicle, vehicle, (value1, value2, key) => {
-                return (isSubmitted && (key === "timeIn" || key === "coordinates")) || key === "timeOut" ? true : undefined;
+                return (isSubmitted && (key === "timeIn" || key === "coordinates" || key === "size")) || key === "timeOut" ? true : undefined;
             });
         });
     }
@@ -83,7 +83,7 @@ class VehicleManager {
         return this._unparkedVehicles.filter((unParkedVehicle) => {
             return (
                 unParkedVehicle.license === vehicle.license &&
-                ParkingFeeCalculator.getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) <= 1
+                ParkingFeeCalculator.getTimeDifference(vehicle.timeIn, unParkedVehicle.timeOut) === 1
             );
         })[0];
     }

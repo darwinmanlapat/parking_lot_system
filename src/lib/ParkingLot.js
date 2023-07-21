@@ -1,7 +1,7 @@
 import config from "../config";
 import ParkingFeeCalculator from "./ParkingFeeCalculator";
 import ParkingSlot from "./ParkingSlot";
-import { isEqual } from "lodash";
+import { isEqual, sortBy } from "lodash";
 
 /**
  * A class representing a parking lot and its associated operations.
@@ -29,7 +29,7 @@ class ParkingLot {
      * @returns {Object | null} The coordinates of the closest available parking slot if found, otherwise null.
      */
     parkVehicle(selectedEntryPoint, vehicleSize) {
-        return this.#findClosestAvailableSlot(selectedEntryPoint, this._parkingSlot.getPossibleSlots(vehicleSize));
+        return this.#findClosestAvailableSlot(selectedEntryPoint, sortBy(this._parkingSlot.getPossibleSlots(vehicleSize), ['rowIndex', 'columnIndex']));
     }
 
     /**

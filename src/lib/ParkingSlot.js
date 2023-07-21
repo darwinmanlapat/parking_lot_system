@@ -39,6 +39,7 @@ class ParkingSlot {
         const largeSlots = this._sizes[Size.LARGE];
 
         if (size === Size.SMALL) {
+            console.log('wtf', smallSlots.concat(mediumSlots, largeSlots));
             return smallSlots.concat(mediumSlots, largeSlots);
         }
 

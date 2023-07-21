@@ -138,7 +138,7 @@ const ControlPanel = (props) => {
                         <div className="col-8">
                             {
                                 selectedEntryPoint || !isNil(currentVehicle) ?
-                                    <div className="park-vehicle">
+                                    <div className="park-vehicle" data-cy="park-vehicle-form">
                                         {
                                             vehicleManager.isParked(currentVehicle) ? <h6><u>Vehicle Details</u></h6> : null
                                         }
@@ -151,6 +151,7 @@ const ControlPanel = (props) => {
                                             <div className="col-9">
                                                 <label htmlFor="license-plate">License Plate</label>
                                                 <ReactInputMask
+                                                    data-cy="license-plate-field"
                                                     alwaysShowMask
                                                     autoFocus
                                                     id="license-plate"
@@ -182,6 +183,7 @@ const ControlPanel = (props) => {
                                             <div className="col-9">
                                                 <label htmlFor="vehicle-size">Vehicle Size</label>
                                                 <select
+                                                    data-cy="vehicle-size-field"
                                                     className="form-select"
                                                     id="vehicle-size"
                                                     value={currentVehicle.size}
@@ -205,6 +207,7 @@ const ControlPanel = (props) => {
                                             <div className="col-9">
                                                 <label htmlFor="time-in">Time in</label>
                                                 <input
+                                                    data-cy="time-in-field"
                                                     className="form-control"
                                                     id="time-in"
                                                     type="datetime-local"
@@ -228,6 +231,7 @@ const ControlPanel = (props) => {
                                                     <div className="col-9">
                                                         <label htmlFor="time-out">Time out</label>
                                                         <input
+                                                            data-cy="time-out-field"
                                                             className="form-control"
                                                             id="time-out"
                                                             type="datetime-local"
@@ -250,12 +254,14 @@ const ControlPanel = (props) => {
                                                 {
                                                     vehicleManager.isParked(currentVehicle) ?
                                                         <button
+                                                            data-cy="unpark-button"
                                                             className="btn btn-success"
                                                             disabled={isButtonDisabled}
                                                             onClick={() => handleUnparkButton(currentVehicle)}
                                                         >Unpark Vehicle</button> :
 
                                                         <button
+                                                            data-cy="park-button"
                                                             className="btn btn-success"
                                                             onClick={() => handleParkButton()}
                                                             disabled={isButtonDisabled}
