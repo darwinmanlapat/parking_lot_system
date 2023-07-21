@@ -400,7 +400,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should let the users set the time in value for the vehicle', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     getTableCell(0, 0).click();
 
@@ -425,7 +425,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should let the user park a vehicle if all details are complete and valid', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     getTableCell(0, 0).click();
 
@@ -450,7 +450,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should park the vehicle closest to the entry point', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -534,7 +534,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should park a SMALL vehicle in ALL parking slot sizes', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -598,7 +598,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should park a MEDIUM vehicle in MEDIUM and LARGE parking slot sizes', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -686,7 +686,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should not park a vehicle if its already parked (same license, same size)', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -730,7 +730,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should not park a vehicle if its already parked (same license, different size)', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -774,7 +774,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should not park a vehicle if there is no remaining available slot', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -835,7 +835,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should show parked vehicle details when clicking on a parked vehicle', () => {
-    const currentDateTime = new Date().toISOString().slice(0, 16);
+    const currentDateTime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -877,7 +877,8 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should let the user set the time out for parked vehicles', () => {
-    const adjustDatetime = new Date(Date.now() + 20000).toISOString().slice(0, 16);
+    // const adjustDatetime = new Date(Date.now() + 20000).toISOString().slice(0, 16);
+    const adjustDatetime = "2023-07-21T13:30";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
@@ -938,7 +939,7 @@ describe('Final step: Control Panel', () => {
   });
 
   it('should unpark a vehicle', () => {
-    const currentDatetime = new Date().toISOString().slice(0, 16);
+    const currentDatetime = "2023-07-21T13:28";
 
     // Park 1st vehicle
     getTableCell(0, 0).click();
