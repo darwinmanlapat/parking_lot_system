@@ -1,5 +1,4 @@
 import { useWizard } from "react-use-wizard";
-import "./TableConstructor.scss";
 import ParkingMap from "../../common/ParkingMap/ParkingMap";
 import config from "../../../config";
 import Stepper from "../../common/Stepper/Stepper";
