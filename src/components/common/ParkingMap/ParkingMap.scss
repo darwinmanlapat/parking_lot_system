@@ -1,52 +1,63 @@
+// Define variables
 $table-cell-size: 55px;
 $table-cell-font-size: 12px;
+$highlight-color: #ff5733;
 
+// Refactored styles
 .parking-map {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
+	min-height: 80vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    table {
-        height: 100%;
-        width: 100%;
-        display: table-cell;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: $table-cell-font-size;
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: auto;
+		font-size: $table-cell-font-size;
 
-        .clicked {
-            background-color: black;
-        }
+		td {
+			width: $table-cell-size;
+			height: $table-cell-size;
+			text-align: center;
+			vertical-align: middle;
+			border: 1px solid #ccc;
+			transition: background-color 0.3s;
+			position: relative;
 
-        td {
-            text-align: center;
-            vertical-align: middle;
-            width: $table-cell-size;
-            height: $table-cell-size;
+			.parked-vehicle {
+				font-size: 10px;
+			}
 
-            &:hover {
-                cursor: pointer;
-            }
+			.size-select {
+				border: none;
+				cursor: pointer;
+				outline: none;
+				transition: transform 0.2s;
 
-            .parked-vehicle {
-                font-size: xx-small;
-            }
+				&:hover {
+					text-decoration: underline;
+					transform: scale(1.1);
+				}
+			}
 
-            .size-select {
-                border: none;
+			&.clicked {
+				background-color: $highlight-color;
+				color: white;
+			}
 
-                &:hover {
-                    cursor: pointer;
-                }
+			&:hover {
+				background-color: lighten($highlight-color, 10%);
+			}
 
-                &:focus-visible {
-                    outline: none;
-                }
-            }
-        }
-    }
+			.parking-space-info {
+				position: absolute;
+				bottom: 5px;
+				left: 50%;
+				transform: translateX(-50%);
+				font-size: 10px;
+				color: #555;
+			}
+		}
+	}
 }
