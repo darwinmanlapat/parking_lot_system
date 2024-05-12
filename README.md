@@ -5,9 +5,11 @@ This is a parking lot system designed for the PayMongo technical exam.
 ## Running Locally
 
 ### Prerequisite
+
 - Node: 16.20.1
 
 ### Steps
+
 1. Clone this repository to your desired directory.
 2. Go into the project directory and run `npm install` to install dependencies.
 3. After all the dependencies are installed, run `npm run start` to start the local server.
@@ -34,17 +36,18 @@ Your parking system must also handle the calculation of fees, and must meet the 
 1. All types of cars pay the flat rate of 40 pesos for the first three (3) hours;
 
 2. The exceeding hourly rate beyond the initial three (3) hours will be charged as follows:
-    - 20/hour for vehicles parked in SP;
-    - 60/hour for vehicles parked in MP; and
-    - 100/hour for vehicles parked in LP
 
-    Take note that exceeding hours are charged depending on parking slot size regardless of vehicle size.
+   - 20/hour for vehicles parked in SP;
+   - 60/hour for vehicles parked in MP; and
+   - 100/hour for vehicles parked in LP
 
-    For parking that exceeds 24 hours, every full 24-hour chunk is charged 5,000 pesos regardless of the parking slot.
+   Take note that exceeding hours are charged depending on parking slot size regardless of vehicle size.
 
-    The remainder hours are charged using the method explained in (2).
+   For parking that exceeds 24 hours, every full 24-hour chunk is charged 5,000 pesos regardless of the parking slot.
 
-    Parking fees are calculated using the rounding up method, e.g. 6.4 hours must be rounded to 7.
+   The remainder hours are charged using the method explained in (2).
+
+   Parking fees are calculated using the rounding up method, e.g. 6.4 hours must be rounded to 7.
 
 3. A vehicle leaving the parking complex and returning within one hour based on their exit time must be charged a continuous rate, i.e. the vehicle must be considered as if it did not leave. Otherwise, rates must be implemented as described. For example, if a vehicle exits at 10:00 and returns at 10:30, the continuous rate must apply.
 
@@ -59,13 +62,13 @@ You are free to design the system in any pattern you wish. However, take note th
 3. The sizes of every corresponding parking slot. Again, you are welcome to introduce your own design. We suggest using a list of corresponding sizes described in integers: [0, 2, 1, 1, ...] where 0, 1, 2 means small, medium, and large in that order. Another useful design may be a dictionary of parking sizes with corresponding slots as values.
 
 4. Two functions to park a vehicle and unpark it. The functions must consider the attributes of the vehicle as described above.
-When the unpark function is called, it must also return how much the vehicle concerned is charged.
+   When the unpark function is called, it must also return how much the vehicle concerned is charged.
 
 ## Goals
 
 - Complete all the requirements for the exam
 
-- Create an interactive web app for the Parking System 
+- Create an interactive web app for the Parking System
 
 ## Assumptions
 
@@ -106,12 +109,13 @@ Here are some of my personal assumptions and constraints for the system:
 ### Time-in/time-out
 
 - Vehicles can only set their time to specific ranges to prevent negative fees
-    - Time-in: starting from the current date and onwards
-    - Time-out: starting from their time-in and onwards
+  - Time-in: starting from the current date and onwards
+  - Time-out: starting from their time-in and onwards
 
 ## Improvements
 
 ### UI/UX
+
 - [x] ~~Add styling~~
 - [x] ~~Add proper input validations~~
 - [ ] Add indicator on which vehicle/entry point is selected on the map
@@ -119,6 +123,7 @@ Here are some of my personal assumptions and constraints for the system:
 - [ ] Improve visual map (include animations?)
 
 ### Internal System Design
+
 - [ ] Break down some of the bigger components to smaller components
 - [x] ~~Add Cypress e2e testing~~
 - [ ] Use React Redux for state management
