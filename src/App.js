@@ -48,7 +48,6 @@ function App() {
       [Size.MEDIUM]: [],
       [Size.LARGE]: [],
     });
-    // eslint-disable-next-line
   }, [entryPoints]);
 
   return (

@@ -62,9 +62,6 @@ const ControlPanel = (props) => {
         }
     }
 
-    /**
-     * Handles the click event on the Park button.
-     */
     const handleParkButton = () => {
         if (vehicleManager.isParked(currentVehicle, true)) {
             toast.error(`Vehicle ${currentVehicle.license} is already parked.`);
@@ -72,7 +69,6 @@ const ControlPanel = (props) => {
             const isReturningVehicle = vehicleManager.isReturningVehicle(currentVehicle);
             let incomingVehicle = currentVehicle;
 
-            // Replace the returning vehicle's time in with its previous time in to simulate the continuous rate
             if (isReturningVehicle) {
                 const returningVehicle = vehicleManager.getReturningVehicle(currentVehicle);
                 
@@ -98,11 +94,6 @@ const ControlPanel = (props) => {
         setSelectedEntryPoint(null);
     }
 
-    /**
-     * Handles the click event on the Unpark button for a parked vehicle.
-     *
-     * @param {Object} parkedVehicle - The parked vehicle object to unpark.
-     */
     const handleUnparkButton = (parkedVehicle) => {
         const parkingFee = parkingLot?.unparkVehicle(parkedVehicle);
 

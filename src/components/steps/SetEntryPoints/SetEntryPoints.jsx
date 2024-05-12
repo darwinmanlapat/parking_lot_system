@@ -8,7 +8,6 @@ const SetEntryPoints = (props) => {
     const { activeStep, previousStep, nextStep } = useWizard();
     const [disableNextButton, setDisableNextButton] = useState(false)
 
-    // Disable the next button if not all entry points are set
     useEffect(() => {
         if (props.entryPoints.length === props.parkingMapConfig.numEntryPoints) {
             setDisableNextButton(true);
@@ -17,24 +16,16 @@ const SetEntryPoints = (props) => {
         }
     }, [props.entryPoints, props.parkingMapConfig.numEntryPoints]);
 
-    /**
-     * Handles the click event on a parking lot cell.
-     *
-     * @param {number} rowIndex - The row index of the clicked cell.
-     * @param {number} columnIndex - The column index of the clicked cell.
-     */
+
     const handleCellClick = (rowIndex, columnIndex) => {
-        // Check if the cell is an outer cell
         const isOuterCell = rowIndex === 0 || rowIndex === props.parkingMapConfig.tableSize - 1 || columnIndex === 0 || columnIndex === props.parkingMapConfig.tableSize - 1;
 
         if (isOuterCell) {
             const isEntryPointCell = ParkingLot.isEntryPoint(props.entryPoints, rowIndex, columnIndex);
 
-            // Check if a cell is clicked so we can toggle it.
             if (isEntryPointCell) {
                 props.setEntryPoints(props.entryPoints.filter(clickedCell => !isEqual(clickedCell, {rowIndex, columnIndex})));
             } else {
-                // If the is cell is not yet clicked, we should check if we have the desired amount of entry points
                 if (props.entryPoints.length < props.parkingMapConfig.numEntryPoints) {
                     props.setEntryPoints([...props.entryPoints, { rowIndex, columnIndex }]);
                 }
