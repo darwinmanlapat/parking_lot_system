@@ -1,4 +1,4 @@
-import { Size } from "../enums/Size";
+import { Sizes } from "../enums/Size";
 import { findKey, isEqual } from "lodash";
 
 class ParkingSlot {
@@ -12,19 +12,19 @@ class ParkingSlot {
     }
 
     getPossibleSlots(size) {
-        const smallSlots = this._sizes[Size.SMALL];
-        const mediumSlots = this._sizes[Size.MEDIUM];
-        const largeSlots = this._sizes[Size.LARGE];
+        const smallSlots = this._sizes[Sizes.SMALL];
+        const mediumSlots = this._sizes[Sizes.MEDIUM];
+        const largeSlots = this._sizes[Sizes.LARGE];
 
-        if (size === Size.SMALL) {
+        if (size === Sizes.SMALL) {
             return smallSlots.concat(mediumSlots, largeSlots);
         }
 
-        if (size === Size.MEDIUM) {
+        if (size === Sizes.MEDIUM) {
             return mediumSlots.concat(largeSlots);
         }
 
-        if (size === Size.LARGE) {
+        if (size === Sizes.LARGE) {
             return largeSlots;
         }
     }

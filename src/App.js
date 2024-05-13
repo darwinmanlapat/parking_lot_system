@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./App.scss";
 import { Wizard } from 'react-use-wizard';
-import { Size } from './enums/Size';
+import { Sizes } from './enums/Size';
 import TableConstructor from './components/steps/TableConstructor/TableConstructor';
 import SetEntryPoints from './components/steps/SetEntryPoints/SetEntryPoints';
 import SetParkingSlotSizes from './components/steps/SetParkingSlotSizes/SetParkingSlotSizes';
@@ -17,17 +17,15 @@ function App() {
     tableSize: config.MIN_ENTRY_POINTS,
   });
   const [parkingSlotSizes, setParkingSlotSizes] = useState({
-    [Size.SMALL]: [],
-    [Size.MEDIUM]: [],
-    [Size.LARGE]: []
+    [Sizes.SMALL]: [],
+    [Sizes.MEDIUM]: [],
+    [Sizes.LARGE]: []
   });
 
-  // Reset the entry point list whenever the table size changes
   useEffect(() => {
     setEntryPoints([]);
   }, [parkingMapConfig.tableSize, parkingMapConfig.numEntryPoints]);
  
-  // Default all the other parking slots to small except the entry points
   useEffect(() => {
     const smallSlots = [];
 
@@ -44,9 +42,9 @@ function App() {
     }
 
     setParkingSlotSizes({
-      [Size.SMALL]: smallSlots,
-      [Size.MEDIUM]: [],
-      [Size.LARGE]: [],
+      [Sizes.SMALL]: smallSlots,
+      [Sizes.MEDIUM]: [],
+      [Sizes.LARGE]: [],
     });
   }, [entryPoints]);
 

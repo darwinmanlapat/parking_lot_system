@@ -1,7 +1,7 @@
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
 import config from "../../../config";
-import { Size } from "../../../enums/Size";
+import { Sizes } from "../../../enums/Size";
 import ParkingLot from "../../../lib/ParkingLot";
 import ParkingSlot from "../../../lib/ParkingSlot";
 import VehicleManager from "../../../lib/VehicleManager";
@@ -33,9 +33,9 @@ const ParkingMap = (props) => {
 						)
 					}
 				>
-					<option>{Size.SMALL}</option>
-					<option>{Size.MEDIUM}</option>
-					<option>{Size.LARGE}</option>
+					<option>{Sizes.SMALL}</option>
+					<option>{Sizes.MEDIUM}</option>
+					<option>{Sizes.LARGE}</option>
 				</select>
 			);
 		}
