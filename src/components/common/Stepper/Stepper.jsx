@@ -35,5 +35,4 @@ const Stepper = (props) => {
         </div>
     );
 }
-
 export default Stepper;
